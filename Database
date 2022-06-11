@@ -1,0 +1,619 @@
+USE [master]
+GO
+/****** Object:  Database [BFApartment]    Script Date: 04-Jun-22 11:15:21 PM ******/
+CREATE DATABASE [BFApartment]
+ CONTAINMENT = NONE
+ ON  PRIMARY 
+( NAME = N'BFApartment', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL15.SQLEXPRESS\MSSQL\DATA\BFApartment.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
+ LOG ON 
+( NAME = N'BFApartment_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL15.SQLEXPRESS\MSSQL\DATA\BFApartment_log.ldf' , SIZE = 8192KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
+ WITH CATALOG_COLLATION = DATABASE_DEFAULT
+GO
+ALTER DATABASE [BFApartment] SET COMPATIBILITY_LEVEL = 150
+GO
+IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
+begin
+EXEC [BFApartment].[dbo].[sp_fulltext_database] @action = 'enable'
+end
+GO
+ALTER DATABASE [BFApartment] SET ANSI_NULL_DEFAULT OFF 
+GO
+ALTER DATABASE [BFApartment] SET ANSI_NULLS OFF 
+GO
+ALTER DATABASE [BFApartment] SET ANSI_PADDING OFF 
+GO
+ALTER DATABASE [BFApartment] SET ANSI_WARNINGS OFF 
+GO
+ALTER DATABASE [BFApartment] SET ARITHABORT OFF 
+GO
+ALTER DATABASE [BFApartment] SET AUTO_CLOSE ON 
+GO
+ALTER DATABASE [BFApartment] SET AUTO_SHRINK OFF 
+GO
+ALTER DATABASE [BFApartment] SET AUTO_UPDATE_STATISTICS ON 
+GO
+ALTER DATABASE [BFApartment] SET CURSOR_CLOSE_ON_COMMIT OFF 
+GO
+ALTER DATABASE [BFApartment] SET CURSOR_DEFAULT  GLOBAL 
+GO
+ALTER DATABASE [BFApartment] SET CONCAT_NULL_YIELDS_NULL OFF 
+GO
+ALTER DATABASE [BFApartment] SET NUMERIC_ROUNDABORT OFF 
+GO
+ALTER DATABASE [BFApartment] SET QUOTED_IDENTIFIER OFF 
+GO
+ALTER DATABASE [BFApartment] SET RECURSIVE_TRIGGERS OFF 
+GO
+ALTER DATABASE [BFApartment] SET  ENABLE_BROKER 
+GO
+ALTER DATABASE [BFApartment] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
+GO
+ALTER DATABASE [BFApartment] SET DATE_CORRELATION_OPTIMIZATION OFF 
+GO
+ALTER DATABASE [BFApartment] SET TRUSTWORTHY OFF 
+GO
+ALTER DATABASE [BFApartment] SET ALLOW_SNAPSHOT_ISOLATION OFF 
+GO
+ALTER DATABASE [BFApartment] SET PARAMETERIZATION SIMPLE 
+GO
+ALTER DATABASE [BFApartment] SET READ_COMMITTED_SNAPSHOT OFF 
+GO
+ALTER DATABASE [BFApartment] SET HONOR_BROKER_PRIORITY OFF 
+GO
+ALTER DATABASE [BFApartment] SET RECOVERY SIMPLE 
+GO
+ALTER DATABASE [BFApartment] SET  MULTI_USER 
+GO
+ALTER DATABASE [BFApartment] SET PAGE_VERIFY CHECKSUM  
+GO
+ALTER DATABASE [BFApartment] SET DB_CHAINING OFF 
+GO
+ALTER DATABASE [BFApartment] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
+GO
+ALTER DATABASE [BFApartment] SET TARGET_RECOVERY_TIME = 60 SECONDS 
+GO
+ALTER DATABASE [BFApartment] SET DELAYED_DURABILITY = DISABLED 
+GO
+ALTER DATABASE [BFApartment] SET ACCELERATED_DATABASE_RECOVERY = OFF  
+GO
+ALTER DATABASE [BFApartment] SET QUERY_STORE = OFF
+GO
+USE [BFApartment]
+GO
+/****** Object:  Table [dbo].[Accounts]    Script Date: 04-Jun-22 11:15:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Accounts](
+	[userId] [varchar](20) NOT NULL,
+	[password] [varchar](255) NOT NULL,
+	[status] [bit] NULL,
+	[roleId] [varchar](20) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[userId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+/****** Object:  Table [dbo].[Apartments]    Script Date: 04-Jun-22 11:15:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Apartments](
+	[apartmentId] [varchar](20) NOT NULL,
+	[size] [varchar](20) NOT NULL,
+	[details] [nvarchar](1000) NOT NULL,
+	[status] [bit] NULL,
+	[apartmentTypeId] [varchar](20) NULL,
+	[buildingId] [varchar](20) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[apartmentId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[ApartmentTypes]    Script Date: 04-Jun-22 11:15:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ApartmentTypes](
+	[apartmentTypeId] [varchar](20) NOT NULL,
+	[typeName] [nvarchar](255) NULL,
+	[rentPrice] [float] NOT NULL,
+	[salePrice] [float] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[apartmentTypeId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[BillDetails]    Script Date: 04-Jun-22 11:15:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[BillDetails](
+	[billId] [varchar](20) NULL,
+	[serviceId] [varchar](20) NULL,
+	[priceDetail] [float] NULL
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Bills]    Script Date: 04-Jun-22 11:15:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Bills](
+	[billId] [varchar](20) NOT NULL,
+	[status] [bit] NULL,
+	[total] [float] NULL,
+	[apartmentId] [varchar](20) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[billId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Buildings]    Script Date: 04-Jun-22 11:15:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Buildings](
+	[buildingId] [varchar](20) NOT NULL,
+	[buildingName] [nvarchar](30) NOT NULL,
+	[numberOfApartment] [int] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[buildingId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Contracts]    Script Date: 04-Jun-22 11:15:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Contracts](
+	[contractId] [varchar](20) NOT NULL,
+	[startDate] [date] NULL,
+	[endDate] [date] NULL,
+	[status] [varchar](50) NOT NULL,
+	[ownerId] [varchar](20) NULL,
+	[apartmentId] [varchar](20) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[contractId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Owners]    Script Date: 04-Jun-22 11:15:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Owners](
+	[ownerId] [varchar](20) NOT NULL,
+	[name] [nvarchar](255) NOT NULL,
+	[dob] [date] NOT NULL,
+	[gender] [varchar](10) NOT NULL,
+	[job] [nvarchar](255) NULL,
+	[phone] [varchar](15) NOT NULL,
+	[email] [varchar](40) NOT NULL,
+	[status] [bit] NULL,
+	[userId] [varchar](20) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[ownerId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Requests]    Script Date: 04-Jun-22 11:15:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Requests](
+	[requestId] [varchar](20) NOT NULL,
+	[action] [nvarchar](255) NOT NULL,
+	[status] [bit] NULL,
+	[ownerId] [varchar](20) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[requestId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Residents]    Script Date: 04-Jun-22 11:15:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Residents](
+	[residentId] [varchar](20) NOT NULL,
+	[name] [nvarchar](255) NOT NULL,
+	[dob] [date] NOT NULL,
+	[gender] [varchar](10) NOT NULL,
+	[job] [nvarchar](255) NULL,
+	[phone] [varchar](15) NOT NULL,
+	[status] [bit] NULL,
+	[requestId] [varchar](20) NULL,
+	[ownerId] [varchar](20) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[residentId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Roles]    Script Date: 04-Jun-22 11:15:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Roles](
+	[roleId] [varchar](20) NOT NULL,
+	[roleName] [varchar](20) NOT NULL,
+	[status] [bit] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[roleId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Services]    Script Date: 04-Jun-22 11:15:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Services](
+	[serviceId] [varchar](20) NOT NULL,
+	[serviceName] [nvarchar](255) NOT NULL,
+	[servicePrice] [float] NOT NULL,
+	[status] [bit] NULL,
+	[typeId] [varchar](20) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[serviceId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Troubles]    Script Date: 04-Jun-22 11:15:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Troubles](
+	[troubleId] [varchar](20) NOT NULL,
+	[date] [date] NOT NULL,
+	[detail] [nvarchar](1000) NULL,
+	[solution] [nvarchar](1000) NULL,
+	[status] [bit] NULL,
+	[ownerId] [varchar](20) NULL,
+	[typeId] [varchar](20) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[troubleId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[TroubleType]    Script Date: 04-Jun-22 11:15:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[TroubleTypes](
+	[typeId] [varchar](20) NOT NULL,
+	[detail] [nvarchar](1000) NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[typeId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[TypeDetails]    Script Date: 04-Jun-22 11:15:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[TypeDetails](
+	[Id] [varchar](20) NOT NULL,
+	[oldIndex] [int] NOT NULL,
+	[newIndex] [int] NOT NULL,
+	[usagaIndex] [int] NOT NULL,
+	[typeId] [varchar](20) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[TypeServices]    Script Date: 04-Jun-22 11:15:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[TypeServices](
+	[typeId] [varchar](20) NOT NULL,
+	[name] [nvarchar](255) NOT NULL,
+	[price] [float] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[typeId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+CREATE TABLE ServiceContracts
+(contractId varchar(20) NOT NULL,
+serviceId varchar(20) NOT NULL)
+go
+ALTER TABLE ServiceContracts ADD CONSTRAINT Ma PRIMARY KEY (contractId, serviceId)
+go
+ALTER TABLE ServiceContracts
+ADD CONSTRAINT fk_ten
+FOREIGN KEY (contractId)
+REFERENCES Contracts(contractId);
+go
+
+ALTER TABLE ServiceContracts
+ADD CONSTRAINT fk_ten2
+  FOREIGN KEY (serviceId)
+  REFERENCES Services(serviceId);
+  go
+//Account password: 123
+INSERT [dbo].[Accounts] ([userId], [password], [status], [roleId]) VALUES (N'admin', N'202cb962ac59075b964b07152d234b70', 1, N'AD')
+INSERT [dbo].[Accounts] ([userId], [password], [status], [roleId]) VALUES (N'employee', N'202cb962ac59075b964b07152d234b70', 1, N'EM')
+INSERT [dbo].[Accounts] ([userId], [password], [status], [roleId]) VALUES (N'employee_2', N'202cb962ac59075b964b07152d234b70', 1, N'EM')
+INSERT [dbo].[Accounts] ([userId], [password], [status], [roleId]) VALUES (N'user', N'202cb962ac59075b964b07152d234b70', 1, N'US')
+INSERT [dbo].[Accounts] ([userId], [password], [status], [roleId]) VALUES (N'linhnpn', N'202cb962ac59075b964b07152d234b70', 1, N'US')
+INSERT [dbo].[Accounts] ([userId], [password], [status], [roleId]) VALUES (N'trieudh', N'202cb962ac59075b964b07152d234b70', 1, N'US')
+INSERT [dbo].[Accounts] ([userId], [password], [status], [roleId]) VALUES (N'thinhdnp', N'202cb962ac59075b964b07152d234b70', 1, N'US')
+INSERT [dbo].[Accounts] ([userId], [password], [status], [roleId]) VALUES (N'hoanghdm', N'202cb962ac59075b964b07152d234b70', 1, N'US')
+GO
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart1', N'100', N'them sau', 1, N'type1', N'building1')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart10', N'150', N'them sau', 1, N'type3', N'building1')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart11', N'100', N'them sau', 0, N'type1', N'building2')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart12', N'100', N'them sau', 1, N'type1', N'building2')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart13', N'100', N'them sau', 1, N'type1', N'building2')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart14', N'100', N'them sau', 1, N'type1', N'building2')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart15', N'120', N'them sau', 1, N'type2', N'building2')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart16', N'120', N'them sau', 1, N'type2', N'building2')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart17', N'120', N'them sau', 1, N'type2', N'building2')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart18', N'150', N'them sau', 1, N'type3', N'building2')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart19', N'150', N'them sau', 0, N'type3', N'building2')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart2', N'100', N'them sau', 1, N'type1', N'building1')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart20', N'150', N'them sau', 0, N'type3', N'building2')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart21', N'100', N'them sau', 1, N'type1', N'building3')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart22', N'100', N'them sau', 1, N'type1', N'building3')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart23', N'100', N'them sau', 1, N'type1', N'building3')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart24', N'100', N'them sau', 1, N'type1', N'building3')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart25', N'100', N'them sau', 1, N'type1', N'building3')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart26', N'100', N'them sau', 0, N'type1', N'building3')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart27', N'120', N'them sau', 1, N'type2', N'building3')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart28', N'120', N'them sau', 1, N'type2', N'building3')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart29', N'120', N'them sau', 0, N'type2', N'building3')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart3', N'100', N'them sau', 1, N'type1', N'building1')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart30', N'120', N'them sau', 1, N'type2', N'building3')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart31', N'120', N'them sau', 0, N'type2', N'building3')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart32', N'150', N'them sau', 1, N'type3', N'building3')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart33', N'150', N'them sau', 0, N'type3', N'building3')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart34', N'150', N'them sau', 0, N'type3', N'building3')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart35', N'150', N'them sau', 0, N'type3', N'building3')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart36', N'100', N'them sau', 1, N'type1', N'building4')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart37', N'100', N'them sau', 1, N'type1', N'building4')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart38', N'100', N'them sau', 1, N'type1', N'building4')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart39', N'100', N'them sau', 1, N'type1', N'building4')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart4', N'100', N'them sau', 1, N'type1', N'building1')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart40', N'100', N'them sau', 1, N'type1', N'building4')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart41', N'100', N'them sau', 1, N'type1', N'building4')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart42', N'120', N'them sau', 1, N'type2', N'building4')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart43', N'120', N'them sau', 1, N'type2', N'building4')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart44', N'120', N'them sau', 1, N'type2', N'building4')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart45', N'120', N'them sau', 1, N'type2', N'building4')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart46', N'120', N'them sau', 0, N'type2', N'building4')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart47', N'150', N'them sau', 1, N'type3', N'building4')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart48', N'150', N'them sau', 1, N'type3', N'building4')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart49', N'150', N'them sau', 1, N'type3', N'building4')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart5', N'120', N'them sau', 1, N'type2', N'building1')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart50', N'150', N'them sau', 0, N'type3', N'building4')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart6', N'120', N'them sau', 1, N'type2', N'building1')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart7', N'120', N'them sau', 1, N'type2', N'building1')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart8', N'150', N'them sau', 1, N'type3', N'building1')
+INSERT [dbo].[Apartments] ([apartmentId], [size], [details], [status], [apartmentTypeId], [buildingId]) VALUES (N'apart9', N'150', N'them sau', 1, N'type3', N'building1')
+GO
+INSERT [dbo].[ApartmentTypes] ([apartmentTypeId], [typeName], [rentPrice], [salePrice]) VALUES (N'type1', N'5000000', 1000000000, 0)
+INSERT [dbo].[ApartmentTypes] ([apartmentTypeId], [typeName], [rentPrice], [salePrice]) VALUES (N'type2', N'10000000', 5000000000, 0)
+INSERT [dbo].[ApartmentTypes] ([apartmentTypeId], [typeName], [rentPrice], [salePrice]) VALUES (N'type3', N'20000000', 10000000000, 0)
+GO
+INSERT [dbo].[Buildings] ([buildingId], [buildingName], [numberOfApartment]) VALUES (N'building1', N'Building A', 10)
+INSERT [dbo].[Buildings] ([buildingId], [buildingName], [numberOfApartment]) VALUES (N'building2', N'Building B', 10)
+INSERT [dbo].[Buildings] ([buildingId], [buildingName], [numberOfApartment]) VALUES (N'building3', N'Building C', 15)
+INSERT [dbo].[Buildings] ([buildingId], [buildingName], [numberOfApartment]) VALUES (N'building4', N'Building D', 15)
+GO
+INSERT [dbo].[Contracts] ([contractId], [startDate], [endDate], [status], [ownerId], [apartmentId]) VALUES (N'ct1', CAST(N'2020-05-05' AS Date), CAST(N'2023-05-05' AS Date), N'sale', N'own2', N'apart1')
+INSERT [dbo].[Contracts] ([contractId], [startDate], [endDate], [status], [ownerId], [apartmentId]) VALUES (N'ct10', CAST(N'2020-03-25' AS Date), CAST(N'2022-03-25' AS Date), N'rent', N'own7', N'apart28')
+INSERT [dbo].[Contracts] ([contractId], [startDate], [endDate], [status], [ownerId], [apartmentId]) VALUES (N'ct11', CAST(N'2021-06-25' AS Date), CAST(N'2023-06-25' AS Date), N'rent', N'own7', N'apart30')
+INSERT [dbo].[Contracts] ([contractId], [startDate], [endDate], [status], [ownerId], [apartmentId]) VALUES (N'ct12', CAST(N'2020-05-05' AS Date), CAST(N'1900-01-01' AS Date), N'sale', N'own8', N'apart13')
+INSERT [dbo].[Contracts] ([contractId], [startDate], [endDate], [status], [ownerId], [apartmentId]) VALUES (N'ct13', CAST(N'2020-05-05' AS Date), CAST(N'1900-01-01' AS Date), N'sale', N'own8', N'apart14')
+INSERT [dbo].[Contracts] ([contractId], [startDate], [endDate], [status], [ownerId], [apartmentId]) VALUES (N'ct14', CAST(N'2021-08-15' AS Date), CAST(N'1900-01-01' AS Date), N'sale', N'own9', N'apart42')
+INSERT [dbo].[Contracts] ([contractId], [startDate], [endDate], [status], [ownerId], [apartmentId]) VALUES (N'ct15', CAST(N'2019-07-18' AS Date), CAST(N'2023-07-18' AS Date), N'rent', N'own9', N'apart43')
+INSERT [dbo].[Contracts] ([contractId], [startDate], [endDate], [status], [ownerId], [apartmentId]) VALUES (N'ct16', CAST(N'2021-07-18' AS Date), CAST(N'1900-01-01' AS Date), N'sale', N'own10', N'apart40')
+INSERT [dbo].[Contracts] ([contractId], [startDate], [endDate], [status], [ownerId], [apartmentId]) VALUES (N'ct17', CAST(N'2021-05-26' AS Date), CAST(N'2022-05-26' AS Date), N'rent', N'own10', N'apart27')
+INSERT [dbo].[Contracts] ([contractId], [startDate], [endDate], [status], [ownerId], [apartmentId]) VALUES (N'ct18', CAST(N'2021-09-25' AS Date), CAST(N'2022-09-25' AS Date), N'rent', N'own11', N'apart21')
+INSERT [dbo].[Contracts] ([contractId], [startDate], [endDate], [status], [ownerId], [apartmentId]) VALUES (N'ct19', CAST(N'2021-06-28' AS Date), CAST(N'2023-06-28' AS Date), N'rent', N'own11', N'apart22')
+INSERT [dbo].[Contracts] ([contractId], [startDate], [endDate], [status], [ownerId], [apartmentId]) VALUES (N'ct2', CAST(N'2020-05-05' AS Date), CAST(N'2023-05-05' AS Date), N'rent', N'own2', N'apart6')
+INSERT [dbo].[Contracts] ([contractId], [startDate], [endDate], [status], [ownerId], [apartmentId]) VALUES (N'ct20', CAST(N'2019-09-20' AS Date), CAST(N'1900-01-01' AS Date), N'sale', N'own11', N'apart23')
+INSERT [dbo].[Contracts] ([contractId], [startDate], [endDate], [status], [ownerId], [apartmentId]) VALUES (N'ct21', CAST(N'2020-03-25' AS Date), CAST(N'2022-03-25' AS Date), N'rent', N'own12', N'apart7')
+INSERT [dbo].[Contracts] ([contractId], [startDate], [endDate], [status], [ownerId], [apartmentId]) VALUES (N'ct22', CAST(N'2021-06-25' AS Date), CAST(N'2023-06-25' AS Date), N'rent', N'own12', N'apart10')
+INSERT [dbo].[Contracts] ([contractId], [startDate], [endDate], [status], [ownerId], [apartmentId]) VALUES (N'ct23', CAST(N'2020-04-05' AS Date), CAST(N'2023-04-05' AS Date), N'sale', N'own13', N'apart36')
+INSERT [dbo].[Contracts] ([contractId], [startDate], [endDate], [status], [ownerId], [apartmentId]) VALUES (N'ct24', CAST(N'2022-05-05' AS Date), CAST(N'2025-05-05' AS Date), N'rent', N'own13', N'apart37')
+INSERT [dbo].[Contracts] ([contractId], [startDate], [endDate], [status], [ownerId], [apartmentId]) VALUES (N'ct25', CAST(N'2021-08-15' AS Date), CAST(N'1900-01-01' AS Date), N'sale', N'own13', N'apart38')
+INSERT [dbo].[Contracts] ([contractId], [startDate], [endDate], [status], [ownerId], [apartmentId]) VALUES (N'ct26', CAST(N'2022-06-18' AS Date), CAST(N'2024-06-18' AS Date), N'rent', N'own14', N'apart45')
+INSERT [dbo].[Contracts] ([contractId], [startDate], [endDate], [status], [ownerId], [apartmentId]) VALUES (N'ct27', CAST(N'2022-03-18' AS Date), CAST(N'1900-01-01' AS Date), N'sale', N'own14', N'apart47')
+INSERT [dbo].[Contracts] ([contractId], [startDate], [endDate], [status], [ownerId], [apartmentId]) VALUES (N'ct28', CAST(N'2022-06-15' AS Date), CAST(N'2026-06-15' AS Date), N'rent', N'own15', N'apart24')
+INSERT [dbo].[Contracts] ([contractId], [startDate], [endDate], [status], [ownerId], [apartmentId]) VALUES (N'ct29', CAST(N'2021-09-22' AS Date), CAST(N'2023-09-20' AS Date), N'rent', N'own15', N'apart32')
+INSERT [dbo].[Contracts] ([contractId], [startDate], [endDate], [status], [ownerId], [apartmentId]) VALUES (N'ct3', CAST(N'2021-08-15' AS Date), CAST(N'1900-01-01' AS Date), N'sale', N'own2', N'apart9')
+INSERT [dbo].[Contracts] ([contractId], [startDate], [endDate], [status], [ownerId], [apartmentId]) VALUES (N'ct30', CAST(N'2021-06-25' AS Date), CAST(N'2023-06-25' AS Date), N'rent', N'own16', N'apart44')
+INSERT [dbo].[Contracts] ([contractId], [startDate], [endDate], [status], [ownerId], [apartmentId]) VALUES (N'ct31', CAST(N'2019-09-20' AS Date), CAST(N'1900-01-01' AS Date), N'sale', N'own16', N'apart48')
+INSERT [dbo].[Contracts] ([contractId], [startDate], [endDate], [status], [ownerId], [apartmentId]) VALUES (N'ct32', CAST(N'2020-03-25' AS Date), CAST(N'2022-03-25' AS Date), N'rent', N'own17', N'apart3')
+INSERT [dbo].[Contracts] ([contractId], [startDate], [endDate], [status], [ownerId], [apartmentId]) VALUES (N'ct33', CAST(N'2021-06-25' AS Date), CAST(N'2023-06-25' AS Date), N'rent', N'own17', N'apart4')
+INSERT [dbo].[Contracts] ([contractId], [startDate], [endDate], [status], [ownerId], [apartmentId]) VALUES (N'ct34', CAST(N'2019-09-20' AS Date), CAST(N'1900-01-01' AS Date), N'sale', N'own17', N'apart25')
+INSERT [dbo].[Contracts] ([contractId], [startDate], [endDate], [status], [ownerId], [apartmentId]) VALUES (N'ct35', CAST(N'2020-03-25' AS Date), CAST(N'2022-03-25' AS Date), N'rent', N'own18', N'apart5')
+INSERT [dbo].[Contracts] ([contractId], [startDate], [endDate], [status], [ownerId], [apartmentId]) VALUES (N'ct36', CAST(N'2021-06-25' AS Date), CAST(N'2023-06-25' AS Date), N'rent', N'own18', N'apart8')
+INSERT [dbo].[Contracts] ([contractId], [startDate], [endDate], [status], [ownerId], [apartmentId]) VALUES (N'ct37', CAST(N'2019-09-20' AS Date), CAST(N'1900-01-01' AS Date), N'sale', N'own19', N'apart39')
+INSERT [dbo].[Contracts] ([contractId], [startDate], [endDate], [status], [ownerId], [apartmentId]) VALUES (N'ct38', CAST(N'2020-03-25' AS Date), CAST(N'2022-03-25' AS Date), N'rent', N'own19', N'apart41')
+INSERT [dbo].[Contracts] ([contractId], [startDate], [endDate], [status], [ownerId], [apartmentId]) VALUES (N'ct39', CAST(N'2021-06-25' AS Date), CAST(N'2023-06-25' AS Date), N'rent', N'own20', N'apart49')
+INSERT [dbo].[Contracts] ([contractId], [startDate], [endDate], [status], [ownerId], [apartmentId]) VALUES (N'ct4', CAST(N'2019-07-18' AS Date), CAST(N'2023-07-18' AS Date), N'rent', N'own5', N'apart12')
+INSERT [dbo].[Contracts] ([contractId], [startDate], [endDate], [status], [ownerId], [apartmentId]) VALUES (N'ct5', CAST(N'2021-07-18' AS Date), CAST(N'1900-01-01' AS Date), N'sale', N'own5', N'apart16')
+INSERT [dbo].[Contracts] ([contractId], [startDate], [endDate], [status], [ownerId], [apartmentId]) VALUES (N'ct6', CAST(N'2021-06-15' AS Date), CAST(N'2022-06-15' AS Date), N'rent', N'own5', N'apart18')
+INSERT [dbo].[Contracts] ([contractId], [startDate], [endDate], [status], [ownerId], [apartmentId]) VALUES (N'ct7', CAST(N'2021-09-20' AS Date), CAST(N'2022-09-20' AS Date), N'rent', N'own6', N'apart15')
+INSERT [dbo].[Contracts] ([contractId], [startDate], [endDate], [status], [ownerId], [apartmentId]) VALUES (N'ct8', CAST(N'2021-06-25' AS Date), CAST(N'2023-06-25' AS Date), N'rent', N'own6', N'apart17')
+INSERT [dbo].[Contracts] ([contractId], [startDate], [endDate], [status], [ownerId], [apartmentId]) VALUES (N'ct9', CAST(N'2019-09-20' AS Date), CAST(N'1900-01-01' AS Date), N'sale', N'own7', N'apart2')
+GO
+INSERT [dbo].[Owners] ([ownerId], [name], [dob], [gender], [job], [phone], [email], [status], [userId]) VALUES (N'own10', N'Nguyễn Thanh Tùng', CAST(N'2001-03-09' AS Date), N'female', N'Ca sĩ', N'01234567', N'tungnt@gmail.com', 1, N'user')
+INSERT [dbo].[Owners] ([ownerId], [name], [dob], [gender], [job], [phone], [email], [status], [userId]) VALUES (N'own11', N'Nguyễn Công Phượng', CAST(N'2001-03-10' AS Date), N'male', N'Cầu thủ', N'01234567', N'phuongnc@gmail.com', 1, N'linhnpn')
+INSERT [dbo].[Owners] ([ownerId], [name], [dob], [gender], [job], [phone], [email], [status], [userId]) VALUES (N'own12', N'Nguyễn Văn Toàn', CAST(N'2001-03-11' AS Date), N'male', N'Kỹ sư', N'01234567', N'toannv@gmail.com', 1, N'trieudh')
+INSERT [dbo].[Owners] ([ownerId], [name], [dob], [gender], [job], [phone], [email], [status], [userId]) VALUES (N'own13', N'Đỗ Hùng Dũng', CAST(N'2001-03-12' AS Date), N'female', N'Cầu thủ', N'01234567', N'dungdh@gmail.com', 1, N'thinhdnp')
+INSERT [dbo].[Owners] ([ownerId], [name], [dob], [gender], [job], [phone], [email], [status], [userId]) VALUES (N'own14', N'Đặng Văn Lâm', CAST(N'2001-01-13' AS Date), N'female', N'Nha sĩ', N'01234567', N'lamdv@gmail.com', 1, N'hoanghdm')
+GO
+
+INSERT [dbo].[Requests] ([requestId], [action], [status], [ownerId]) VALUES (N'req12', N'add', 1, N'own10')
+INSERT [dbo].[Requests] ([requestId], [action], [status], [ownerId]) VALUES (N'req13', N'add', 1, N'own11')
+INSERT [dbo].[Requests] ([requestId], [action], [status], [ownerId]) VALUES (N'req14', N'add', 1, N'own12')
+INSERT [dbo].[Requests] ([requestId], [action], [status], [ownerId]) VALUES (N'req15', N'delete', 1, N'own12')
+INSERT [dbo].[Requests] ([requestId], [action], [status], [ownerId]) VALUES (N'req16', N'add', 1, N'own13')
+INSERT [dbo].[Requests] ([requestId], [action], [status], [ownerId]) VALUES (N'req17', N'add', 1, N'own14')
+GO
+
+INSERT [dbo].[Residents] ([residentId], [name], [dob], [gender], [job], [phone], [status], [requestId], [ownerId]) VALUES (N'res41', N'Nguyễn Thị Phương Linh', CAST(N'2001-02-18' AS Date), N'female', N'Công Nhân', N'02345678', 1, N'req12', N'own10')
+INSERT [dbo].[Residents] ([residentId], [name], [dob], [gender], [job], [phone], [status], [requestId], [ownerId]) VALUES (N'res42', N'Nguyễn Tấn Lộc', CAST(N'2001-02-19' AS Date), N'male', N'Công Nhân', N'02345678', 1, N'req12', N'own10')
+INSERT [dbo].[Residents] ([residentId], [name], [dob], [gender], [job], [phone], [status], [requestId], [ownerId]) VALUES (N'res43', N'Phan Quang Minh', CAST(N'2001-02-20' AS Date), N'male', N'Công Nhân', N'02345678', 1, N'req12', N'own10')
+INSERT [dbo].[Residents] ([residentId], [name], [dob], [gender], [job], [phone], [status], [requestId], [ownerId]) VALUES (N'res44', N'Đặng Hoàng Nam', CAST(N'2001-02-21' AS Date), N'male', N'Công Nhân', N'02345678', 1, N'req12', N'own10')
+INSERT [dbo].[Residents] ([residentId], [name], [dob], [gender], [job], [phone], [status], [requestId], [ownerId]) VALUES (N'res45', N'Bùi Thị Ngọc', CAST(N'2001-02-22' AS Date), N'female', N'Công Nhân', N'02345678', 1, N'req12', N'own10')
+INSERT [dbo].[Residents] ([residentId], [name], [dob], [gender], [job], [phone], [status], [requestId], [ownerId]) VALUES (N'res46', N'Nguyễn Thị Thảo Nguyên', CAST(N'2001-02-23' AS Date), N'female', N'Công Nhân', N'02345678', 1, N'req13', N'own11')
+INSERT [dbo].[Residents] ([residentId], [name], [dob], [gender], [job], [phone], [status], [requestId], [ownerId]) VALUES (N'res47', N'Trần Thị Bích Nhi', CAST(N'2001-02-24' AS Date), N'female', N'Công Nhân', N'02345678', 1, N'req13', N'own11')
+INSERT [dbo].[Residents] ([residentId], [name], [dob], [gender], [job], [phone], [status], [requestId], [ownerId]) VALUES (N'res48', N'Nguyễn Huỳnh Như', CAST(N'2001-02-25' AS Date), N'female', N'Công Nhân', N'02345678', 1, N'req13', N'own11')
+INSERT [dbo].[Residents] ([residentId], [name], [dob], [gender], [job], [phone], [status], [requestId], [ownerId]) VALUES (N'res49', N'Ngô Thị Thiên Như', CAST(N'2001-02-26' AS Date), N'female', N'Công Nhân', N'02345678', 1, N'req13', N'own11')
+INSERT [dbo].[Residents] ([residentId], [name], [dob], [gender], [job], [phone], [status], [requestId], [ownerId]) VALUES (N'res5', N'Lưu Trang Anh', CAST(N'2001-01-12' AS Date), N'female', N'Sinh viên', N'02345678', 1, N'req2', N'own2')
+INSERT [dbo].[Residents] ([residentId], [name], [dob], [gender], [job], [phone], [status], [requestId], [ownerId]) VALUES (N'res50', N'Nguyễn Hoàng Phi', CAST(N'2001-02-27' AS Date), N'male', N'Công Nhân', N'02345678', 1, N'req13', N'own11')
+INSERT [dbo].[Residents] ([residentId], [name], [dob], [gender], [job], [phone], [status], [requestId], [ownerId]) VALUES (N'res51', N'Huỳnh Ngọc Vũ Phương', CAST(N'2001-02-28' AS Date), N'female', N'Công Nhân', N'02345678', 1, N'req13', N'own11')
+INSERT [dbo].[Residents] ([residentId], [name], [dob], [gender], [job], [phone], [status], [requestId], [ownerId]) VALUES (N'res52', N'Phùng Thái Sang', CAST(N'2001-03-01' AS Date), N'male', N'Công Nhân', N'02345678', 1, N'req14', N'own12')
+INSERT [dbo].[Residents] ([residentId], [name], [dob], [gender], [job], [phone], [status], [requestId], [ownerId]) VALUES (N'res53', N'Đặng Anh Tài', CAST(N'2001-03-02' AS Date), N'male', N'Công Nhân', N'02345678', 1, N'req14', N'own12')
+INSERT [dbo].[Residents] ([residentId], [name], [dob], [gender], [job], [phone], [status], [requestId], [ownerId]) VALUES (N'res54', N'Nguyễn Quốc Thái', CAST(N'2001-03-03' AS Date), N'male', N'Công Nhân', N'02345678', 1, N'req14', N'own12')
+INSERT [dbo].[Residents] ([residentId], [name], [dob], [gender], [job], [phone], [status], [requestId], [ownerId]) VALUES (N'res55', N'Bùi Văn Thái', CAST(N'2001-03-04' AS Date), N'male', N'Công Nhân', N'02345678', 1, N'req14', N'own12')
+INSERT [dbo].[Residents] ([residentId], [name], [dob], [gender], [job], [phone], [status], [requestId], [ownerId]) VALUES (N'res56', N'Nguyễn Thị Thu Thảo', CAST(N'2001-03-05' AS Date), N'female', N'Công Nhân', N'02345678', 1, N'req15', N'own12')
+INSERT [dbo].[Residents] ([residentId], [name], [dob], [gender], [job], [phone], [status], [requestId], [ownerId]) VALUES (N'res57', N'Lê Anh Thư', CAST(N'2001-03-06' AS Date), N'female', N'Giáo viên', N'02345678', 1, N'req16', N'own13')
+INSERT [dbo].[Residents] ([residentId], [name], [dob], [gender], [job], [phone], [status], [requestId], [ownerId]) VALUES (N'res58', N'Vương Minh Thư', CAST(N'2001-03-07' AS Date), N'female', N'Luật sư', N'02345678', 1, N'req16', N'own13')
+INSERT [dbo].[Residents] ([residentId], [name], [dob], [gender], [job], [phone], [status], [requestId], [ownerId]) VALUES (N'res59', N'Bùi Thị Mộng Thường', CAST(N'2001-03-08' AS Date), N'female', N'Nha sĩ', N'02345678', 1, N'req16', N'own13')
+INSERT [dbo].[Residents] ([residentId], [name], [dob], [gender], [job], [phone], [status], [requestId], [ownerId]) VALUES (N'res6', N'Phạm Thị Hiền Anh', CAST(N'2001-01-13' AS Date), N'female', N'Sinh viên', N'02345678', 1, N'req2', N'own2')
+INSERT [dbo].[Residents] ([residentId], [name], [dob], [gender], [job], [phone], [status], [requestId], [ownerId]) VALUES (N'res60', N'Phạm Hữu Toàn', CAST(N'2001-03-09' AS Date), N'male', N'Đạo diễn', N'02345678', 1, N'req16', N'own13')
+INSERT [dbo].[Residents] ([residentId], [name], [dob], [gender], [job], [phone], [status], [requestId], [ownerId]) VALUES (N'res61', N'Nguyễn Vũ Huyền Trang', CAST(N'2001-03-10' AS Date), N'female', N'Nha sĩ', N'02345678', 1, N'req16', N'own13')
+INSERT [dbo].[Residents] ([residentId], [name], [dob], [gender], [job], [phone], [status], [requestId], [ownerId]) VALUES (N'res62', N'Huỳnh Ngọc Mai Trinh', CAST(N'2001-03-11' AS Date), N'female', N'Kỹ sư', N'02345678', 1, N'req16', N'own13')
+INSERT [dbo].[Residents] ([residentId], [name], [dob], [gender], [job], [phone], [status], [requestId], [ownerId]) VALUES (N'res63', N'Nguyễn Văn Thành Trung', CAST(N'2001-03-12' AS Date), N'male', N'Nha sĩ', N'02345678', 1, N'req17', N'own14')
+INSERT [dbo].[Residents] ([residentId], [name], [dob], [gender], [job], [phone], [status], [requestId], [ownerId]) VALUES (N'res64', N'Nguyễn Lê Minh Tú', CAST(N'2001-03-13' AS Date), N'male', N'Phóng viên', N'02345678', 1, N'req17', N'own14')
+INSERT [dbo].[Residents] ([residentId], [name], [dob], [gender], [job], [phone], [status], [requestId], [ownerId]) VALUES (N'res65', N'Nguyễn Thị Ngọc Vàng', CAST(N'2001-03-14' AS Date), N'female', N'Biên tập viên', N'02345678', 1, N'req17', N'own14')
+INSERT [dbo].[Residents] ([residentId], [name], [dob], [gender], [job], [phone], [status], [requestId], [ownerId]) VALUES (N'res66', N'Nguyễn Trương Tường Vy', CAST(N'2001-03-15' AS Date), N'female', N'Thiết kế đồ họa', N'02345678', 1, N'req17', N'own14')
+INSERT [dbo].[Residents] ([residentId], [name], [dob], [gender], [job], [phone], [status], [requestId], [ownerId]) VALUES (N'res67', N'Lê Thạch Yến Vy', CAST(N'2001-03-16' AS Date), N'female', N'Luật sư', N'02345678', 1, N'req17', N'own14')
+INSERT [dbo].[Residents] ([residentId], [name], [dob], [gender], [job], [phone], [status], [requestId], [ownerId]) VALUES (N'res68', N'Nguyễn Văn An', CAST(N'2001-03-17' AS Date), N'male', N'Sinh viên', N'02345678', 1, N'req17', N'own14')
+
+INSERT [dbo].[Roles] ([roleId], [roleName], [status]) VALUES (N'AD', N'Admin', 1)
+INSERT [dbo].[Roles] ([roleId], [roleName], [status]) VALUES (N'EM', N'Employee', 1)
+INSERT [dbo].[Roles] ([roleId], [roleName], [status]) VALUES (N'US', N'User', 1)
+GO
+INSERT [dbo].[TypeDetails] ([Id], [oldIndex], [newIndex], [usagaIndex], [typeId]) VALUES (N'td1', 100, 250, 150, N'ts1')
+INSERT [dbo].[TypeDetails] ([Id], [oldIndex], [newIndex], [usagaIndex], [typeId]) VALUES (N'td2', 100, 200, 100, N'ts2')
+GO
+INSERT [dbo].[TypeServices] ([typeId], [name], [price]) VALUES (N'ts1', N'Tiền điện', 2000)
+INSERT [dbo].[TypeServices] ([typeId], [name], [price]) VALUES (N'ts10', N'Tiền vệ sinh', 300000)
+INSERT [dbo].[TypeServices] ([typeId], [name], [price]) VALUES (N'ts11', N'Tiền rác', 100000)
+INSERT [dbo].[TypeServices] ([typeId], [name], [price]) VALUES (N'ts2', N'Tiền nước', 3000)
+INSERT [dbo].[TypeServices] ([typeId], [name], [price]) VALUES (N'ts3', N'Tiền wifi', 200000)
+INSERT [dbo].[TypeServices] ([typeId], [name], [price]) VALUES (N'ts4', N'Tiền wifi', 250000)
+INSERT [dbo].[TypeServices] ([typeId], [name], [price]) VALUES (N'ts5', N'Tiền wifi', 300000)
+INSERT [dbo].[TypeServices] ([typeId], [name], [price]) VALUES (N'ts6', N'Tiền wifi', 350000)
+INSERT [dbo].[TypeServices] ([typeId], [name], [price]) VALUES (N'ts7', N'Tiền wifi', 500000)
+INSERT [dbo].[TypeServices] ([typeId], [name], [price]) VALUES (N'ts8', N'Tiền wifi', 800000)
+INSERT [dbo].[TypeServices] ([typeId], [name], [price]) VALUES (N'ts9', N'Tiền wifi', 1000000)
+GO
+
+INSERT INTO TroubleTypes VALUES ('TB1', N'Sự cố khác')
+INSERT INTO TroubleTypes VALUES ('TB2', N'Sự cố an ninh')
+INSERT INTO TroubleTypes VALUES ('TB3', N'Thiết bị điện hư hại')
+INSERT INTO TroubleTypes VALUES ('TB4', N'Sự cố đường truyền mạng')
+
+INSERT INTO Troubles VALUES ('TR01', '1-1-2001', N'Mạng yếu', N'Kiểm tra đường truyền', 1, 'own10', 'TB3')
+INSERT INTO Troubles VALUES ('TR02', '1-1-2001', N'Mạng yếu', N'Kiểm tra đường truyền', 1, 'own10', 'TB3')
+INSERT INTO Troubles VALUES ('TR03', '1-1-2001', N'Mạng yếu', N'Kiểm tra đường truyền', 1, 'own10', 'TB3')
+INSERT INTO Troubles VALUES ('TR04', '1-1-2001', N'Mạng yếu', N'Kiểm tra đường truyền', 1, 'own10', 'TB3')
+INSERT INTO Troubles VALUES ('TR05', '1-1-2001', N'Mạng yếu', N'Kiểm tra đường truyền', 1, 'own10', 'TB3')
+INSERT INTO Troubles VALUES ('TR06', '1-1-2001', N'Mạng yếu', N'Kiểm tra đường truyền', 1, 'own10', 'TB3')
+INSERT INTO Troubles VALUES ('TR07', '1-1-2001', N'Mạng yếu', N'Kiểm tra đường truyền', 1, 'own10', 'TB3')
+
+
+
+INSERT INTO Troubles Values ('')
+SET ANSI_PADDING ON
+GO
+/****** Object:  Index [UQ__TypeDeta__F04DF13BA3297F98]    Script Date: 04-Jun-22 11:15:21 PM ******/
+ALTER TABLE [dbo].[TypeDetails] ADD UNIQUE NONCLUSTERED 
+(
+	[typeId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Accounts]  WITH CHECK ADD FOREIGN KEY([roleId])
+REFERENCES [dbo].[Roles] ([roleId])
+GO
+ALTER TABLE [dbo].[Apartments]  WITH CHECK ADD FOREIGN KEY([apartmentTypeId])
+REFERENCES [dbo].[ApartmentTypes] ([apartmentTypeId])
+GO
+ALTER TABLE [dbo].[Apartments]  WITH CHECK ADD FOREIGN KEY([buildingId])
+REFERENCES [dbo].[Buildings] ([buildingId])
+GO
+ALTER TABLE [dbo].[BillDetails]  WITH CHECK ADD FOREIGN KEY([billId])
+REFERENCES [dbo].[Bills] ([billId])
+GO
+ALTER TABLE [dbo].[BillDetails]  WITH CHECK ADD FOREIGN KEY([serviceId])
+REFERENCES [dbo].[Services] ([serviceId])
+GO
+ALTER TABLE [dbo].[Bills]  WITH CHECK ADD FOREIGN KEY([apartmentId])
+REFERENCES [dbo].[Apartments] ([apartmentId])
+GO
+ALTER TABLE [dbo].[Contracts]  WITH CHECK ADD FOREIGN KEY([apartmentId])
+REFERENCES [dbo].[Apartments] ([apartmentId])
+GO
+ALTER TABLE [dbo].[Contracts]  WITH CHECK ADD FOREIGN KEY([ownerId])
+REFERENCES [dbo].[Owners] ([ownerId])
+GO
+ALTER TABLE [dbo].[Owners]  WITH CHECK ADD FOREIGN KEY([userId])
+REFERENCES [dbo].[Accounts] ([userId])
+
+ALTER TABLE Owners ADD CONSTRAINT ssdhf UNIQUE (userId)
+GO
+ALTER TABLE [dbo].[Requests]  WITH CHECK ADD FOREIGN KEY([ownerId])
+REFERENCES [dbo].[Owners] ([ownerId])
+GO
+ALTER TABLE [dbo].[Residents]  WITH CHECK ADD FOREIGN KEY([ownerId])
+REFERENCES [dbo].[Owners] ([ownerId])
+GO
+ALTER TABLE [dbo].[Residents]  WITH CHECK ADD FOREIGN KEY([requestId])
+REFERENCES [dbo].[Requests] ([requestId])
+GO
+ALTER TABLE [dbo].[Services]  WITH CHECK ADD FOREIGN KEY([typeId])
+REFERENCES [dbo].[TypeServices] ([typeId])
+GO
+ALTER TABLE [dbo].[Troubles]  WITH CHECK ADD FOREIGN KEY([ownerId])
+REFERENCES [dbo].[Owners] ([ownerId])
+GO
+ALTER TABLE [dbo].[Troubles]  WITH CHECK ADD FOREIGN KEY([typeId])
+REFERENCES [dbo].[TroubleType] ([typeId])
+GO
+ALTER TABLE [dbo].[TypeDetails]  WITH CHECK ADD FOREIGN KEY([typeId])
+REFERENCES [dbo].[TypeServices] ([typeId])
+GO
+USE [master]
+GO
+ALTER DATABASE [BFApartment] SET  READ_WRITE 
+GO
