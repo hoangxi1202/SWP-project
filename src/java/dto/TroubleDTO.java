@@ -5,8 +5,6 @@
  */
 package dto;
 
-import java.util.Date;
-
 /**
  *
  * @author Nhat Linh
@@ -19,24 +17,28 @@ public class TroubleDTO {
     private String date;
     private String typeName;
     private String detail;
-    private String solution;
     private boolean status;
 
     public TroubleDTO() {
     }
 
-    public TroubleDTO(String troubleId, String apartment, String ownerName, String date, String typeName, String detail, String solution, boolean status) {
+    public TroubleDTO(String troubleId, String apartment, String ownerName, String date, String typeName, String detail, boolean status) {
         this.troubleId = troubleId;
         this.apartment = apartment;
         this.ownerName = ownerName;
         this.date = date;
         this.typeName = typeName;
         this.detail = detail;
-        this.solution = solution;
         this.status = status;
-
     }
 
+    public String getOwnerName() {
+        return ownerName;
+    }
+
+    public void setOwnerName(String ownerName) {
+        this.ownerName = ownerName;
+    }
 
     public String getTroubleId() {
         return troubleId;
@@ -52,14 +54,6 @@ public class TroubleDTO {
 
     public void setApartment(String apartment) {
         this.apartment = apartment;
-    }
-
-    public String getOwnerName() {
-        return ownerName;
-    }
-
-    public void setOwnerName(String ownerName) {
-        this.ownerName = ownerName;
     }
 
     public String getDate() {
@@ -84,14 +78,6 @@ public class TroubleDTO {
 
     public void setDetail(String detail) {
         this.detail = detail;
-    }
-
-    public String getSolution() {
-        return solution;
-    }
-
-    public void setSolution(String solution) {
-        this.solution = solution;
     }
 
     public boolean isStatus() {

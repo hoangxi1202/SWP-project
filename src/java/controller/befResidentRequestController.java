@@ -6,6 +6,7 @@
 package controller;
 
 import dao.ResidentDAO;
+import dto.RequestDTO;
 import dto.ResidentDTO;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -32,15 +33,27 @@ public class befResidentRequestController extends HttpServlet {
         String url = ERROR;
         List<ResidentDTO> listResAdd = null;
         List<ResidentDTO> listResDel = null;
+        List<RequestDTO> listReqAdd = null;
+        List<RequestDTO> listReqDel = null;
         try {
             ResidentDAO dao = new ResidentDAO();
-            listResAdd = dao.getListRequestRes("add");
-            listResDel = dao.getListRequestRes("delete");
-            if (listResAdd.size() > 0) {
-                request.setAttribute("LIST_RESIDENT_ADD", listResAdd);
+//            listResAdd = dao.getListRequestRes("add");
+//            listResDel = dao.getListRequestRes("delete");
+            listReqAdd = dao.getListRequest("add");
+            listReqDel = dao.getListRequest("delete");
+            if (listReqAdd.size() > 0) {
+                for (RequestDTO requestDTO : listReqAdd) {
+                    listResAdd = dao.getListRequestRes("add", requestDTO.getOwnerId());
+                    requestDTO.setListRes(listResAdd);
+                }
+                request.setAttribute("LIST_RESIDENT_ADD", listReqAdd);
             }
-            if (listResDel.size() > 0) {
-                request.setAttribute("LIST_RESIDENT_DEL", listResDel);
+            if (listReqDel.size() > 0) {
+                for (RequestDTO requestDTO : listReqDel) {
+                    listResDel = dao.getListRequestRes("delete", requestDTO.getOwnerId());
+                    requestDTO.setListRes(listResDel);
+                }
+                request.setAttribute("LIST_RESIDENT_DEL", listReqDel);
             }
             url = SUCCESS;
         } catch (SQLException e) {

@@ -14,7 +14,7 @@
     </head>
     <body>
         <form action="MainController">
-            Căn hộ số: <input type="text" name="apartmentId" alt="" required=""/></br>
+            Căn hộ số: <input type="text" name="apartmentId" alt="" readonly="" value="${requestScope.APARTMENT_ID}"/></br>
             <select name="typeId">
                 <c:if test="${requestScope.LIST_TYPE_TROUBLE !=null}">
                     <c:if test="${not empty requestScope.LIST_TYPE_TROUBLE}">
@@ -25,7 +25,6 @@
                 </c:if>
             </select>
             Nội dung: <input type="text" name="detail" required="" placeholder="Nội dung chi tiết" />
-            Giải pháp: <input type="text" name="solution" placeholder="Giải pháp mong muốn"/>
             <input type="submit" name="action" value="SendTrouble"/>
 
         </form>

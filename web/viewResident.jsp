@@ -13,6 +13,10 @@
         <title>Thong tin Cu Dan</title>
     </head>
     <body>
+        <form action="MainController">
+            <input type="text" name="search" value="${param.search}"/>
+            <input type="submit" name="action" value="ViewResident"/>
+        </form>
         <c:if test="${requestScope.LIST_RESIDENT != null}">
             <c:if test="${not empty requestScope.LIST_RESIDENT }">
                 <table border="1">
@@ -55,25 +59,25 @@
                                 <td>${resident.job}</td>
                                 <td>${resident.phone}</td>
                                 <td>${resident.status}</td>
-<!--                                <td>
-                                    <form action="MainController">
-                                        <select name="status">
-                                            <%--<c:if test ="${!trouble.status}">--%>
-                                                <option value="false" selected>Not Yet</option>
-                                                <option value="true">Done</option>
-                                            <%--</c:if>--%>
-                                            <%--<c:if test ="${trouble.status}">--%>
-                                                <option value="true" selected>Done</option>
-                                                <option value="false">Not Yet</option>
-                                            <%--</c:if>--%>
-                                        </select>
-                                        <input type="hidden" name="troubleId" value="${trouble.troubleId}"/>
-                                        <input type="submit" name="action" value="UpdateTrouble"/> 
+                                <!--                                <td>
+                                                                    <form action="MainController">
+                                                                        <select name="status">
+                                <%--<c:if test ="${!trouble.status}">--%>
+                                    <option value="false" selected>Not Yet</option>
+                                    <option value="true">Done</option>
+                                <%--</c:if>--%>
+                                <%--<c:if test ="${trouble.status}">--%>
+                                    <option value="true" selected>Done</option>
+                                    <option value="false">Not Yet</option>
+                                <%--</c:if>--%>
+                            </select>
+                            <input type="hidden" name="troubleId" value="${trouble.troubleId}"/>
+                            <input type="submit" name="action" value="UpdateTrouble"/> 
 
-                                    </form>
+                        </form>
 
 
-                                </td>-->
+                    </td>-->
 
                             </tr>
                         </c:forEach>

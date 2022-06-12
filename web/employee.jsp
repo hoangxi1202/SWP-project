@@ -134,6 +134,10 @@
             <input type="submit" name="action" value="ViewTrouble"/>
         </form>
         <a href="MainController?action=befResidentRequest" >Resident Request</a>
+        <form action="MainController">
+    <input type="text" name="search" value="${param.search}"/>
+    <input type="submit" name="action" value="ViewResident"/>
+</form>
     </body>
 
 </html>

@@ -10,6 +10,7 @@ import dao.UserDAO;
 import dto.ResidentDTO;
 import dto.UserDTO;
 import java.io.IOException;
+import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -43,14 +44,20 @@ public class AddResidentController extends HttpServlet {
             String ownerId = dao.getOwnerId(loginUser.getUserID());
             ResidentDAO daoRes = new ResidentDAO();
             String residentId = ownerId + String.valueOf(daoRes.getIndexResident(ownerId));
-            String requestId = String.valueOf(daoRes.getIndexRequest() + 1);
+            int indexReq = daoRes.getIndexRequest() + 1;
+            String requestId = "REQ";
+            if (indexReq > 99) {
+                requestId += String.valueOf(indexReq);
+            } else {
+                requestId += "0" + String.valueOf(indexReq);
+            }
             daoRes.insertRequest(requestId, ownerId);
             for (int i = 0; i < name.length; i++) {
                 daoRes.addResident(new ResidentDTO(residentId, ownerId, name[i], dob[i], (gender[i].equals("1")), job[i], phone[i], false, requestId));
             }
             url = SUCCESS;
 
-        } catch (Exception e) {
+        } catch (ClassNotFoundException | SQLException e) {
             log("Error at AddResidentCOntroller: " + e.toString());
         } finally {
             request.getRequestDispatcher(url).forward(request, response);

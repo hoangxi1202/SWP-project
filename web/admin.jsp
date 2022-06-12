@@ -98,8 +98,10 @@
     <input type="submit" name="action" value="ViewTrouble"/>
 </form>
 <form action="MainController">
+    <input type="text" name="search" value="${param.search}"/>
     <input type="submit" name="action" value="ViewResident"/>
 </form>
+    
 
 </body>
 

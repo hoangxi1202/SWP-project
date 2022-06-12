@@ -65,6 +65,10 @@ public class MainController extends HttpServlet {
     private static final String DELETE_RESIDENT_CONTROLLER = "DeleteResidentController";
     private static final String BEFORE_RESIDENT_REQUEST = "befResidentRequest";
     private static final String BEFORE_RESIDENT_REQUEST_CONTROLLER = "befResidentRequestController";
+    private static final String ACCEPT_REQUEST = "AcceptRequest";
+    private static final String ACCEPT_REQUEST_CONTROLLER = "AcceptRequestController";
+    private static final String REJECT_REQUEST = "RejectRequest";
+    private static final String REJECT_REQUEST_CONTROLLER = "RejectRequestController";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -85,6 +89,10 @@ public class MainController extends HttpServlet {
                 url = UPDATE;
             } else if (DELETE_ACTION.equals(action)) {
                 url = DELETE;
+            } else if (ACCEPT_REQUEST.equals(action)) {
+                url = ACCEPT_REQUEST_CONTROLLER;
+            } else if (REJECT_REQUEST.equals(action)) {
+                url = REJECT_REQUEST_CONTROLLER;
             } else if (SENDMAIL_ACTION.equals(action)) {
                 url = SENDMAIL;
             } else if (ADD_SERVICE_ACTION.equals(action)) {

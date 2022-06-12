@@ -18,6 +18,7 @@
                     Name<input type="text" name="name"  /></br>
                     DoB<input type="date" name="dob"  /></br>
                     Sex<select name="gender" type="checkbox">
+                        <option value="" selected disabled hidden>Choose Gender</option>
                         <option value="1">Nam</option>
                         <option value="0">Nữ</option>
                     </select></br>
@@ -25,8 +26,6 @@
                     Phone<input type="tel" name="phone" /></br>
                 </div>
             </div>
-
-
             <input type="submit" name="action" value="AddResident"/>
         </form>
         <button onclick="addElement()">+</button>
@@ -34,10 +33,11 @@
             function addElement() {
                 let nhap = document.getElementById("nhap");
                 let div = document.createElement("div");
-                div.innerHTML = '<div>'
+                div.innerHTML = '<div> <hr>'
                         + '\nName<input type="text" name="name"  /></br>'
                         + '\nDoB<input type="date" name="dob"  /></br>'
                         + '\nSex<select name="gender">'
+                        + '\n<option value="" selected disabled hidden>Choose Gender</option>'
                         + '\n    <option value="1">Nam</option>'
                         + '\n   <option value="0">Nữ</option>'
                         + '\n </select></br>'
