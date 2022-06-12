@@ -21,9 +21,8 @@
                 return;
             }
         %>
-        <a href="createTrouble.jsp">Trouble</a></br>
-        <a href="addResident.jsp">Add Resident</a>
-        <a href="MainController?action=BeforeCreateTrouble">Create Trouble</a>
-        <a href="MainController?action=BeforeDeleteResident">Delete Resident</a>
+        <a href="addResident.jsp">Add Resident</a> </br>
+        <a href="MainController?action=BeforeCreateTrouble"><button>Report a Trouble</button></a> </br>
+        <a href="MainController?action=BeforeDeleteResident"><button>Request Remove Resident</button></a> </br>
     </body>
 </html>

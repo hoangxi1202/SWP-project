@@ -17,38 +17,70 @@
         </br>
         <c:if test="${requestScope.LIST_RESIDENT_ADD != null}">
             <c:if test="${not empty requestScope.LIST_RESIDENT_ADD }">
-                <c:forEach var="resident" items="${requestScope.LIST_RESIDENT_ADD}" varStatus="counter" >
-                    Tên: ${resident.name} </br>
-                    Giới tính: 
-                    <c:if test="${resident.gender}">
-                        Nam
-                    </c:if>
-                    <c:if test="${!resident.gender}">
-                        Nữ
-                    </c:if> </br>
-                    Ngày sinh: ${resident.dob} </br>
-                    Nghề nghiệp: ${resident.job} </br>
-                    Số điện thoại: ${resident.phone}</br>
+                <c:forEach var="request" items="${requestScope.LIST_RESIDENT_ADD}" varStatus="counter" >
+
+                    Request ID: ${request.requestId}    </br>                
+                    Owner Name: ${request.fullName} 
+                    <form action="MainController">
+                        <input type="hidden" name="requestId" value="${request.requestId}"/>
+                        <input type="hidden" name="todo" value="add" />
+                        <input type="submit" name="action" value="AcceptRequest" />
+
+                    </form>
+                    <form action="MainController">
+                        <input type="hidden" name="requestId" value="${request.requestId}"/>
+                        <input type="submit" name="action" value="RejectRequest" />
+                    </form>
+                    List Resident: <c:forEach var="resident" items="${request.listRes}" varStatus="counter2" > </br>
+                        Tên: ${resident.name} </br>
+                        Giới tính: 
+                        <c:if test="${resident.gender}">
+                            Nam
+                        </c:if>
+                        <c:if test="${!resident.gender}">
+                            Nữ
+                        </c:if> </br>
+                        Ngày sinh: ${resident.dob} </br>
+                        Nghề nghiệp: ${resident.job} </br>
+                        Số điện thoại: ${resident.phone}</br>
+                        <hr>
+                    </c:forEach>
                 </c:forEach>
             </c:if>
         </c:if>
-                    <hr>
+        <hr>
+        <hr>
         Delete:
-         </br>
+        </br>
         <c:if test="${requestScope.LIST_RESIDENT_DEL != null}">
             <c:if test="${not empty requestScope.LIST_RESIDENT_DEL }">
-                <c:forEach var="resident" items="${requestScope.LIST_RESIDENT_DEL}" varStatus="counter" >
-                    Tên: ${resident.name} </br>
-                    Giới tính: 
-                    <c:if test="${resident.gender}">
-                        Nam
-                    </c:if>
-                    <c:if test="${!resident.gender}">
-                        Nữ
-                    </c:if> </br>
-                    Ngày sinh: ${resident.dob} </br>
-                    Nghề nghiệp: ${resident.job} </br>
-                    Số điện thoại: ${resident.phone}</br>
+                <c:forEach var="request" items="${requestScope.LIST_RESIDENT_DEL}" varStatus="counter" >
+                    Request ID: ${request.requestId}</br>
+                    Owner Name: ${request.fullName} 
+                    <form action="MainController">
+                        <input type="hidden" name="requestId" value="${request.requestId}"/>
+                        <input type="hidden" name="todo" value="delete" />
+                        <input type="submit" name="action" value="AcceptRequest" />
+
+                    </form>
+                    <form action="MainController">
+                        <input type="hidden" name="requestId" value="${request.requestId}"/>
+                        <input type="submit" name="action" value="RejectRequest" />
+                    </form>
+                    List Resident: <c:forEach var="resident" items="${request.listRes}" varStatus="counter2" > </br>
+                        Tên: ${resident.name} </br>
+                        Giới tính: 
+                        <c:if test="${resident.gender}">
+                            Nam
+                        </c:if>
+                        <c:if test="${!resident.gender}">
+                            Nữ
+                        </c:if> </br>
+                        Ngày sinh: ${resident.dob} </br>
+                        Nghề nghiệp: ${resident.job} </br>
+                        Số điện thoại: ${resident.phone}</br>
+                        <hr>
+                    </c:forEach>
                 </c:forEach>
             </c:if>
         </c:if>

@@ -30,9 +30,39 @@ public class TroubleDAO {
             + "			AND Contracts.apartmentId = Apartments.apartmentId";
     private static final String UPDATE_TROUBLE = "UPDATE Apart_Troubles SET status = ? WHERE tranId = ?";
     private static final String VIEW_TYPE_TROUBLE = "SELECT troubleId, troubleName FROM Troubles";
+    private static final String GET_INDEX_TROUBLE = "SELECT tranId FROM Apart_Troubles";
+    private static final String INSERT_APART_TROUBLE = "INSERT INTO Apart_Troubles VALUES (?, ?, ?, ?, ?, ?)";
+
+    public int getIndexTrouble() throws SQLException {
+        int index = 0;
+        Connection conn = null;
+        PreparedStatement ptm = null;
+        ResultSet rs = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                ptm = conn.prepareStatement(GET_INDEX_TROUBLE);
+                rs = ptm.executeQuery();
+                while (rs.next()) {
+                    index++;
+                }
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (ptm != null) {
+                ptm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return index;
+    }
 
     public List<TroubleDTO> getListTrouble() throws SQLException {
-        //not fix yet
         List<TroubleDTO> listTrouble = new ArrayList<>();
         Connection conn = null;
         PreparedStatement ptm = null;
@@ -54,12 +84,11 @@ public class TroubleDAO {
                     if (check.equals("1")) {
                         status = true;
                     }
-                    listTrouble.add(new TroubleDTO(troubleId, apartment, ownerName, date, typeName, detail, "", status));
+                    listTrouble.add(new TroubleDTO(troubleId, apartment, ownerName, date, typeName, detail, status));
 
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (ClassNotFoundException | SQLException e) {
         } finally {
             if (rs != null) {
                 rs.close();
@@ -90,8 +119,7 @@ public class TroubleDAO {
                 ptm.setString(2, troubleId);
                 check = ptm.executeUpdate() > 0;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (ClassNotFoundException | SQLException e) {
         } finally {
             if (ptm != null) {
                 ptm.close();
@@ -103,18 +131,27 @@ public class TroubleDAO {
         return check;
     }
 
-    public boolean createTrouble(String accountId, String apartmentId, String type, String detail, String solution) {
-        //not support yet
+    public boolean createTrouble(TroubleDTO trouble) {
         boolean check = false;
         Connection conn = null;
         PreparedStatement ptm = null;
-        ResultSet rs = null;
         try {
             conn = Utils.getConnection();
             if (conn != null) {
-                ptm = conn.prepareStatement("");
+                ptm = conn.prepareStatement(INSERT_APART_TROUBLE);
+                ptm.setString(1, trouble.getApartment());
+                ptm.setString(2, trouble.getTypeName());
+                ptm.setString(3, trouble.getDate());
+                ptm.setString(4, trouble.getDetail());
+                if ("true".equals(trouble.isStatus())) {
+                    ptm.setString(5, "1");
+                } else {
+                    ptm.setString(5, "0");
+                }
+                ptm.setString(6, trouble.getTroubleId());
+                check = ptm.executeUpdate() > 0;
             }
-        } catch (Exception e) {
+        } catch (ClassNotFoundException | SQLException e) {
         }
         return check;
     }
@@ -130,14 +167,13 @@ public class TroubleDAO {
                 ptm = conn.prepareStatement(VIEW_TYPE_TROUBLE);
                 rs = ptm.executeQuery();
                 while (rs.next()) {
-                    String typeId = rs.getString("typeId");
-                    String detail = rs.getString("detail");
+                    String typeId = rs.getString("troubleId");
+                    String detail = rs.getString("troubleName");
                     listTrouble.add(new TroubleTypeDTO(typeId, detail));
 
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (ClassNotFoundException | SQLException e) {
         } finally {
             if (rs != null) {
                 rs.close();

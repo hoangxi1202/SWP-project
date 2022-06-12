@@ -5,6 +5,8 @@
  */
 package controller;
 
+import dao.TroubleDAO;
+import dto.TroubleDTO;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import javax.servlet.ServletException;
@@ -17,26 +19,34 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Nhat Linh
  */
-@WebServlet(name = "CreateTroubleController", urlPatterns = {"/CreateTroubleController"})
+@WebServlet(name = "SendTroubleController", urlPatterns = {"/SendTroubleController"})
 public class SendTroubleController extends HttpServlet {
 
     private final static String ERROR = "createTrouble.jsp";
-    private final static String SUCCESS = "createTrouble.jsp";
+    private final static String SUCCESS = "user.jsp";
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         String url = ERROR;
-        //not support yet
         try {
             String apartmentId = request.getParameter("apartmentId");
-            String contractId = request.getParameter("contractId");
             String typeId = request.getParameter("typeId");
             String detail = request.getParameter("detail");
-            String solution = request.getParameter("solution");
-            java.util.Date now =new java.util.Date();
+            java.util.Date now = new java.util.Date();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String date = sdf.format(now);
+            TroubleDAO dao = new TroubleDAO();
+            String tranId = "TRAN" + String.valueOf(dao.getIndexTrouble() + 1);
+            TroubleDTO trouble = new TroubleDTO(tranId, apartmentId, "", date, typeId, detail, false);
+            boolean check = dao.createTrouble(trouble);
+            if (check) {
+                url = SUCCESS;
+            }
         } catch (Exception e) {
+            log("Error at SendTroubleController: " + e.toString());
+        } finally {
+            request.getRequestDispatcher(url).forward(request, response);
         }
     }
 

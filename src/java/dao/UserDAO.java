@@ -27,6 +27,41 @@ public class UserDAO {
     private static final String UPDATE_USER = "UPDATE Accounts SET roleID=? WHERE userID=?";
     private static final String DELETE_USER = "UPDATE Accounts SET status=0 WHERE userId=?";
     private static final String CHECK_DUP_USER = "SELECT userId FROM Accounts WHERE userId=?";
+    private static final String GET_APARTMENT = "SELECT Apartments.apartmentId\n"
+            + "FROM Apartments, Contracts, Owners\n"
+            + "WHERE Apartments.apartmentId = Contracts.apartmentId\n"
+            + "	AND Contracts.ownerId = Owners.ownerId\n"
+            + "	AND Owners.userId = ?";
+
+    public String getApartment(String userId) throws SQLException, ClassNotFoundException {
+        String apartmentId = "";
+        Connection conn = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(GET_APARTMENT);
+                stm.setString(1, userId);
+                rs = stm.executeQuery();
+                if (rs.next()) {
+                    apartmentId = rs.getString("apartmentId");
+                }
+            }
+        } catch (SQLException e) {
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return apartmentId;
+    }
 
     public UserDTO checkLogin(String userID, String password) throws SQLException, ClassNotFoundException {
         UserDTO user = null;
@@ -42,7 +77,7 @@ public class UserDAO {
                 rs = stm.executeQuery();
                 if (rs.next()) {
                     String roleID = rs.getString("roleId");
-                    user = new UserDTO(userID, "***", roleID );
+                    user = new UserDTO(userID, "***", roleID);
                 }
             }
         } catch (SQLException e) {
@@ -91,7 +126,6 @@ public class UserDAO {
         return check;
     }
 
-
     public String getOwnerId(String userID) throws SQLException, ClassNotFoundException {
         String ownId = "";
         Connection conn = null;
@@ -119,7 +153,7 @@ public class UserDAO {
             if (conn != null) {
                 conn.close();
             }
-        } 
+        }
         return ownId;
     }
 
@@ -166,8 +200,8 @@ public class UserDAO {
                     String roleID = rs.getString("roleID");
                     int status = rs.getInt("status");
                     String password = "***";
-                    if (status==1){
-                    list.add(new UserDTO(userID, password, roleID));
+                    if (status == 1) {
+                        list.add(new UserDTO(userID, password, roleID));
                     }
                 }
             }
@@ -186,7 +220,7 @@ public class UserDAO {
         return list;
     }
 
-   public boolean updateUser(UserDTO user) throws SQLException {
+    public boolean updateUser(UserDTO user) throws SQLException {
         boolean check = false;
         Connection conn = null;
         PreparedStatement stm = null;

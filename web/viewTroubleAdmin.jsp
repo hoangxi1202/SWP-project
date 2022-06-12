@@ -24,7 +24,6 @@
                             <th>Date</th>
                             <th>Type</th>
                             <th>Detail</th>
-                            <th>Solution</th>
                             <th>Status</th>
                         </tr>
                     </thead>
@@ -43,7 +42,6 @@
                                 </td>
                                 <td>${trouble.typeName}</td>
                                 <td>${trouble.detail}</td>
-                                <td>${trouble.solution}</td>
                                 <td>
                                     <c:if test ="${!trouble.status}">
                                         Not Yet

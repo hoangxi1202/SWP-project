@@ -6,15 +6,18 @@
 package controller;
 
 import dao.TroubleDAO;
+import dao.UserDAO;
 import dto.TroubleTypeDTO;
+import dto.UserDTO;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.sql.SQLException;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -31,14 +34,20 @@ public class BeforeCreateTroubleController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         String url = ERROR;
         List<TroubleTypeDTO> listType = null;
-        TroubleDAO dao = new TroubleDAO();
+
         try {
+            TroubleDAO dao = new TroubleDAO();
+            HttpSession session = request.getSession();
+            UserDTO loginUser = (UserDTO) session.getAttribute("LOGIN_USER");
+            UserDAO daoUser = new UserDAO();
+            String apartmentId = daoUser.getApartment(loginUser.getUserID());
             listType = dao.getListTypeTrouble();
             if (listType.size() > 0) {
+                request.setAttribute("APARTMENT_ID", apartmentId);
                 request.setAttribute("LIST_TYPE_TROUBLE", listType);
                 url = SUCCESS;
             }
-        } catch (Exception e) {
+        } catch (ClassNotFoundException | SQLException e) {
             log("Error at BeforeCreateTroubleController: " + e.toString());
         } finally {
             request.getRequestDispatcher(url).forward(request, response);

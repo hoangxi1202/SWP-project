@@ -5,7 +5,9 @@
  */
 package controller;
 
+import dao.ResidentDAO;
 import java.io.IOException;
+import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,18 +18,32 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Nhat Linh
  */
-@WebServlet(name = "CreateTroubleController", urlPatterns = {"/CreateTroubleController"})
-public class CreateTroubleController extends HttpServlet {
+@WebServlet(name = "AcceptRequestController", urlPatterns = {"/AcceptRequestController"})
+public class AcceptRequestController extends HttpServlet {
 
-    private static final String ERROR = "user.jsp";
-    private static final String SUCCESS = "createTrouble.jsp";
+    private static final String ERROR = "MainController?action=befResidentRequest";
+    private static final String SUCCESS = "MainController?action=befResidentRequest";
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         String url = ERROR;
         try {
-            
-        } catch (Exception e) {
+            String requestId = request.getParameter("requestId");
+            String todo = request.getParameter("todo");
+            ResidentDAO dao = new ResidentDAO();
+            boolean check = dao.updateRequestResident(requestId, todo);
+            if (check) {
+                check = dao.updateRequest(requestId);
+                if (check) {
+                    url = SUCCESS;
+                }
+            }
+
+        } catch (SQLException e) {
+            log("Error at AcceptRequestController: " + e.toString());
+        } finally {
+            request.getRequestDispatcher(url).forward(request, response);
         }
     }
 

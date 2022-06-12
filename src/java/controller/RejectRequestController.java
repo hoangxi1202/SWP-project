@@ -5,59 +5,39 @@
  */
 package controller;
 
-import dao.TroubleDAO;
-import dto.TroubleDTO;
-import dto.UserDTO;
+import dao.ResidentDAO;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author Nhat Linh
  */
-@WebServlet(name = "ViewTroubleController", urlPatterns = {"/ViewTroubleController"})
-public class ViewTroubleController extends HttpServlet {
+@WebServlet(name = "RejectRequestController", urlPatterns = {"/RejectRequestController"})
+public class RejectRequestController extends HttpServlet {
 
-    private static final String ERROR_AD = "admin.jsp";
-    private static final String ERROR_EM = "employee.jsp";
-    private static final String SUCCESS_AD = "viewTroubleAdmin.jsp";
-    private static final String SUCCESS_EM = "viewTroubleEmployee.jsp";
-    private static final String AD = "AD";
-    private static final String EM = "EM";
+    private static final String ERROR = "MainController?action=befResidentRequest";
+    private static final String SUCCESS = "MainController?action=befResidentRequest";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        HttpSession session = request.getSession();
-        UserDTO loginUser = (UserDTO) session.getAttribute("LOGIN_USER");
-        String curUser = loginUser.getRoleID();
-        String url = "";
-        List<TroubleDTO> listTrouble = null;
-        TroubleDAO dao = new TroubleDAO();
-        if (AD.equals(curUser)) {
-            url = ERROR_AD;
-        } else if (EM.equals(curUser)) {
-            url = ERROR_EM;
-        }
+        String url = ERROR;
         try {
-            listTrouble = dao.getListTrouble();
-            if (listTrouble.size() > 0) {
-                request.setAttribute("LIST_TROUBLE", listTrouble);
-                if (AD.equals(curUser)) {
-                    url = SUCCESS_AD;
-                } else if (EM.equals(curUser)) {
-                    url = SUCCESS_EM;
-                }
+            String requestId = request.getParameter("requestId");
+            ResidentDAO dao = new ResidentDAO();
+            boolean check = dao.updateRequest(requestId);
+            if (check) {
+                url = SUCCESS;
             }
+
         } catch (SQLException e) {
-            log("Error at ViewTroubleController: " + e.toString());
+            log("Error at RejectRequestController: " + e.toString());
         } finally {
             request.getRequestDispatcher(url).forward(request, response);
         }
