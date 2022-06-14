@@ -27,10 +27,9 @@ public class ResidentDAO {
             + "Residents.dob, Residents.sex, Residents.job, Residents.phone FROM "
             + "Residents, Owners WHERE Residents.ownerId = Owners.ownerId"
             + " AND Owners.userId LIKE ? AND Residents.status = 1";
-    private static final String SEARCH_BY_OWN = "SELECT residentId FROM "
-            + "Residents WHERE ownerId LIKE ?";
     private static final String GET_INDEX_REQUEST = "SELECT requestId from Requests";
-    private static final String ADD_RESIDENT = "INSERT INTO Residents VALUES (?, ?, ?, ?, ?, ?, 0, ?, ?)";
+    private static final String ADD_RESIDENT = "INSERT INTO Residents(residentId, fullName, dob, sex, job, phone, status, requestId, ownerId) "
+            + " VALUES (? , ? , ? , ? , ? , ? , 0 , ? , ? )";
     private static final String UPDATE_RESIDENT = "UPDATE Residents SET requestId = ? WHERE residentId = ?";
     private static final String INSERT_REQUEST = "INSERT INTO Requests VALUES (?, ?, ?, ?)";
     private static final String VIEW_REQUEST_RESIDENT = "SELECT Requests.requestId, Residents.ownerId, Residents.residentId, Residents.fullName, Residents.sex, "
@@ -50,6 +49,37 @@ public class ResidentDAO {
     private static final String UPDATE_REQUEST_RESIDENT = "UPDATE Residents\n"
             + " SET [status] = ?\n"
             + " WHERE requestId = ?";
+    private static final String COUNT_RESIDENT = "SELECT COUNT(residentId) as [count]\n"
+            + "  FROM Residents";
+
+    public int countResident() throws SQLException {
+        int count = 0;
+        Connection conn = null;
+        PreparedStatement ptm = null;
+        ResultSet rs = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                ptm = conn.prepareStatement(COUNT_RESIDENT);
+                rs = ptm.executeQuery();
+                if (rs.next()) {
+                    count = Integer.parseInt(rs.getString("count"));
+                }
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (ptm != null) {
+                ptm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return count;
+    }
 
     public boolean updateRequestResident(String requestId, String action) throws SQLException {
         boolean check = false;
@@ -283,36 +313,6 @@ public class ResidentDAO {
         return listResident;
     }
 
-    public int getIndexResident(String search) throws SQLException {
-        int count = 0;
-        Connection conn = null;
-        PreparedStatement ptm = null;
-        ResultSet rs = null;
-        try {
-            conn = Utils.getConnection();
-            if (conn != null) {
-                ptm = conn.prepareStatement(SEARCH_BY_OWN);
-                ptm.setString(1, "%" + search + "%");
-                rs = ptm.executeQuery();
-                while (rs.next()) {
-                    count++;
-                }
-            }
-        } catch (ClassNotFoundException | SQLException e) {
-        } finally {
-            if (rs != null) {
-                rs.close();
-            }
-            if (ptm != null) {
-                ptm.close();
-            }
-            if (conn != null) {
-                conn.close();
-            }
-        }
-        return count;
-    }
-
     public int getIndexRequest() throws SQLException {
         int count = 0;
         Connection conn = null;
@@ -351,7 +351,7 @@ public class ResidentDAO {
             if (conn != null) {
                 stm = conn.prepareStatement(ADD_RESIDENT);
                 stm.setString(1, res.getResidentId());
-                stm.setString(2, res.getName());
+                stm.setString(2,"N'" + res.getName()+"'");
                 stm.setString(3, res.getDob());
                 if (res.isGender() == true) {
                     stm.setString(4, "male");

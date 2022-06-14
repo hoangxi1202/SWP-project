@@ -8,6 +8,7 @@ package controller;
 import dao.ResidentDAO;
 import dao.UserDAO;
 import dto.ResidentDTO;
+import dto.ResidentError;
 import dto.UserDTO;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -38,12 +39,23 @@ public class AddResidentController extends HttpServlet {
             String[] gender = request.getParameterValues("gender");
             String[] job = request.getParameterValues("job");
             String[] phone = request.getParameterValues("phone");
+//            boolean check = true;
+//            ResidentError resError = new ResidentError();
+//            for (int i = 0; i <name.length; i++) {
+//                if (name[i].length()<7) {
+//                    resError.setNameError("Tên của người thứ " +(i+1)+ " phải nhiều hơn 7 kí tự");
+//                }
+//                if (dob)
+//            }
+
+            int count = 0;
             HttpSession session = request.getSession();
             UserDTO loginUser = (UserDTO) session.getAttribute("LOGIN_USER");
             UserDAO dao = new UserDAO();
             String ownerId = dao.getOwnerId(loginUser.getUserID());
             ResidentDAO daoRes = new ResidentDAO();
-            String residentId = ownerId + String.valueOf(daoRes.getIndexResident(ownerId));
+            int indexRes = daoRes.countResident();
+            String residentId = "";
             int indexReq = daoRes.getIndexRequest() + 1;
             String requestId = "REQ";
             if (indexReq > 99) {
@@ -51,11 +63,19 @@ public class AddResidentController extends HttpServlet {
             } else {
                 requestId += "0" + String.valueOf(indexReq);
             }
-            daoRes.insertRequest(requestId, ownerId);
-            for (int i = 0; i < name.length; i++) {
-                daoRes.addResident(new ResidentDTO(residentId, ownerId, name[i], dob[i], (gender[i].equals("1")), job[i], phone[i], false, requestId));
+            boolean check = daoRes.insertRequest(requestId, ownerId);
+            if (check) {
+                for (int i = 0; i < name.length; i++) {
+                    residentId = "RES" + String.valueOf(indexRes + i + 1);
+                    check = daoRes.addResident(new ResidentDTO(residentId, ownerId, name[i], dob[i], (gender[i].equals("1")), job[i], phone[i], false, requestId));
+                    if (check) {
+                        count++;
+                    }
+                }
+                if (count > 0) {
+                    url = SUCCESS;
+                }
             }
-            url = SUCCESS;
 
         } catch (ClassNotFoundException | SQLException e) {
             log("Error at AddResidentCOntroller: " + e.toString());
