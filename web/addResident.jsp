@@ -18,12 +18,12 @@
                     Name<input type="text" name="name"  /></br>
                     DoB<input type="date" name="dob"  /></br>
                     Sex<select name="gender" type="checkbox">
-                        <option value="" selected disabled hidden>Choose Gender</option>
+                        <option value="" selected>Choose Gender</option>
                         <option value="1">Nam</option>
                         <option value="0">Nữ</option>
                     </select></br>
                     Job<input type="text" name="job" /></br>
-                    Phone<input type="tel" name="phone" /></br>
+                    Phone<input type="text" name="phone" /></br>
                 </div>
             </div>
             <input type="submit" name="action" value="AddResident"/>

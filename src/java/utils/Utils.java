@@ -71,4 +71,38 @@ public class Utils {
         }
         return check;
     }
+
+    public static boolean isValidDate(String input) {
+        boolean check = false;
+        Date date = null;
+        if (input == null) {
+            input = "";
+        }
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            sdf.setLenient(false);
+            date = sdf.parse(input);
+            if (!input.equals(sdf.format(date))) {
+                date = null;
+            }
+            check = true;
+
+        } catch (ParseException e) {
+        }
+        return check;
+    }
+
+    public static boolean inputPattern(String input, String regex) {
+        boolean check = false;
+        try {
+            input = input.trim();
+            check = input.matches(regex);
+//            if (check) {
+//                throw new Exception("Wrong date format!!");
+//            }
+        } catch (Exception e) {
+        }
+        return check;
+    }
+
 }
