@@ -21,6 +21,7 @@ public class ResidentDTO {
     private boolean status;
     public String resquestId;
 
+    
     public ResidentDTO(String residentId, String ownerId, String name, String dob, boolean gender, String job, String phone, boolean status, String resquestId) {
         this.residentId = residentId;
         this.ownerId = ownerId;
