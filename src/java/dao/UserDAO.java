@@ -32,6 +32,64 @@ public class UserDAO {
             + "WHERE Apartments.apartmentId = Contracts.apartmentId\n"
             + "	AND Contracts.ownerId = Owners.ownerId\n"
             + "	AND Owners.userId = ?";
+    private static final String CHECK_PASS = "SELECT password FROM Accounts WHERE userId = ?";
+    private static final String CHANGE_PASSWORD = "Update Accounts SET password = ? WHERE userId = ?";
+
+    public boolean updatePass(String userId, String password) throws SQLException {
+        boolean check = false;
+        Connection conn = null;
+        PreparedStatement stm = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(CHANGE_PASSWORD);
+                stm.setString(1, password);
+                stm.setString(2, userId);
+                check = stm.executeUpdate() > 0;
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            if (conn != null) {
+                conn.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+        }
+        return check;
+    }
+
+    public boolean checkPass(String userId, String password) throws SQLException, ClassNotFoundException {
+        boolean check = false;
+        Connection conn = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(CHECK_PASS);
+                stm.setString(1, userId);
+                rs = stm.executeQuery();
+                if (rs.next()) {
+                    if (rs.getString("password").equals(password)) {
+                        check = true;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return check;
+    }
 
     public String getApartment(String userId) throws SQLException, ClassNotFoundException {
         String apartmentId = "";
@@ -141,8 +199,7 @@ public class UserDAO {
                     ownId = rs.getString("ownerId");
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (ClassNotFoundException | SQLException e) {
         } finally {
             if (rs != null) {
                 rs.close();

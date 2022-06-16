@@ -24,5 +24,7 @@
         <a href="addResident.jsp">Add Resident</a> </br>
         <a href="MainController?action=BeforeCreateTrouble"><button>Report a Trouble</button></a> </br>
         <a href="MainController?action=BeforeDeleteResident"><button>Request Remove Resident</button></a> </br>
+        <a href="MainController?action=ViewBill"><button>Hoá đơn</button></a>
+        <a href="changePassword.jsp"><button>Đổi mật khẩu</button></a>
     </body>
 </html>

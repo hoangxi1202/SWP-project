@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package entity;
 
 import java.sql.Date;
@@ -13,12 +12,13 @@ import java.sql.Date;
  * @author Minh Hoàng
  */
 public class Service {
-    private String serviceId;
-    private String serviceName;
-    private Date createdDate;
-    private int status;
-    private String typeID;
-    private float price;
+
+    protected String serviceId;
+    protected String serviceName;
+    protected Date createdDate;
+    protected int status;
+    protected String typeID;
+    protected float price;
 
     public String getTypeID() {
         return typeID;
@@ -27,7 +27,7 @@ public class Service {
     public void setTypeID(String typeID) {
         this.typeID = typeID;
     }
- 
+
     public Service() {
     }
 
@@ -46,7 +46,6 @@ public class Service {
         this.status = status;
         this.price = price;
     }
-    
 
     public String getServiceId() {
         return serviceId;
@@ -80,8 +79,6 @@ public class Service {
         this.status = status;
     }
 
-
-
     public float getPrice() {
         return price;
     }
@@ -94,7 +91,5 @@ public class Service {
     public String toString() {
         return "Service{" + "serviceId=" + serviceId + ", serviceName=" + serviceName + ", createdDate=" + createdDate + ", status=" + status + ", price=" + price + '}';
     }
-    
-   
-    
+
 }

@@ -70,6 +70,13 @@ public class MainController extends HttpServlet {
     private static final String REJECT_REQUEST = "RejectRequest";
     private static final String REJECT_REQUEST_CONTROLLER = "RejectRequestController";
 
+    private static final String VIEW_BILL = "ViewBill";
+    private static final String VIEW_BILL_DETAIL = "ViewDetail";
+    private static final String VIEW_BILL_CONTROLLER = "ViewBillController";
+    private static final String VIEW_BILL_DETAIL_CONTROLLER = "ViewBillDetailController";
+    private static final String CHANGE_PASSWORD = "ChangePassword";
+    private static final String CHANGE_PASSWORD_CONTROLLER = "ChangePasswordController";
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -105,8 +112,6 @@ public class MainController extends HttpServlet {
                 url = REMOVE_SERVICE;
             } else if (ADD_DETAIL_SERVICE_ACTION.equals(action)) {
                 url = ADD_DETAIL_SERVICE;
-            } else if (CREATE_ACCOUNT_ACTION.equals(action)) {
-                url = CREATEACCOUNT;
             } else if (VIEW_TROUBLE.equals(action)) {
                 url = VIEW_TROUBLE_CONTROLLER;
             } else if (UPDATE_TROUBLE.equals(action)) {
@@ -127,6 +132,12 @@ public class MainController extends HttpServlet {
                 url = DELETE_RESIDENT_CONTROLLER;
             } else if (BEFORE_RESIDENT_REQUEST.equals(action)) {
                 url = BEFORE_RESIDENT_REQUEST_CONTROLLER;
+            } else if (VIEW_BILL.equals(action)) {
+                url = VIEW_BILL_CONTROLLER;
+            } else if (VIEW_BILL_DETAIL.equals(action)) {
+                url = VIEW_BILL_DETAIL_CONTROLLER;
+            } else if (CHANGE_PASSWORD.equals(action)) {
+                url = CHANGE_PASSWORD_CONTROLLER;
             } else {
 
                 HttpSession session = request.getSession();
