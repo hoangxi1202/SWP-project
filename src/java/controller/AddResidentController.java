@@ -44,28 +44,40 @@ public class AddResidentController extends HttpServlet {
             String[] phone = request.getParameterValues("phone");
             boolean check = true;
             List<ResidentError> listResError = new ArrayList<>();
+            List<ResidentDTO> listRes = new ArrayList<>();
             for (int i = 0; i < name.length; i++) {
+                ResidentDTO res = new ResidentDTO();
                 ResidentError resError = new ResidentError();
                 if (name[i].length() < 7) {
                     resError.setNameError("Tên của người thứ " + (i + 1) + " phải nhiều hơn 7 kí tự");
                     check = false;
+                } else {
+                    res.setName(name[i]);
                 }
-                if (!"1".equals(gender[i]) || !"0".equals(gender[i])) {
-                    resError.setSexError("Giới tính của người thứ " + (i + 1) + "không hợp lệ.");
+                if (!"1".equals(gender[i]) && !"0".equals(gender[i])) {
+                    resError.setSexError("Giới tính của người thứ " + (i + 1) + " không hợp lệ.");
                     check = false;
-                }
+                } else res.setGender("1".equals(gender[i]));
                 if (!Utils.isValidDate(dob[i])) {
                     resError.setDobError("Ngày sinh của người thứ " + (i + 1) + " không hợp lệ");
                     check = false;
+                }else {
+                    res.setDob(dob[i]);
                 }
                 if (job[i].length() < 10) {
                     resError.setJobError("Công việc của người thứ " + (i + 1) + " phải nhiều hơn 10 kí tự");
+                    check = false;
+                }else {
+                    res.setJob(job[i]);
                 }
-                if (!Utils.inputPattern(phone[i], ".*[0-9]*.") && phone[i].length() < 10) {
+                if (!Utils.inputPattern(phone[i], "[\\d]{10}") || phone[i].length() < 10) {
                     resError.setPhoneError("SĐT phải có định dạng số và lớn hơn 10 kí tự");
                     check = false;
+                }else {
+                    res.setPhone(phone[i]);
                 }
                 listResError.add(resError);
+                listRes.add(res);
             }
             if (check) {
                 int count = 0;
@@ -98,6 +110,7 @@ public class AddResidentController extends HttpServlet {
                 }
             } else {
                 request.setAttribute("RESIDENT_ERROR", listResError);
+                request.setAttribute("RESIDENT", listRes);
             }
 
         } catch (ClassNotFoundException | SQLException e) {
