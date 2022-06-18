@@ -17,7 +17,7 @@
             <c:if test="${not empty requestScope.LIST_BILL_PAID }">
                 <c:forEach var="billPaid" items="${requestScope.LIST_BILL_PAID}" varStatus="counter">
                     Số hóa đơn: ${billPaid.billId} </br>
-                    Tổng: ${billPaid.total} </br> VNĐ
+                    Tổng: ${billPaid.total}  VNĐ</br>
                     Ngày xuất hóa đơn: ${billPaid.date} </br>
                     Đã thanh toán
                     <form action="MainController" method="POST">
@@ -31,16 +31,19 @@
             <c:if test="${not empty requestScope.LIST_BILL_UNPAID }">
                 <c:forEach var="billUnpaid" items="${requestScope.LIST_BILL_UNPAID}" varStatus="counter">
                     Số hóa đơn: ${billUnpaid.billId} </br>
-                    Tổng: ${billUnpaid.total} </br> VNĐ
+                    Tổng: ${billUnpaid.total} VNĐ </br> 
                     Ngày xuất hóa đơn: ${billUnpaid.date} </br>
                     <form action="MainController" method="POST">
                         <input type="hidden" name="billId" value="${billUnpaid.billId}"/>
                         <input type="submit" name="action" value="Payment"/>
                     </form>
                     <form action="MainController" method="POST">
-                        <input type="hidden" name="billId" value="${billPaid.billId}"/>
+                        <input type="hidden" name="billId" value="${billUnpaid.billId}"/>
                         <input type="submit" name="action" value="ViewDetail"/>
                     </form>
+                    <a href="MainController?action=PayBill&billId=${billUnpaid.billId}">
+                        <button>Thanh toán hóa đơn</button>
+                    </a>
                 </c:forEach>
             </c:if>
         </c:if>

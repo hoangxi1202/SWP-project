@@ -71,7 +71,11 @@ public class MainController extends HttpServlet {
     private static final String REJECT_REQUEST_CONTROLLER = "RejectRequestController";
 
     private static final String VIEW_BILL = "ViewBill";
+    private static final String PAY_BILL = "PayBill";
+    private static final String PAY_BILL_CONTROLLER = "PayBillController";
     private static final String VIEW_BILL_DETAIL = "ViewDetail";
+    private static final String VIEW_ALL_BILL = "ViewAllBill";
+    private static final String VIEW_ALL_BILL_CONTROLLER = "ViewAllBillController";
     private static final String VIEW_BILL_CONTROLLER = "ViewBillController";
     private static final String VIEW_BILL_DETAIL_CONTROLLER = "ViewBillDetailController";
     private static final String CHANGE_PASSWORD = "ChangePassword";
@@ -88,8 +92,12 @@ public class MainController extends HttpServlet {
 
             } else if (LOGOUT_ACTION.equals(action)) {
                 url = LOGOUT;
+            } else if (VIEW_ALL_BILL.equals(action)) {
+                url = VIEW_ALL_BILL_CONTROLLER;
             } else if (CREATE_ACCOUNT_ACTION.equals(action)) {
                 url = CREATEACCOUNT;
+            } else if (PAY_BILL.equals(action)) {
+                url = PAY_BILL_CONTROLLER;
             } else if (SEARCH_ACTION.equals(action)) {
                 url = SEARCH;
             } else if (UPDATE_ACTION.equals(action)) {

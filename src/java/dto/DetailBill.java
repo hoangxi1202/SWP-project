@@ -5,27 +5,77 @@
  */
 package dto;
 
-import entity.Service;
 import java.sql.Date;
 
 /**
  *
  * @author Nhat Linh
  */
-public class DetailBill extends Service {
+public class DetailBill {
 
-    private String serviceDetailId;
+    private String Id;
+    private String name;
+    private float price;
+    private String createDate;
+    private float priceDetail;
     private int newIndex;
     private int oldIndex;
     private int usageIndex;
-    private Date date;
+    private String date;
 
-    public String getServiceDetailId() {
-        return serviceDetailId;
+    public DetailBill() {
     }
 
-    public void setServiceDetailId(String serviceDetailId) {
-        this.serviceDetailId = serviceDetailId;
+    public DetailBill(String Id, String name, float price, String createDate, float priceDetail, int newIndex, int oldIndex, int usageIndex, String date) {
+        this.Id = Id;
+        this.name = name;
+        this.price = price;
+        this.createDate = createDate;
+        this.priceDetail = priceDetail;
+        this.newIndex = newIndex;
+        this.oldIndex = oldIndex;
+        this.usageIndex = usageIndex;
+        this.date = date;
+    }
+
+    public String getId() {
+        return Id;
+    }
+
+    public void setId(String Id) {
+        this.Id = Id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public float getPrice() {
+        return price;
+    }
+
+    public void setPrice(float price) {
+        this.price = price;
+    }
+
+    public String getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(String createDate) {
+        this.createDate = createDate;
+    }
+
+    public float getPriceDetail() {
+        return priceDetail;
+    }
+
+    public void setPriceDetail(float priceDetail) {
+        this.priceDetail = priceDetail;
     }
 
     public int getNewIndex() {
@@ -52,31 +102,11 @@ public class DetailBill extends Service {
         this.usageIndex = usageIndex;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public DetailBill(String serviceDetailId, int newIndex, int oldIndex, int usageIndex, Date date) {
-        this.serviceDetailId = serviceDetailId;
-        this.newIndex = newIndex;
-        this.oldIndex = oldIndex;
-        this.usageIndex = usageIndex;
-        this.date = date;
-    }
-
-    public DetailBill() {
-    }
-
-    public DetailBill(String serviceDetailId, int newIndex, int oldIndex, int usageIndex, Date date, String serviceId, String serviceName, Date createdDate, int status, String typeID, float price) {
-        super(serviceId, serviceName, createdDate, status, typeID, price);
-        this.serviceDetailId = serviceDetailId;
-        this.newIndex = newIndex;
-        this.oldIndex = oldIndex;
-        this.usageIndex = usageIndex;
+    public void setDate(String date) {
         this.date = date;
     }
 

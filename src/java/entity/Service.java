@@ -13,12 +13,21 @@ import java.sql.Date;
  */
 public class Service {
 
-    protected String serviceId;
-    protected String serviceName;
-    protected Date createdDate;
-    protected int status;
-    protected String typeID;
-    protected float price;
+    private String serviceId;
+    private String serviceName;
+    private Date createdDate;
+    private int status;
+    private String typeID;
+    private float price;
+    private float priceDetail;
+
+    public Service(String serviceId, String serviceName, float servicePrice, Date date, float priceDetail) {
+        this.serviceId = serviceId;
+        this.serviceName = serviceName;
+        this.createdDate = date;
+        this.priceDetail = priceDetail;
+        this.price = servicePrice;
+    }
 
     public String getTypeID() {
         return typeID;
@@ -29,6 +38,16 @@ public class Service {
     }
 
     public Service() {
+    }
+
+    public Service(String serviceId, String serviceName, Date createdDate, int status, String typeID, float price, float priceDetail) {
+        this.serviceId = serviceId;
+        this.serviceName = serviceName;
+        this.createdDate = createdDate;
+        this.status = status;
+        this.typeID = typeID;
+        this.price = price;
+        this.priceDetail = priceDetail;
     }
 
     public Service(String serviceId, String serviceName, int status, float price) {
@@ -49,6 +68,14 @@ public class Service {
 
     public String getServiceId() {
         return serviceId;
+    }
+
+    public float getPriceDetail() {
+        return priceDetail;
+    }
+
+    public void setPriceDetail(float priceDetail) {
+        this.priceDetail = priceDetail;
     }
 
     public void setServiceId(String serviceId) {

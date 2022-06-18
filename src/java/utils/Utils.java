@@ -20,7 +20,7 @@ import java.util.Date;
  * @author Minh Hoàng
  */
 public class Utils {
-
+    
     public static Connection getConnection() throws ClassNotFoundException, SQLException {
         Connection conn = null;
         Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
@@ -28,11 +28,11 @@ public class Utils {
         conn = DriverManager.getConnection(url, "sa", "12345678");
         return conn;
     }
-
+    
     public static String getMd5(String input) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
-
+            
             byte[] messageDigest = md.digest(input.getBytes());
             BigInteger no = new BigInteger(1, messageDigest);
             String hashtext = no.toString(16);
@@ -44,7 +44,7 @@ public class Utils {
             throw new RuntimeException(e);
         }
     }
-
+    
     public static Date getDate(String msg) {
         boolean check = true;
         Date date = null;
@@ -58,20 +58,20 @@ public class Utils {
             }
         } while (check);
         return date;
-
+        
     }
-
+    
     public static boolean getBoolean(String input) {
         boolean check = false;
         try {
-            if ("male".equals(input)) {
+            if ("male".equals(input) || "1".equals(input)) {
                 check = true;
             }
         } catch (Exception e) {
         }
         return check;
     }
-
+    
     public static boolean isValidDate(String input) {
         boolean check = false;
         Date date = null;
@@ -86,12 +86,12 @@ public class Utils {
                 date = null;
             }
             check = true;
-
+            
         } catch (ParseException e) {
         }
         return check;
     }
-
+    
     public static boolean inputPattern(String input, String regex) {
         boolean check = false;
         try {
@@ -104,5 +104,5 @@ public class Utils {
         }
         return check;
     }
-
+    
 }

@@ -64,9 +64,9 @@
                         // show add detail with elec and water bill (1)
                         // show detail added (2)
                         ServiceDAO dao = new ServiceDAO();
-                        if (dao.checkServiceHasDetail(s.getServiceId())){
+                        if (dao.checkServiceHasDetail(s.getServiceId())) {
                             statusDetail = 2;
-                        }else{
+                        } else {
                             statusDetail = 1;
                         }
                 %>
@@ -77,7 +77,7 @@
                     <td>                  
                         <input type="text" name="serName" value="<%=s.getServiceName()%>"/>
                     </td>              
-                     <td>
+                    <td>
                         <input type="text" name="serDate" value="<%=s.getCreatedDate()%>"/>
                     </td>
                     <td>
@@ -96,8 +96,7 @@
                         <input type="submit" name="action" value="AddDetailService"/>
                     </td>
                     <%
-                        }
-                        else if (statusDetail == 2) {
+                    } else if (statusDetail == 2) {
                     %>
                     <td>
                         <input type="hidden" name="serID" value="<%=s.getServiceId()%>"/>
@@ -130,14 +129,17 @@
     %> 
 </body>
 
-        <form action="MainController">
-            <input type="submit" name="action" value="ViewTrouble"/>
-        </form>
-        <a href="MainController?action=befResidentRequest" >Resident Request</a>
-        <form action="MainController">
+<form action="MainController">
+    <input type="submit" name="action" value="ViewTrouble"/>
+</form>
+<a href="MainController?action=befResidentRequest" >Resident Request</a>
+<form action="MainController">
     <input type="text" name="search" value="${param.search}"/>
     <input type="submit" name="action" value="ViewResident"/>
 </form>
-    </body>
+<form action="MainController">
+    <input type="submit" name="action" value="ViewAllBill" />
+</form>
+</body>
 
 </html>
