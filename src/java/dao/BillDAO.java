@@ -7,6 +7,7 @@ package dao;
 
 import dto.BillDTO;
 import dto.DetailBill;
+import entity.BankAccount;
 import entity.Service;
 import java.sql.Connection;
 import java.sql.Date;
@@ -48,6 +49,99 @@ public class BillDAO {
             + "	AND Bills.billId = BillDetails.billId\n"
             + "	AND BillDetails.serviceId = Services.serviceId\n"
             + "	AND Bills.billId = ?;";
+
+    private static final String MINUS_MONEY = "UPDATE BankAccounts\n"
+            + " SET accountBlance = accountBlance - ?\n"
+            + " WHERE accountNum = ?";
+    private static final String ADD_MONEY = "UPDATE BankAccounts\n"
+            + " SET accountBlance = accountBlance + ?\n"
+            + " WHERE accountNum = '01238454'";
+    private static final String CHECK_BANK = "SELECT accountNum, accountBlance\n"
+            + " FROM BankAccounts\n"
+            + " WHERE accountNum = ? AND PIN = ? AND name = ?\n"
+            + " AND bankId = ?";
+
+    public BankAccount checkBank(String accountNum, String PIN, String name, String bankId) throws SQLException {
+        BankAccount bank = null;
+        Connection conn = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(CHECK_BANK);
+                stm.setString(1, accountNum);
+                stm.setString(2, PIN);
+                stm.setString(3, name);
+                stm.setString(4, bankId);
+                rs = stm.executeQuery();
+                while (rs.next()) {
+                    accountNum = rs.getString("accountNum");
+                    double accountBlance = Double.parseDouble(rs.getString("accountBlance"));
+                    bank = new BankAccount(accountNum, name, bankId, accountBlance, "***");
+                }
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return bank;
+    }
+
+    public boolean minusMoney(String accountNum, double total) throws SQLException {
+        boolean check = false;
+        Connection conn = null;
+        PreparedStatement stm = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(MINUS_MONEY);
+                stm.setString(1, String.valueOf(total));
+                stm.setString(2, accountNum);
+                check = stm.executeUpdate() == 1;
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            if (conn != null) {
+                conn.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+        }
+        return check;
+    }
+
+    public boolean addMoney(double total) throws SQLException {
+        boolean check = false;
+        Connection conn = null;
+        PreparedStatement stm = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(ADD_MONEY);
+                stm.setString(1, String.valueOf(total));
+                check = stm.executeUpdate() == 1;
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            if (conn != null) {
+                conn.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+        }
+        return check;
+    }
 
     public boolean PaymentBill(String billId) throws SQLException {
         boolean check = false;

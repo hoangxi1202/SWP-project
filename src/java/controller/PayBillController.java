@@ -6,6 +6,7 @@
 package controller;
 
 import dao.BillDAO;
+import entity.BankAccount;
 import java.io.IOException;
 import java.sql.SQLException;
 import javax.servlet.ServletException;
@@ -21,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "PayBillController", urlPatterns = {"/PayBillController"})
 public class PayBillController extends HttpServlet {
 
-    private static final String ERROR = "MainController?action=ViewBill";
+    private static final String ERROR = "payment.jsp";
     private static final String SUCCESS = "MainController?action=ViewBill";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -30,10 +31,26 @@ public class PayBillController extends HttpServlet {
         String url = ERROR;
         try {
             String billId = request.getParameter("billId");
+            double total = Double.parseDouble(request.getParameter("total"));
+            String accountNum = request.getParameter("bankNumber");
+            String PIN = request.getParameter("PIN");
+            String name = request.getParameter("name");
+            String bankName = request.getParameter("bankName");
             BillDAO dao = new BillDAO();
-            boolean check = dao.PaymentBill(billId);
-            if (check) {
-                url = SUCCESS;
+            boolean check = false;
+            BankAccount bank = dao.checkBank(accountNum, PIN, name, bankName);
+            if (bank != null) {
+                if (total < bank.getBlance()) {
+                    check = dao.minusMoney(accountNum, total) && dao.addMoney(total);
+                    if (check) {
+                        dao.PaymentBill(billId);
+                        url = SUCCESS;
+                    }
+                } else {
+                    request.setAttribute("BANK_ERROR", "Your blance is not enough");
+                }
+            } else {
+                request.setAttribute("BANK_ERROR", "Your bank account is invalid");
             }
         } catch (SQLException e) {
             log("Error at PayBillController: " + e.toString());

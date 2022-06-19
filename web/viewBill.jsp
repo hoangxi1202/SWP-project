@@ -41,9 +41,11 @@
                         <input type="hidden" name="billId" value="${billUnpaid.billId}"/>
                         <input type="submit" name="action" value="ViewDetail"/>
                     </form>
-                    <a href="MainController?action=PayBill&billId=${billUnpaid.billId}">
-                        <button>Thanh toán hóa đơn</button>
-                    </a>
+                    <form action="payment.jsp">
+                        <input type="hidden" name="billId" value="${billUnpaid.billId}"/>
+                        <input type="hidden" name="total" value="${billUnpaid.total}"/>
+                        <input type="submit" value="Thanh toan"/>
+                    </form>
                 </c:forEach>
             </c:if>
         </c:if>
