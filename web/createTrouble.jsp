@@ -46,7 +46,7 @@
                         <textarea class="form-control" id="exampleFormControlTextarea1" name="detail" placeholder="Nội dung chi tiết ... " rows="3" required=""></textarea>                    
                     </div>
                 </div>               
-                <button type="submit" style="padding: 0px 40px; margin: 10px 10px" class="btn btn-primary float-right" name="action" value="SendTrouble">Gửi</button>
+                    <button type="submit" style="padding: 0px 40px; margin: 10px 10px" class="btn btn-primary float-right" name="action" value="SendTrouble">Gửi</button>
             </form>
             <a href="user.jsp"><button style="padding: 0px 40px; margin: 10px 10px" class="btn btn-light float-right">Hủy</button><a/>     
         </div>
