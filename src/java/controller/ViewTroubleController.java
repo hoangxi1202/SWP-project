@@ -35,10 +35,16 @@ public class ViewTroubleController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        String indexPage = request.getParameter("index");
+        if ("".equals(indexPage) || indexPage == null) {
+            indexPage = "1";
+        }
+        int index = Integer.parseInt(indexPage);
         HttpSession session = request.getSession();
         UserDTO loginUser = (UserDTO) session.getAttribute("LOGIN_USER");
         String curUser = loginUser.getRoleID();
         String url = "";
+        int count = 0;
         List<TroubleDTO> listTrouble = null;
         TroubleDAO dao = new TroubleDAO();
         if (AD.equals(curUser)) {
@@ -47,7 +53,13 @@ public class ViewTroubleController extends HttpServlet {
             url = ERROR_EM;
         }
         try {
-            listTrouble = dao.getListTrouble();
+            count = dao.countTrouble();
+            int endPage = count / 3;
+            if (count % 3 != 0) {
+                endPage++;
+            }
+            listTrouble = dao.getListTrouble(index);
+            request.setAttribute("endP", endPage);
             if (listTrouble.size() > 0) {
                 request.setAttribute("LIST_TROUBLE", listTrouble);
                 if (AD.equals(curUser)) {

@@ -27,11 +27,48 @@ public class TroubleDAO {
             + "            WHERE Troubles.troubleId = Apart_Troubles.troubleId \n"
             + "			AND Owners.ownerId = Contracts.ownerId \n"
             + "			AND Apartments.apartmentId = Apart_Troubles.apartmentId \n"
-            + "			AND Contracts.apartmentId = Apartments.apartmentId";
+            + "			AND Contracts.apartmentId = Apartments.apartmentId \n"
+            + "            ORDER BY Apart_Troubles.tranId DESC\n"
+            + "            OFFSET ? ROWS FETCH NEXT 3 ROWS ONLY;";
     private static final String UPDATE_TROUBLE = "UPDATE Apart_Troubles SET status = ? WHERE tranId = ?";
     private static final String VIEW_TYPE_TROUBLE = "SELECT troubleId, troubleName FROM Troubles";
     private static final String GET_INDEX_TROUBLE = "SELECT tranId FROM Apart_Troubles";
+    private static final String COUNT_TROUBLE = "SELECT count(Apart_Troubles.tranId)"
+            + "            FROM Apartments, Troubles, Owners, Apart_Troubles, Contracts \n"
+            + "            WHERE Troubles.troubleId = Apart_Troubles.troubleId \n"
+            + "			AND Owners.ownerId = Contracts.ownerId \n"
+            + "			AND Apartments.apartmentId = Apart_Troubles.apartmentId \n"
+            + "			AND Contracts.apartmentId = Apartments.apartmentId";
     private static final String INSERT_APART_TROUBLE = "INSERT INTO Apart_Troubles VALUES (?, ?, ?, ?, ?, ?)";
+
+    public int countTrouble() throws SQLException {
+        int index = 0;
+        Connection conn = null;
+        PreparedStatement ptm = null;
+        ResultSet rs = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                ptm = conn.prepareStatement(COUNT_TROUBLE);
+                rs = ptm.executeQuery();
+                while (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (ptm != null) {
+                ptm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return index;
+    }
 
     public int getIndexTrouble() throws SQLException {
         int index = 0;
@@ -62,7 +99,7 @@ public class TroubleDAO {
         return index;
     }
 
-    public List<TroubleDTO> getListTrouble() throws SQLException {
+    public List<TroubleDTO> getListTrouble(int index) throws SQLException {
         List<TroubleDTO> listTrouble = new ArrayList<>();
         Connection conn = null;
         PreparedStatement ptm = null;
@@ -71,6 +108,7 @@ public class TroubleDAO {
             conn = Utils.getConnection();
             if (conn != null) {
                 ptm = conn.prepareStatement(VIEW_TROUBLE);
+                ptm.setInt(1, (index - 1) * 3);
                 rs = ptm.executeQuery();
                 while (rs.next()) {
                     String apartment = rs.getString("apartmentId");

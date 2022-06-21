@@ -31,7 +31,7 @@
                         <c:forEach var="trouble" items="${requestScope.LIST_TROUBLE}" varStatus="counter">
                             <tr>
                                 <td>${trouble.troubleId}                                
-                                    
+
                                 </td>
                                 <td>
                                     ${trouble.apartment}
@@ -69,7 +69,9 @@
 
                     </tbody>
                 </table>
-
+                <c:forEach begin="1" end="${endP}" var="i">
+                    <a href="MainController?action=ViewTrouble&index=${i}">${i}</a>
+                </c:forEach>
             </c:if>
         </c:if>
     </body>
