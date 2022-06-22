@@ -5,74 +5,69 @@
  */
 package controller;
 
-import dao.TroubleDAO;
-import dto.TroubleDTO;
+import dao.UserDAO;
+import dto.PasswordError;
 import dto.UserDTO;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import utils.Utils;
 
 /**
  *
  * @author Nhat Linh
  */
-@WebServlet(name = "ViewTroubleController", urlPatterns = {"/ViewTroubleController"})
-public class ViewTroubleController extends HttpServlet {
-
-    private static final String ERROR_AD = "admin.jsp";
-    private static final String ERROR_EM = "employee.jsp";
-    private static final String SUCCESS_AD = "viewTroubleAdmin.jsp";
-    private static final String SUCCESS_EM = "viewTroubleEmployee.jsp";
-    private static final String AD = "AD";
-    private static final String EM = "EM";
-
+@WebServlet(name = "ChangePasswordController", urlPatterns = {"/ChangePasswordController"})
+public class ChangePasswordController extends HttpServlet {
+    
+    private static final String SUCCESS = "user.jsp";
+    private static final String ERROR = "changePassword.jsp";
+    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String indexPage = request.getParameter("index");
-        if ("".equals(indexPage) || indexPage == null) {
-            indexPage = "1";
-        }
-        int index = Integer.parseInt(indexPage);
-        HttpSession session = request.getSession();
-        UserDTO loginUser = (UserDTO) session.getAttribute("LOGIN_USER");
-        String curUser = loginUser.getRoleID();
-        String url = "";
-        int count = 0;
-        List<TroubleDTO> listTrouble = null;
-        TroubleDAO dao = new TroubleDAO();
-        if (AD.equals(curUser)) {
-            url = ERROR_AD;
-        } else if (EM.equals(curUser)) {
-            url = ERROR_EM;
-        }
+        String url = ERROR;
         try {
-            count = dao.countTrouble();
-            int endPage = count / 3;
-            if (count % 3 != 0) {
-                endPage++;
+            HttpSession session = request.getSession();
+            UserDTO loginUser = (UserDTO) session.getAttribute("LOGIN_USER");
+            String curUser = loginUser.getUserID();
+            String oldPassword = request.getParameter("oldPassword");
+            String newPassword = request.getParameter("newPassword");
+            String reNewPassword = request.getParameter("reNewPassword");
+            boolean check = true;
+            PasswordError error = new PasswordError();
+            UserDAO dao = new UserDAO();
+            if (!dao.checkPass(curUser, Utils.getMd5(oldPassword))) {
+                error.setOldPassError("Mật khẩu không chính xác!!");
+                check = false;
             }
-            listTrouble = dao.getListTrouble(index);
-            request.setAttribute("endP", endPage);
-            if (listTrouble.size() > 0) {
-                request.setAttribute("LIST_TROUBLE", listTrouble);
-                if (AD.equals(curUser)) {
-                    url = SUCCESS_AD;
-                } else if (EM.equals(curUser)) {
-                    url = SUCCESS_EM;
+            if (newPassword.length() <= 2) {
+                error.setNewPassError("Mật khẩu yếu");
+                check = false;
+            }
+            if (!newPassword.equals(reNewPassword)) {
+                error.setReNewPassError("Hai mật khẩu phải giống nhau");
+                check = false;
+            }
+            if (check) {
+                boolean cofirm = dao.updatePass(curUser, Utils.getMd5(newPassword));
+                if (cofirm) {
+                    url = SUCCESS;
                 }
+            } else {
+                request.setAttribute("PASSWORD_ERROR", error);
             }
-        } catch (SQLException e) {
-            log("Error at ViewTroubleController: " + e.toString());
+            
+        } catch (ClassNotFoundException | SQLException e) {
         } finally {
             request.getRequestDispatcher(url).forward(request, response);
         }
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

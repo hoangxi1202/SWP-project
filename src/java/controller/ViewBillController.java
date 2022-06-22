@@ -5,8 +5,8 @@
  */
 package controller;
 
-import dao.TroubleDAO;
-import dto.TroubleDTO;
+import dao.BillDAO;
+import dto.BillDTO;
 import dto.UserDTO;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -22,57 +22,36 @@ import javax.servlet.http.HttpSession;
  *
  * @author Nhat Linh
  */
-@WebServlet(name = "ViewTroubleController", urlPatterns = {"/ViewTroubleController"})
-public class ViewTroubleController extends HttpServlet {
+@WebServlet(name = "ViewBillController", urlPatterns = {"/ViewBillController"})
+public class ViewBillController extends HttpServlet {
 
-    private static final String ERROR_AD = "admin.jsp";
-    private static final String ERROR_EM = "employee.jsp";
-    private static final String SUCCESS_AD = "viewTroubleAdmin.jsp";
-    private static final String SUCCESS_EM = "viewTroubleEmployee.jsp";
-    private static final String AD = "AD";
-    private static final String EM = "EM";
+    private static final String ERROR = "user.jsp";
+    private static final String SUCCESS = "viewBill.jsp";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String indexPage = request.getParameter("index");
-        if ("".equals(indexPage) || indexPage == null) {
-            indexPage = "1";
-        }
-        int index = Integer.parseInt(indexPage);
         HttpSession session = request.getSession();
         UserDTO loginUser = (UserDTO) session.getAttribute("LOGIN_USER");
-        String curUser = loginUser.getRoleID();
-        String url = "";
-        int count = 0;
-        List<TroubleDTO> listTrouble = null;
-        TroubleDAO dao = new TroubleDAO();
-        if (AD.equals(curUser)) {
-            url = ERROR_AD;
-        } else if (EM.equals(curUser)) {
-            url = ERROR_EM;
-        }
+        String curUser = loginUser.getUserID();
+        List<BillDTO> listPaid = null;
+        List<BillDTO> listUnpaid = null;
+        BillDAO dao = new BillDAO();
+        String url = ERROR;
         try {
-            count = dao.countTrouble();
-            int endPage = count / 3;
-            if (count % 3 != 0) {
-                endPage++;
-            }
-            listTrouble = dao.getListTrouble(index);
-            request.setAttribute("endP", endPage);
-            if (listTrouble.size() > 0) {
-                request.setAttribute("LIST_TROUBLE", listTrouble);
-                if (AD.equals(curUser)) {
-                    url = SUCCESS_AD;
-                } else if (EM.equals(curUser)) {
-                    url = SUCCESS_EM;
-                }
+            listPaid = dao.getBill(curUser, "1");
+            listUnpaid = dao.getBill(curUser, "0");
+            if (listPaid.size() > 0 || listUnpaid.size() > 0) {
+                request.setAttribute("LIST_BILL_PAID", listPaid);
+                request.setAttribute("LIST_BILL_UNPAID", listUnpaid);
+                url = SUCCESS;
             }
         } catch (SQLException e) {
-            log("Error at ViewTroubleController: " + e.toString());
+            log("Error at ViewBillController: " + e.toString());
         } finally {
             request.getRequestDispatcher(url).forward(request, response);
         }
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

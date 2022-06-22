@@ -14,7 +14,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import utils.Utils;
@@ -58,6 +57,7 @@ public class ServiceDAO {
         }
         return check;
     }
+
     public boolean checkDuplicateServiceDetail(String id) throws SQLException {
         boolean check = false;
         Connection conn = null;
@@ -230,6 +230,7 @@ public class ServiceDAO {
         }
         return check;
     }
+
     public List<ServiceTypes> getListServiceType() throws SQLException {
         List<ServiceTypes> list = new ArrayList<>();
         Connection conn = null;
@@ -263,7 +264,7 @@ public class ServiceDAO {
         return list;
     }
 
-    public boolean checkServiceHasDetail(String serviceId) throws SQLException{
+    public boolean checkServiceHasDetail(String serviceId) throws SQLException {
         boolean check = false;
         Connection conn = null;
         PreparedStatement stm = null;
@@ -296,6 +297,7 @@ public class ServiceDAO {
         }
         return check;
     }
+
     public boolean deleteService(String serID) throws SQLException {
         boolean result = false;
         Connection conn = null;
@@ -354,10 +356,9 @@ public class ServiceDAO {
         return check;
     }
 
-
     public static void main(String[] args) throws SQLException, ParseException {
         ServiceDAO d = new ServiceDAO();
-        
+
         //System.out.println(d.getService("E1-101").toString());
 //        SimpleDateFormat sdf = new SimpleDateFormat("mm-dd-yyyy");
 //        java.util.Date date = sdf.parse("02-28-2022");

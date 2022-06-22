@@ -56,7 +56,9 @@
 
                     </tbody>
                 </table>
-
+                <c:forEach begin="1" end="${endP}" var="i">
+                    <a href="MainController?action=ViewTrouble&index=${i}">${i}</a>
+                </c:forEach>
             </c:if>
         </c:if>
     </body>

@@ -5,71 +5,55 @@
  */
 package controller;
 
-import dao.TroubleDAO;
-import dto.TroubleDTO;
-import dto.UserDTO;
+import dao.BillDAO;
+import entity.BankAccount;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author Nhat Linh
  */
-@WebServlet(name = "ViewTroubleController", urlPatterns = {"/ViewTroubleController"})
-public class ViewTroubleController extends HttpServlet {
+@WebServlet(name = "PayBillController", urlPatterns = {"/PayBillController"})
+public class PayBillController extends HttpServlet {
 
-    private static final String ERROR_AD = "admin.jsp";
-    private static final String ERROR_EM = "employee.jsp";
-    private static final String SUCCESS_AD = "viewTroubleAdmin.jsp";
-    private static final String SUCCESS_EM = "viewTroubleEmployee.jsp";
-    private static final String AD = "AD";
-    private static final String EM = "EM";
+    private static final String ERROR = "payment.jsp";
+    private static final String SUCCESS = "MainController?action=ViewBill";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String indexPage = request.getParameter("index");
-        if ("".equals(indexPage) || indexPage == null) {
-            indexPage = "1";
-        }
-        int index = Integer.parseInt(indexPage);
-        HttpSession session = request.getSession();
-        UserDTO loginUser = (UserDTO) session.getAttribute("LOGIN_USER");
-        String curUser = loginUser.getRoleID();
-        String url = "";
-        int count = 0;
-        List<TroubleDTO> listTrouble = null;
-        TroubleDAO dao = new TroubleDAO();
-        if (AD.equals(curUser)) {
-            url = ERROR_AD;
-        } else if (EM.equals(curUser)) {
-            url = ERROR_EM;
-        }
+        String url = ERROR;
         try {
-            count = dao.countTrouble();
-            int endPage = count / 3;
-            if (count % 3 != 0) {
-                endPage++;
-            }
-            listTrouble = dao.getListTrouble(index);
-            request.setAttribute("endP", endPage);
-            if (listTrouble.size() > 0) {
-                request.setAttribute("LIST_TROUBLE", listTrouble);
-                if (AD.equals(curUser)) {
-                    url = SUCCESS_AD;
-                } else if (EM.equals(curUser)) {
-                    url = SUCCESS_EM;
+            String billId = request.getParameter("billId");
+            double total = Double.parseDouble(request.getParameter("total"));
+            String accountNum = request.getParameter("bankNumber");
+            String PIN = request.getParameter("PIN");
+            String name = request.getParameter("name");
+            String bankName = request.getParameter("bankName");
+            BillDAO dao = new BillDAO();
+            boolean check = false;
+            BankAccount bank = dao.checkBank(accountNum, PIN, name, bankName);
+            if (bank != null) {
+                if (total < bank.getBlance()) {
+                    check = dao.minusMoney(accountNum, total) && dao.addMoney(total);
+                    if (check) {
+                        dao.PaymentBill(billId);
+                        url = SUCCESS;
+                    }
+                } else {
+                    request.setAttribute("BANK_ERROR", "Your blance is not enough");
                 }
+            } else {
+                request.setAttribute("BANK_ERROR", "Your bank account is invalid");
             }
         } catch (SQLException e) {
-            log("Error at ViewTroubleController: " + e.toString());
+            log("Error at PayBillController: " + e.toString());
         } finally {
             request.getRequestDispatcher(url).forward(request, response);
         }
