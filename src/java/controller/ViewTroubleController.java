@@ -40,6 +40,7 @@ public class ViewTroubleController extends HttpServlet {
             indexPage = "1";
         }
         int index = Integer.parseInt(indexPage);
+        int tag = index;
         HttpSession session = request.getSession();
         UserDTO loginUser = (UserDTO) session.getAttribute("LOGIN_USER");
         String curUser = loginUser.getRoleID();
@@ -60,6 +61,7 @@ public class ViewTroubleController extends HttpServlet {
             }
             listTrouble = dao.getListTrouble(index);
             request.setAttribute("endP", endPage);
+            request.setAttribute("tag", tag);
             if (listTrouble.size() > 0) {
                 request.setAttribute("LIST_TROUBLE", listTrouble);
                 if (AD.equals(curUser)) {
