@@ -133,10 +133,7 @@
     <input type="submit" name="action" value="ViewTrouble"/>
 </form>
 <a href="MainController?action=befResidentRequest" >Resident Request</a>
-<form action="MainController">
-    <input type="text" name="search" value="${param.search}"/>
-    <input type="submit" name="action" value="ViewResident"/>
-</form>
+<a href="MainController?action=ViewResident&search="><button>Xem cư dân</button></a>
 <form action="MainController">
     <input type="submit" name="action" value="ViewAllBill" />
 </form>
