@@ -15,6 +15,7 @@
 
     </head>
     <body>
+        <jsp:include page="headerUser.jsp"></jsp:include>
         <div class="container">
             <form action="MainController" method="POST">
                 <c:if test="${requestScope.LIST_RESIDENT != null}">

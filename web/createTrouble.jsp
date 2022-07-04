@@ -15,7 +15,9 @@
 
     </head>
     <body>
+        <jsp:include page="headerUser.jsp"></jsp:include>
         <div class="container">
+            <h1 class="text-center">Báo cáo sự cố</h1>
             <form action="MainController" method="POST">
                 <div class="form-row" >
                     <div class="col-md-3 mb-3" >

@@ -16,6 +16,7 @@
         <title>Employee Page</title>
     </head>
     <body>
+        
         <%
             UserDTO loginUser = (UserDTO) session.getAttribute("LOGIN_USER");
 //            if (loginUser == null || !"EM".equals(loginUser.getRoleID())) {
@@ -29,7 +30,7 @@
             }
         %>
 
-
+        
         <a href="managerService.jsp">Quan Ly Dich vu</a>
         <form action="MainController">
             <input type="submit" name="action" value="Logout"/>

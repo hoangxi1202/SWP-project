@@ -13,6 +13,7 @@
         <title>Thanh toán hóa đơn</title>
     </head>
     <body>
+        <jsp:include page="headerUser.jsp"></jsp:include>
         <form action="MainController" method="POST">
             Ngân hàng: <select name="bankName" type="checkbox">
                 <option value="" selected>Ngân hàng</option>

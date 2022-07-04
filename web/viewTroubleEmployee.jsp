@@ -17,6 +17,7 @@
     <body>
         <!--Not fix updateTrouble trả về trang hiện tại (đang update trang 2 sẽ trả về trang 1) cần fix đang trang 2 update trouble vẫn về trang 2-->
         <!--Execute-->
+        
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
@@ -102,9 +103,16 @@
                 <c:forEach begin="1" end="${endP}" var="i">
                     <li class="page-item" ${tag==i?"active":""}><a class="page-link" href="MainController?action=ViewTrouble&index=${i}">${i}</a></li>
                     </c:forEach>
-                <li class="page-item">
-                    <a class="page-link" href="MainController?action=ViewTrouble&index=${tag+1}">Next</a>
-                </li>
+                    <c:if test="${tag==endP}">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="MainController?action=ViewTrouble&index=${tag+1}">Next</a>
+                    </li>
+                </c:if>
+                <c:if test="${tag!=endP}">
+                    <li class="page-item">
+                        <a class="page-link" href="MainController?action=ViewTrouble&index=${tag+1}">Next</a>
+                    </li>
+                </c:if>
             </ul>
         </nav>
     </body>
