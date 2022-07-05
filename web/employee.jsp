@@ -1,9 +1,3 @@
-<%-- 
-    Document   : employee
-    Created on : May 23, 2022, 9:37:19 PM
-    Author     : Minh Hoàng
---%>
-
 <%@page import="dao.ServiceDAO"%>
 <%@page import="dto.UserDTO"%>
 <%@page import="entity.Service"%>
@@ -15,8 +9,9 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Employee Page</title>
     </head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <body>
-        
+        <jsp:include page="headerEmp.jsp"></jsp:include>
         <%
             UserDTO loginUser = (UserDTO) session.getAttribute("LOGIN_USER");
 //            if (loginUser == null || !"EM".equals(loginUser.getRoleID())) {
@@ -30,7 +25,7 @@
             }
         %>
 
-        
+
         <a href="managerService.jsp">Quan Ly Dich vu</a>
         <form action="MainController">
             <input type="submit" name="action" value="Logout"/>
@@ -138,6 +133,10 @@
 <form action="MainController">
     <input type="submit" name="action" value="ViewAllBill" />
 </form>
+<jsp:include page="footer.jsp"></jsp:include>
 </body>
+<script src="js/js.js" ></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
 </html>

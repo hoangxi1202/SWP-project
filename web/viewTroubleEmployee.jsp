@@ -17,14 +17,14 @@
     <body>
         <!--Not fix updateTrouble trả về trang hiện tại (đang update trang 2 sẽ trả về trang 1) cần fix đang trang 2 update trouble vẫn về trang 2-->
         <!--Execute-->
-        
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <h2 class="text-center">
-                        Sự cố
-                    </h2>
-                </div>
+        <jsp:include page="headerEmp.jsp"></jsp:include>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2 class="text-center">
+                            Sự cố
+                        </h2>
+                    </div>
                 <c:if test="${requestScope.LIST_TROUBLE != null}">
                     <c:if test="${not empty requestScope.LIST_TROUBLE }">
                         <div class="table-responsive" id="no-more-tables">
@@ -73,8 +73,6 @@
                                                     <input type="submit" name="action" value="UpdateTrouble"/> 
 
                                                 </form>
-
-
                                             </td>
 
                                         </tr>
@@ -101,7 +99,7 @@
                     </li>
                 </c:if>
                 <c:forEach begin="1" end="${endP}" var="i">
-                    <li class="page-item" ${tag==i?"active":""}><a class="page-link" href="MainController?action=ViewTrouble&index=${i}">${i}</a></li>
+                    <li class="page-item ${tag==i?"active":""}"><a class="page-link" href="MainController?action=ViewTrouble&index=${i}">${i}</a></li>
                     </c:forEach>
                     <c:if test="${tag==endP}">
                     <li class="page-item disabled">
@@ -115,6 +113,7 @@
                 </c:if>
             </ul>
         </nav>
+        <jsp:include page="footer.jsp"></jsp:include>
     </body>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

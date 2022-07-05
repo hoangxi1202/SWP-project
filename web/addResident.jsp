@@ -10,7 +10,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Add new Residents</title>
+        <title>Thêm người ở</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="css/addResident.css">
         <link rel="stylesheet" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
@@ -164,13 +164,13 @@
                             </div>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary float-right" name="action" value="AddResident">Gửi</button>
+                    <button type="submit" class="btn btn-primary btn-add float-right" name="action" value="AddResident">Gửi</button>
                 </form>
             </c:if>
             <button class="btn btn-outline-info btn-add float-left">+</button>   
         </div>
 
-        <a href="user.jsp"><button class="btn btn-light float-right">Hủy</button></a>
+        <a href="user.jsp"><button class="btn btn-light btn-add float-right">Hủy</button></a>
         <jsp:include page="footer.jsp"></jsp:include>
     </body>
     <script src="js/js.js" ></script>

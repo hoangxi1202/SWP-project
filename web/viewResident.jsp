@@ -10,11 +10,13 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Thong tin Cu Dan</title>
+        <title>Thông tin cư dân</title>
     </head>
-    <body>
-        <form action="MainController" method="POST">
-            <input type="text" name="search" value="${param.search}"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <body>        
+        <jsp:include page="headerEmp.jsp"></jsp:include>
+            <form action="MainController" method="POST">
+                <input type="text" name="search" value="${param.search}"/>
             <input type="submit" name="action" value="ViewResident"/>
         </form>
         <table border="1">
@@ -57,29 +59,10 @@
                         <td>${resident.job}</td>
                         <td>${resident.phone}</td>
                         <td>${resident.status}</td>
-                        <!--                                <td>
-                                                            <form action="MainController">
-                                                                <select name="status">
-                        <%--<c:if test ="${!trouble.status}">--%>
-                            <option value="false" selected>Not Yet</option>
-                            <option value="true">Done</option>
-                        <%--</c:if>--%>
-                        <%--<c:if test ="${trouble.status}">--%>
-                            <option value="true" selected>Done</option>
-                            <option value="false">Not Yet</option>
-                        <%--</c:if>--%>
-                    </select>
-                    <input type="hidden" name="troubleId" value="${trouble.troubleId}"/>
-                    <input type="submit" name="action" value="UpdateTrouble"/> 
-                </form>
-            </td>-->
-
                     </tr>
                 </c:forEach>
-
             </tbody>
         </table>
-
-
+        <jsp:include page="footer.jsp"></jsp:include>
     </body>
 </html>
