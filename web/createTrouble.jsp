@@ -16,13 +16,13 @@
     </head>
     <body>
         <jsp:include page="headerUser.jsp"></jsp:include>
-        <div class="container">
-            <h1 class="text-center">Báo cáo sự cố</h1>
-            <form action="MainController" method="POST">
-                <div class="form-row" >
-                    <div class="col-md-3 mb-3" >
-                        <label>Căn hộ số: </label>
-                        <input type="text" class="form-control" name="apartmentId" alt="" readonly="" value="${requestScope.APARTMENT_ID}"/>
+            <div class="container">
+                <h1 class="text-center">Báo cáo sự cố</h1>
+                <form action="MainController" method="POST">
+                    <div class="form-row" >
+                        <div class="col-md-3 mb-3" >
+                            <label>Căn hộ số: </label>
+                            <input type="text" class="form-control" name="apartmentId" alt="" readonly="" value="${requestScope.APARTMENT_ID}"/>
                     </div>
                     <div class="col-md-3 mb-3" >
                         <label>Ngày: </label>
@@ -48,12 +48,15 @@
                         <textarea class="form-control" id="exampleFormControlTextarea1" name="detail" placeholder="Nội dung chi tiết ... " rows="3" required=""></textarea>                    
                     </div>
                 </div>               
-                    <button type="submit" style="padding: 0px 40px; margin: 10px 10px" class="btn btn-primary float-right" name="action" value="SendTrouble">Gửi</button>
+                <button type="submit" style="padding: 0px 40px; margin: 10px 10px" class="btn btn-primary float-right" name="action" value="SendTrouble">Gửi</button>
             </form>
-            <a href="user.jsp"><button style="padding: 0px 40px; margin: 10px 10px" class="btn btn-light float-right">Hủy</button><a/>     
+            <a href="user.jsp"><button style="padding: 0px 40px; margin: 10px 10px" class="btn btn-light float-right">Hủy</button></a>     
         </div>
     </body>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="js/js.js" ></script>
     <script>
+
         function getDate() {
             var today = new Date();
             var dd = today.getDate();
