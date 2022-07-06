@@ -64,8 +64,8 @@ public class AddResidentController extends HttpServlet {
                 }else {
                     res.setDob(dob[i]);
                 }
-                if (job[i].length() < 10) {
-                    resError.setJobError("Công việc của người thứ " + (i + 1) + " phải nhiều hơn 10 kí tự");
+                if (job[i].length() < 5) {
+                    resError.setJobError("Công việc của người thứ " + (i + 1) + " phải nhiều hơn 5 kí tự");
                     check = false;
                 }else {
                     res.setJob(job[i]);

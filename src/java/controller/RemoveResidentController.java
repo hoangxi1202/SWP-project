@@ -6,71 +6,64 @@
 package controller;
 
 import dao.ResidentDAO;
-import dto.ResidentDTO;
-import dto.UserDTO;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author Nhat Linh
  */
-@WebServlet(name = "ViewResidentController", urlPatterns = {"/ViewResidentController"})
-public class ViewResidentController extends HttpServlet {
+@WebServlet(name = "RemoveResidentController", urlPatterns = {"/RemoveResidentController"})
+public class RemoveResidentController extends HttpServlet {
 
-    private static final String ERROR_AD = "admin.jsp";
-    private static final String ERROR_EM = "employee.jsp";
-    private static final String SUCCESS = "viewResident.jsp";
-    private static final String AD = "AD";
-    private static final String EM = "EM";
+    private static final String SUCCESS = "MainController?action=ViewResident&search=";
+    private static final String ERROR = "MainController?action=ViewResident&search=";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        int count = 0;
-        String url = "";
-        String indexPage = request.getParameter("index");
-        if ("".equals(indexPage) || indexPage == null) {
-            indexPage = "1";
-        }
-        int index = Integer.parseInt(indexPage);
-        int tag = index;
-        String search = request.getParameter("search");
-        if (search == null) {
-            search = "";
-        }
-        HttpSession session = request.getSession();
-        UserDTO loginUser = (UserDTO) session.getAttribute("LOGIN_USER");
-        String curUser = loginUser.getRoleID();
-        List<ResidentDTO> listResident = null;
-        ResidentDAO dao = new ResidentDAO();
-        if (AD.equals(curUser)) {
-            url = ERROR_AD;
-        } else if (EM.equals(curUser)) {
-            url = ERROR_EM;
-        }
+        String url = ERROR;
         try {
-            count = dao.countResident("1", search);
-            int endPage = count / 5;
-            if (count % 5 != 0) {
-                endPage++;
+            String search = request.getParameter("search");
+            if (search == null) {
+                search = "";
             }
-            listResident = dao.getListResident(search, index);
-            request.setAttribute("endP", endPage);
-            request.setAttribute("tag", tag);
-            if (listResident.size() > 0) {
-                request.setAttribute("LIST_RESIDENT", listResident);
-                url = SUCCESS;
+            String indexPage = request.getParameter("index");
+            if ("".equals(indexPage) || indexPage == null) {
+                indexPage = "1";
+            }
+            int index = Integer.parseInt(indexPage);
+            url = ERROR + search + "&index=" + index;
+            String residentId = request.getParameter("residentId");
+            String ownerId = request.getParameter("ownerId");
+            ResidentDAO dao = new ResidentDAO();
+            boolean check = false;
+            String errorOwn = "";
+            if (residentId.equals(ownerId)) {
+                int count = dao.countResidentByOwnerID(ownerId);
+                if (count == 0) {
+                    check = dao.removeOwner(ownerId);
+                } else {
+                    errorOwn = "Không thể xóa chủ sở hữu khi đang có người ở\n"
+                            + "Tip: Xóa hết các người ở của chủ sở hữu trước!!!";
+                    request.setAttribute("ERROR", errorOwn);
+                }
+            } else {
+                check = dao.removeResident(residentId);
+            }
+            if (check) {
+                url = SUCCESS + search + "&index=" + index;
+                request.setAttribute("SUCCESS", "Removed Success!!!");
+            } else {
+                request.setAttribute("ERROR", "Error!!!" + errorOwn);
             }
         } catch (SQLException e) {
-            log("Error at ViewResidentController: " + e.toString());
+            log("Error at RemoveResidentController: " + e.toString());
         } finally {
             request.getRequestDispatcher(url).forward(request, response);
         }
