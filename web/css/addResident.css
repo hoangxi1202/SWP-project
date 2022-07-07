@@ -3,7 +3,7 @@
     padding: 15px 25px;
     margin: 15px;
 }
-.btn-add, .btn-delete {
+.btn-add, .btn-delete, .btn-form {
     padding: 0px 40px !important;
     margin: 10px 10px !important;
 }

@@ -95,7 +95,7 @@ public class AddResidentController extends HttpServlet {
                 } else {
                     requestId += "0" + String.valueOf(indexReq);
                 }
-                boolean confirm = daoRes.insertRequest(requestId, ownerId);
+                boolean confirm = daoRes.insertRequest(requestId, ownerId, "add", "0");
                 if (confirm) {
                     for (int i = 0; i < name.length; i++) {
                         residentId = "RES" + String.valueOf(indexRes + i + 1);
