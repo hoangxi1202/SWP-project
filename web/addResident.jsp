@@ -1,9 +1,3 @@
-<%-- 
-    Document   : addResident
-    Created on : Jun 6, 2022, 10:44:57 AM
-    Author     : Nhat Linh
---%>
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>

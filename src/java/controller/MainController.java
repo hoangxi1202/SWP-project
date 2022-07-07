@@ -68,7 +68,11 @@ public class MainController extends HttpServlet {
     private static final String ACCEPT_REQUEST = "AcceptRequest";
     private static final String ACCEPT_REQUEST_CONTROLLER = "AcceptRequestController";
     private static final String REJECT_REQUEST = "RejectRequest";
+    private static final String UPDATE_RESIDENT = "UpdateResident";
+    private static final String REMOVE_RESIDENT = "RemoveResident";
     private static final String REJECT_REQUEST_CONTROLLER = "RejectRequestController";
+    private static final String UPDATE_RESIDENT_CONTROLLER = "UpdateResidentController";
+    private static final String REMOVE_RESIDENT_CONTROLLER = "RemoveResidentController";
 
     private static final String VIEW_BILL = "ViewBill";
     private static final String PAY_BILL = "PayBill";
@@ -89,7 +93,10 @@ public class MainController extends HttpServlet {
             String action = request.getParameter("action");
             if (LOGIN_ACTION.equals(action)) {
                 url = LOGIN;
-
+            } else if (UPDATE_RESIDENT.equals(action)) {
+                url = UPDATE_RESIDENT_CONTROLLER;
+            } else if (REMOVE_RESIDENT.equals(action)) {
+                url = REMOVE_RESIDENT_CONTROLLER;
             } else if (LOGOUT_ACTION.equals(action)) {
                 url = LOGOUT;
             } else if (VIEW_ALL_BILL.equals(action)) {

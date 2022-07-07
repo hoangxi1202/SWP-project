@@ -22,7 +22,13 @@ import utils.Utils;
 public class ResidentDAO {
 
     private static final String SEARCH_BY_NAME = "SELECT residentId, ownerId, fullName, dob, sex, job, phone FROM "
-            + "Residents WHERE (fullName LIKE ? OR ownerId LIKE ?) and status = 1";
+            + " Residents WHERE (fullName LIKE ? OR ownerId LIKE ?) and status = 1\n"
+            + " ORDER BY Residents.residentId ASC\n"
+            + " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY;";
+    private static final String SEARCH_RES_OWN = "SELECT ownerId as residentId, ownerId, fullname, dob, sex, job, phone FROM "
+            + " Owners WHERE (fullName LIKE ? OR ownerId LIKE ?) and status =1\n"
+            + " ORDER BY OwnerId ASC\n"
+            + " OFFSET ? ROWS FETCH NEXT 5 ROWS ONLY;";
     private static final String SEARCH_BY_NAME_OWN = "SELECT Residents.residentId, Residents.ownerId, Residents.fullName, "
             + "Residents.dob, Residents.sex, Residents.job, Residents.phone FROM "
             + "Residents, Owners WHERE Residents.ownerId = Owners.ownerId"
@@ -31,6 +37,22 @@ public class ResidentDAO {
     private static final String ADD_RESIDENT = "INSERT INTO Residents(residentId, fullName, dob, sex, job, phone, status, requestId, ownerId) "
             + " VALUES (? , ? , ? , ? , ? , ? , 0 , ? , ? )";
     private static final String UPDATE_RESIDENT = "UPDATE Residents SET requestId = ? WHERE residentId = ?";
+    private static final String UPDATE_INFO_RESIDENT = "UPDATE Residents \n"
+            + " SET fullName = ?,\n"
+            + "	dob = ?,\n"
+            + "	sex = ?,\n"
+            + "	job = ?,\n"
+            + "	phone = ?,\n"
+            + "	status = ?\n"
+            + " WHERE residentId = ?";
+    private static final String UPDATE_OWNER = "UPDATE Owners \n"
+            + " SET fullName = ?,\n"
+            + "	dob = ?,\n"
+            + "	sex = ?,\n"
+            + "	job = ?,\n"
+            + "	phone = ?,\n"
+            + "	status = ?\n"
+            + " WHERE ownerId = ?";
     private static final String INSERT_REQUEST = "INSERT INTO Requests VALUES (?, ?, ?, ?)";
     private static final String VIEW_REQUEST_RESIDENT = "SELECT Requests.requestId, Residents.ownerId, Residents.residentId, Residents.fullName, Residents.sex, "
             + " Residents.dob, Residents.phone, Residents.status, Residents.job"
@@ -51,6 +73,45 @@ public class ResidentDAO {
             + " WHERE requestId = ?";
     private static final String COUNT_RESIDENT = "SELECT COUNT(residentId) as [count]\n"
             + "  FROM Residents";
+    private static final String COUNT_RESIDENT_V2 = "SELECT COUNT(residentId) as [count]\n"
+            + "  FROM Residents WHERE (fullName LIKE ? OR ownerId LIKE ?) and status LIKE ?";
+    private static final String COUNT_OWNER_V2 = "SELECT COUNT(ownerId) as [count]\n"
+            + "  FROM Owners WHERE (fullName LIKE ? OR ownerId LIKE ?) and status LIKE ?";
+    private static final String COUNT_RESIDENT_BY_OWNERID = "SELECT COUNT(Residents.residentId) as [count]\n"
+            + " FROM Residents, Owners WHERE Residents.ownerId = Owners.ownerId\n"
+            + " AND Owners.ownerId = ? AND Residents.status = 1";
+    private static final String REMOVE_OWNER = "Update Owners SET [status] = 0 WHERE ownerId = ?";
+    private static final String REMOVE_RESIDENT = "Update Residents SET [status] = 0 WHERE residentId = ?";
+
+    public int countResidentByOwnerID(String ownerId) throws SQLException {
+        int count = 0;
+        Connection conn = null;
+        PreparedStatement ptm = null;
+        ResultSet rs = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                ptm = conn.prepareStatement(COUNT_RESIDENT_BY_OWNERID);
+                ptm.setString(1, ownerId);
+                rs = ptm.executeQuery();
+                if (rs.next()) {
+                    count = Integer.parseInt(rs.getString("count"));
+                }
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (ptm != null) {
+                ptm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return count;
+    }
 
     public int countResident() throws SQLException {
         int count = 0;
@@ -274,7 +335,7 @@ public class ResidentDAO {
         return listResident;
     }
 
-    public List<ResidentDTO> getListResident(String search) throws SQLException {
+    private List<ResidentDTO> getListOwner(String search, int index) throws SQLException {
         List<ResidentDTO> listResident = new ArrayList<>();
         Connection conn = null;
         PreparedStatement ptm = null;
@@ -282,9 +343,10 @@ public class ResidentDAO {
         try {
             conn = Utils.getConnection();
             if (conn != null) {
-                ptm = conn.prepareStatement(SEARCH_BY_NAME);
+                ptm = conn.prepareStatement(SEARCH_RES_OWN);
                 ptm.setString(1, "%" + search + "%");
                 ptm.setString(2, "%" + search + "%");
+                ptm.setInt(3, (index - 1) * 5);
                 rs = ptm.executeQuery();
                 while (rs.next()) {
                     String residentId = rs.getString("residentId");
@@ -296,6 +358,51 @@ public class ResidentDAO {
                     String phone = rs.getString("phone");
                     String req = "";
                     listResident.add(new ResidentDTO(residentId, ownerId, name, dob, gender, job, phone, true, req));
+                }
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (ptm != null) {
+                ptm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return listResident;
+    }
+
+    public List<ResidentDTO> getListResident(String search, int index) throws SQLException {
+        List<ResidentDTO> listResident = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement ptm = null;
+        ResultSet rs = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                List<ResidentDTO> listOwner = getListOwner(search, index);
+                listResident.addAll(listOwner);
+                if (listResident.size() < 5) {
+                    ptm = conn.prepareStatement(SEARCH_BY_NAME);
+                    ptm.setString(1, "%" + search + "%");
+                    ptm.setString(2, "%" + search + "%");
+                    ptm.setInt(3, (index - 1) * 5);
+                    ptm.setInt(4, 5 - listResident.size());
+                    rs = ptm.executeQuery();
+                    while (rs.next()) {
+                        String residentId = rs.getString("residentId");
+                        String ownerId = rs.getString("ownerId");
+                        String name = rs.getString("fullName");
+                        String dob = rs.getString("dob");
+                        boolean gender = Utils.getBoolean(rs.getString("sex"));
+                        String job = rs.getString("job");
+                        String phone = rs.getString("phone");
+                        String req = "";
+                        listResident.add(new ResidentDTO(residentId, ownerId, name, dob, gender, job, phone, true, req));
+                    }
                 }
             }
         } catch (ClassNotFoundException | SQLException e) {
@@ -351,7 +458,7 @@ public class ResidentDAO {
             if (conn != null) {
                 stm = conn.prepareStatement(ADD_RESIDENT);
                 stm.setString(1, res.getResidentId());
-                stm.setString(2,"N'" + res.getName()+"'");
+                stm.setString(2, "N'" + res.getName() + "'");
                 stm.setString(3, res.getDob());
                 if (res.isGender() == true) {
                     stm.setString(4, "male");
@@ -426,5 +533,173 @@ public class ResidentDAO {
             }
         }
         return check;
+    }
+
+    public boolean updateResident(ResidentDTO resident) throws SQLException {
+        boolean check = false;
+        Connection conn = null;
+        PreparedStatement stm = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(UPDATE_INFO_RESIDENT);
+                stm.setString(1, resident.getName());
+                stm.setString(2, resident.getDob());
+                stm.setString(3, resident.isGender() ? "male" : "female");
+                stm.setString(4, resident.getJob());
+                stm.setString(5, resident.getPhone());
+                stm.setString(6, resident.isStatus() ? "1" : "0");
+                stm.setString(7, resident.getResidentId());
+                check = stm.executeUpdate() > 0;
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            if (conn != null) {
+                conn.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+        }
+        return check;
+    }
+
+    public boolean updateOwner(ResidentDTO resident) throws SQLException {
+        boolean check = false;
+        Connection conn = null;
+        PreparedStatement stm = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(UPDATE_OWNER);
+                stm.setString(1, resident.getName());
+                stm.setString(2, resident.getDob());
+                stm.setString(3, resident.isGender() ? "male" : "female");
+                stm.setString(4, resident.getJob());
+                stm.setString(5, resident.getPhone());
+                stm.setString(6, resident.isStatus() ? "1" : "0");
+                stm.setString(7, resident.getOwnerId());
+                check = stm.executeUpdate() > 0;
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            if (conn != null) {
+                conn.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+        }
+        return check;
+    }
+
+    public boolean removeOwner(String ownerId) throws SQLException {
+        boolean check = false;
+        Connection conn = null;
+        PreparedStatement stm = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(REMOVE_OWNER);
+                stm.setString(1, ownerId);
+                check = stm.executeUpdate() > 0;
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            if (conn != null) {
+                conn.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+        }
+        return check;
+    }
+
+    public boolean removeResident(String residentId) throws SQLException {
+        boolean check = false;
+        Connection conn = null;
+        PreparedStatement stm = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(REMOVE_RESIDENT);
+                stm.setString(1, residentId);
+                check = stm.executeUpdate() > 0;
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            if (conn != null) {
+                conn.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+        }
+        return check;
+    }
+
+    private int countOwner(String search) throws SQLException {
+        int count = 0;
+        Connection conn = null;
+        PreparedStatement ptm = null;
+        ResultSet rs = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                ptm = conn.prepareStatement(COUNT_OWNER_V2);
+                ptm.setString(1, "%" + search + "%");
+                ptm.setString(2, "%" + search + "%");
+                rs = ptm.executeQuery();
+                if (rs.next()) {
+                    count = Integer.parseInt(rs.getString("count"));
+                }
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (ptm != null) {
+                ptm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return count;
+    }
+
+    public int countResident(String status, String search) throws SQLException {
+        int count = 0;
+        Connection conn = null;
+        PreparedStatement ptm = null;
+        ResultSet rs = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                ptm = conn.prepareStatement(COUNT_RESIDENT_V2);
+                ptm.setString(1, "%" + search + "%");
+                ptm.setString(2, "%" + search + "%");
+                ptm.setString(3, "%" + status + "%");
+                rs = ptm.executeQuery();
+                if (rs.next()) {
+                    count = Integer.parseInt(rs.getString("count"));
+                }
+                count += countOwner(search);
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (ptm != null) {
+                ptm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return count;
     }
 }
