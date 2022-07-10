@@ -6,8 +6,6 @@
 package controller;
 
 import dao.ResidentDAO;
-import dao.UserDAO;
-import dto.UserDTO;
 import java.io.IOException;
 import java.sql.SQLException;
 import javax.servlet.ServletException;
@@ -15,46 +13,57 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author Nhat Linh
  */
-@WebServlet(name = "DeleteResidentController", urlPatterns = {"/DeleteResidentController"})
-public class DeleteResidentController extends HttpServlet {
+@WebServlet(name = "RemoveResidentController", urlPatterns = {"/RemoveResidentController"})
+public class RemoveResidentController extends HttpServlet {
 
-    private static final String SUCCESS = "user.jsp";
-    private static final String ERROR = "deleteResident.jsp";
+    private static final String SUCCESS = "MainController?action=ViewResident&search=";
+    private static final String ERROR = "MainController?action=ViewResident&search=";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         String url = ERROR;
         try {
-            String[] residentId = request.getParameterValues("delete");
-            ResidentDAO daoRes = new ResidentDAO();
-            HttpSession session = request.getSession();
-            UserDTO loginUser = (UserDTO) session.getAttribute("LOGIN_USER");
-            UserDAO dao = new UserDAO();
-            String ownerId = dao.getOwnerId(loginUser.getUserID());
-            String requestId = "REQ";
-            int indexReq = daoRes.getIndexRequest() + 1;
-            if (indexReq > 99) {
-                requestId += String.valueOf(indexReq);
-            } else if (indexReq >= 10 && indexReq <= 99) {
-                requestId += "0" + String.valueOf(indexReq);
+            String search = request.getParameter("search");
+            if (search == null) {
+                search = "";
+            }
+            String indexPage = request.getParameter("index");
+            if ("".equals(indexPage) || indexPage == null) {
+                indexPage = "1";
+            }
+            int index = Integer.parseInt(indexPage);
+            url = ERROR + search + "&index=" + index;
+            String residentId = request.getParameter("residentId");
+            String ownerId = request.getParameter("ownerId");
+            ResidentDAO dao = new ResidentDAO();
+            boolean check = false;
+            String errorOwn = "";
+            if (residentId.equals(ownerId)) {
+                int count = dao.countResidentByOwnerID(ownerId);
+                if (count == 0) {
+                    check = dao.removeOwner(ownerId);
+                } else {
+                    errorOwn = "Không thể xóa chủ sở hữu khi đang có người ở\n"
+                            + "Tip: Xóa hết các người ở của chủ sở hữu trước!!!";
+                    request.setAttribute("ERROR", errorOwn);
+                }
             } else {
-                requestId += "00" + String.valueOf(indexReq);
+                check = dao.removeResident(residentId);
             }
-            daoRes.insertRequest(requestId, ownerId, "delete", "0");
-            for (String residentIdElement : residentId) {
-                daoRes.updateResident(requestId, residentIdElement);
+            if (check) {
+                url = SUCCESS + search + "&index=" + index;
+                request.setAttribute("SUCCESS", "Removed Success!!!");
+            } else {
+                request.setAttribute("ERROR", "Error!!!" + errorOwn);
             }
-            url = SUCCESS;
-
-        } catch (ClassNotFoundException | SQLException e) {
-            log("Error at DeleteResidentController: " + e.toString());
+        } catch (SQLException e) {
+            log("Error at RemoveResidentController: " + e.toString());
         } finally {
             request.getRequestDispatcher(url).forward(request, response);
         }

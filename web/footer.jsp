@@ -1,59 +1,38 @@
-<%-- 
-    Document   : footer
-    Created on : May 24, 2022, 12:29:38 PM
-    Author     : Minh Hoàng
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+<link rel="stylesheet" href="css/footer.css">
+
 <!-- Footer -->
-        <footer class="text-light">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-3 col-lg-4 col-xl-3">
-                        <h5>About</h5>
-                        <hr class="bg-white mb-2 mt-0 d-inline-block mx-auto w-25">
-                        <p class="mb-0">
-                            ---------------------------------------
-                        </p>
-                    </div>
-
-                    <div class="col-md-2 col-lg-2 col-xl-2 mx-auto">
-                        <h5>Informations</h5>
-                        <hr class="bg-white mb-2 mt-0 d-inline-block mx-auto w-25">
-                        <ul class="list-unstyled">
-                            <li><a href="">Link 1</a></li>
-                            <li><a href="">Link 2</a></li>
-                            <li><a href="">Link 3</a></li>
-                            <li><a href="">Link 4</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="col-md-3 col-lg-2 col-xl-2 mx-auto">
-                        <h5>Others links</h5>
-                        <hr class="bg-white mb-2 mt-0 d-inline-block mx-auto w-25">
-                        <ul class="list-unstyled">
-                            <li><a href="">Link 1</a></li>
-                            <li><a href="">Link 2</a></li>
-                            <li><a href="">Link 3</a></li>
-                            <li><a href="">Link 4</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="col-md-4 col-lg-3 col-xl-3">
-                        <h5>Contact</h5>
-                        <hr class="bg-white mb-2 mt-0 d-inline-block mx-auto w-25">
-                        <ul class="list-unstyled">
-                            <li><i class="fa fa-home mr-2"></i> My company</li>
-                            <li><i class="fa fa-envelope mr-2"></i> email@example.com</li>
-                            <li><i class="fa fa-phone mr-2"></i> + 33 12 14 15 16</li>
-                            <li><i class="fa fa-print mr-2"></i> + 33 12 14 15 16</li>
-                        </ul>
-                    </div>
-                    <div class="col-12 copyright mt-3">
-                        <p class="float-left">
-                            <a href="#">Back to top</a>
-                        </p>
-                    </div>
+<div class="footer-dark">
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6 col-md-3 item">
+                    <h3>Dịch vụ</h3>
+                    <ul>
+                        <li><a href="#">Thuê</a></li>
+                        <li><a href="#">Mua bán</a></li>
+                        <li><a href="#">Dịch vụ khác</a></li>
+                    </ul>
                 </div>
+                <div class="col-sm-6 col-md-3 item">
+                    <h3>About</h3>
+                    <ul>
+                        <li><a href="#">Company</a></li>
+                        <li><a href="#">Team</a></li>
+                        <li><a href="#">Careers</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-6 item text">
+                    <h3>BF Apartment</h3>
+                    <p>Chung cư BF (Anh em Vĩnh Cửu) được lựa chọn xây dựng với vị trí “vàng” của Quận Thủ Đức, chung cư BF được thừa hưởng toàn bộ cơ sở hạ tầng đồng bộ của Quận Thủ Đức với môi trường sống văn minh, giao thông đi lại thuận tiện.</p>
+                </div>
+                <div class="col item social"><a href="https://www.facebook.com/Linhsii/"><i class="icon ion-social-facebook"></i></a><a href="https://twitter.com/Linhka_"><i class="icon ion-social-twitter"></i></a><a href="#"><i class="icon ion-social-snapchat"></i></a><a href="https://www.instagram.com/linhsii.npn/"><i class="icon ion-social-instagram"></i></a></div>
             </div>
-        </footer>
+            <p class="copyright">BF Apartment © 2022</p>
+        </div>
+    </footer>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.bundle.min.js"></script>

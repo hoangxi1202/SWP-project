@@ -9,7 +9,6 @@ import dao.ResidentDAO;
 import dto.ResidentDTO;
 import dto.UserDTO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -35,29 +34,43 @@ public class ViewResidentController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("UTF-8");
+        int count = 0;
+        String url = "";
+        String indexPage = request.getParameter("index");
+        if ("".equals(indexPage) || indexPage == null) {
+            indexPage = "1";
+        }
+        int index = Integer.parseInt(indexPage);
+        int tag = index;
+        String search = request.getParameter("search");
+        if (search == null) {
+            search = "";
+        }
         HttpSession session = request.getSession();
         UserDTO loginUser = (UserDTO) session.getAttribute("LOGIN_USER");
         String curUser = loginUser.getRoleID();
         List<ResidentDTO> listResident = null;
         ResidentDAO dao = new ResidentDAO();
-        String url = "";
         if (AD.equals(curUser)) {
             url = ERROR_AD;
         } else if (EM.equals(curUser)) {
             url = ERROR_EM;
         }
-
         try {
-            String search = request.getParameter("search");
-            if (search == null) {
-                search = "";
+            count = dao.countResident("1", search);
+            int endPage = count / 5;
+            if (count % 5 != 0) {
+                endPage++;
             }
-            listResident = dao.getListResident(search);
+            listResident = dao.getListResident(search, index);
+            request.setAttribute("endP", endPage);
+            request.setAttribute("tag", tag);
             if (listResident.size() > 0) {
                 request.setAttribute("LIST_RESIDENT", listResident);
                 url = SUCCESS;
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             log("Error at ViewResidentController: " + e.toString());
         } finally {
             request.getRequestDispatcher(url).forward(request, response);
