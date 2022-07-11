@@ -41,6 +41,9 @@
             }
         %>
 
+        <jsp:include page="headerAdmin.jsp"></jsp:include>
+        <a href="managerAccount.jsp">Manager Account</a>
+
 
         <form action="MainController">
             <input type="submit" name="action" value="Logout"/>
