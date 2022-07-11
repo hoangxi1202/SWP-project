@@ -31,27 +31,26 @@ public class befResidentRequestController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         String url = ERROR;
-        List<ResidentDTO> listResAdd = null;
-        List<ResidentDTO> listResDel = null;
-        List<RequestDTO> listReqAdd = null;
-        List<RequestDTO> listReqDel = null;
+        List<ResidentDTO> listResident = null;
+        List<RequestDTO> listRequest = null;
         try {
             ResidentDAO dao = new ResidentDAO();
+<<<<<<< HEAD
             listReqAdd = dao.getListRequest("add");
             listReqDel = dao.getListRequest("delete");
             if (listReqAdd.size() > 0) {
                 for (RequestDTO requestDTO : listReqAdd) {
                     listResAdd = dao.getListRequestRes("add", requestDTO.getOwnerId());
                     requestDTO.setListRes(listResAdd);
+=======
+            listRequest = dao.getListRequest();
+            if (listRequest.size() > 0) {
+                for (RequestDTO requestDTO : listRequest) {
+                    listResident = dao.getListRequestRes(requestDTO.getRequestId());
+                    requestDTO.setListRes(listResident);
+>>>>>>> 3e2547f2cf0d384ef18769796a63854499d27e03
                 }
-                request.setAttribute("LIST_RESIDENT_ADD", listReqAdd);
-            }
-            if (listReqDel.size() > 0) {
-                for (RequestDTO requestDTO : listReqDel) {
-                    listResDel = dao.getListRequestRes("delete", requestDTO.getOwnerId());
-                    requestDTO.setListRes(listResDel);
-                }
-                request.setAttribute("LIST_RESIDENT_DEL", listReqDel);
+                request.setAttribute("LIST_RESIDENT_REQ", listRequest);
             }
             url = SUCCESS;
         } catch (SQLException e) {

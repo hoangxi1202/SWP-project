@@ -139,6 +139,14 @@
         <!--END-NEW-->
         <jsp:include page="footer.jsp"></jsp:include>
         </body>
+<<<<<<< HEAD
+=======
+        <script>
+            $(document).ready(function () {
+                $(".resident").addClass("active");
+            });
+        </script>
+>>>>>>> 3e2547f2cf0d384ef18769796a63854499d27e03
     <c:if test="${requestScope.SUCCESS!=null}">
         <c:if test="${not empty requestScope.SUCCESS}">
             <script>
