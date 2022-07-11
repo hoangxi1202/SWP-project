@@ -75,7 +75,11 @@ public class ResidentDAO {
             + "  FROM Residents";
     private static final String COUNT_RESIDENT_V2 = "SELECT COUNT(residentId) as [count]\n"
             + "  FROM Residents WHERE (fullName LIKE ? OR ownerId LIKE ?) and status LIKE ?";
+<<<<<<< HEAD
+    private static final String COUNT_OWNER_V2 = "SELECT COUNT(ownerId) as [count]\n"
+=======
     private static final String COUNT_OWNER = "SELECT COUNT(ownerId) as [count]\n"
+>>>>>>> 3e2547f2cf0d384ef18769796a63854499d27e03
             + "  FROM Owners WHERE (fullName LIKE ? OR ownerId LIKE ?) and status LIKE ?";
     private static final String COUNT_RESIDENT_BY_OWNERID = "SELECT COUNT(Residents.residentId) as [count]\n"
             + " FROM Residents, Owners WHERE Residents.ownerId = Owners.ownerId\n"
@@ -471,6 +475,51 @@ public class ResidentDAO {
         return listResident;
     }
 
+    public List<ResidentDTO> getListResident(String search, int index) throws SQLException {
+        List<ResidentDTO> listResident = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement ptm = null;
+        ResultSet rs = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                List<ResidentDTO> listOwner = getListOwner(search, index);
+                listResident.addAll(listOwner);
+                if (listResident.size() < 5) {
+                    ptm = conn.prepareStatement(SEARCH_BY_NAME);
+                    ptm.setString(1, "%" + search + "%");
+                    ptm.setString(2, "%" + search + "%");
+                    ptm.setInt(3, (index - 1) * 5);
+                    ptm.setInt(4, 5 - listResident.size());
+                    rs = ptm.executeQuery();
+                    while (rs.next()) {
+                        String residentId = rs.getString("residentId");
+                        String ownerId = rs.getString("ownerId");
+                        String name = rs.getString("fullName");
+                        String dob = rs.getString("dob");
+                        boolean gender = Utils.getBoolean(rs.getString("sex"));
+                        String job = rs.getString("job");
+                        String phone = rs.getString("phone");
+                        String req = "";
+                        listResident.add(new ResidentDTO(residentId, ownerId, name, dob, gender, job, phone, true, req));
+                    }
+                }
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (ptm != null) {
+                ptm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return listResident;
+    }
+
     public int getIndexRequest() throws SQLException {
         int count = 0;
         Connection conn = null;
@@ -509,7 +558,11 @@ public class ResidentDAO {
             if (conn != null) {
                 stm = conn.prepareStatement(ADD_RESIDENT);
                 stm.setString(1, res.getResidentId());
+<<<<<<< HEAD
+                stm.setString(2, "N'" + res.getName() + "'");
+=======
                 stm.setString(2, res.getName());
+>>>>>>> 3e2547f2cf0d384ef18769796a63854499d27e03
                 stm.setString(3, res.getDob());
                 if (res.isGender() == true) {
                     stm.setString(4, "male");
@@ -589,6 +642,38 @@ public class ResidentDAO {
         return check;
     }
 
+<<<<<<< HEAD
+    public boolean updateResident(ResidentDTO resident) throws SQLException {
+        boolean check = false;
+        Connection conn = null;
+        PreparedStatement stm = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(UPDATE_INFO_RESIDENT);
+                stm.setString(1, resident.getName());
+                stm.setString(2, resident.getDob());
+                stm.setString(3, resident.isGender() ? "male" : "female");
+                stm.setString(4, resident.getJob());
+                stm.setString(5, resident.getPhone());
+                stm.setString(6, resident.isStatus() ? "1" : "0");
+                stm.setString(7, resident.getResidentId());
+                check = stm.executeUpdate() > 0;
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            if (conn != null) {
+                conn.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+        }
+        return check;
+    }
+
+=======
+>>>>>>> 3e2547f2cf0d384ef18769796a63854499d27e03
     public boolean updateOwner(ResidentDTO resident) throws SQLException {
         boolean check = false;
         Connection conn = null;
@@ -664,7 +749,11 @@ public class ResidentDAO {
         return check;
     }
 
+<<<<<<< HEAD
+    private int countOwner(String search) throws SQLException {
+=======
     private int countOwner(String search, String status) throws SQLException {
+>>>>>>> 3e2547f2cf0d384ef18769796a63854499d27e03
         int count = 0;
         Connection conn = null;
         PreparedStatement ptm = null;
@@ -672,10 +761,16 @@ public class ResidentDAO {
         try {
             conn = Utils.getConnection();
             if (conn != null) {
+<<<<<<< HEAD
+                ptm = conn.prepareStatement(COUNT_OWNER_V2);
+                ptm.setString(1, "%" + search + "%");
+                ptm.setString(2, "%" + search + "%");
+=======
                 ptm = conn.prepareStatement(COUNT_OWNER);
                 ptm.setString(1, "%" + search + "%");
                 ptm.setString(2, "%" + search + "%");
                 ptm.setString(3, "%" + status + "%");
+>>>>>>> 3e2547f2cf0d384ef18769796a63854499d27e03
                 rs = ptm.executeQuery();
                 if (rs.next()) {
                     count = Integer.parseInt(rs.getString("count"));
@@ -712,7 +807,11 @@ public class ResidentDAO {
                 if (rs.next()) {
                     count = Integer.parseInt(rs.getString("count"));
                 }
+<<<<<<< HEAD
+                count += countOwner(search);
+=======
                 count += countOwner(search, status);
+>>>>>>> 3e2547f2cf0d384ef18769796a63854499d27e03
             }
         } catch (ClassNotFoundException | SQLException e) {
         } finally {
