@@ -37,8 +37,17 @@ public class SearchApartmentController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession();
         UserDTO loginUser = (UserDTO) session.getAttribute("LOGIN_USER");
+
+        String indexPage = request.getParameter("index");
+        if ("".equals(indexPage) || indexPage == null) {
+            indexPage = "1";
+        }
+        int index = Integer.parseInt(indexPage);
+
         String curUser = loginUser.getRoleID();
         String url = "";
+        int count = 0;
+
         List<ApartmentDTO> listApartment = null;
         ApartmentDAO dao = new ApartmentDAO();
         if (AD.equals(curUser)) {
@@ -47,12 +56,19 @@ public class SearchApartmentController extends HttpServlet {
             url = ERROR_US;
         }
         try {
+            count = dao.getTotalApartment();
+            int endPage = count / 10;
+            if (count % 10 != 0) {
+                endPage++;
+            }
+
             String searchApartment = request.getParameter("searchApartment");
             if (searchApartment == null) {
                 searchApartment = "";
             }
             if (AD.equals(curUser)) {
-                listApartment = dao.getListApartment_AD(searchApartment);
+                listApartment = dao.getListApartment_AD(searchApartment, index);
+                request.setAttribute("endP", endPage);
             } else if (US.equals(curUser)) {
                 listApartment = dao.getListApartment_US(searchApartment);
             }

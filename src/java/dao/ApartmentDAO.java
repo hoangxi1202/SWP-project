@@ -20,14 +20,21 @@ import utils.Utils;
  */
 public class ApartmentDAO {
 
+    Connection conn = null;
+    PreparedStatement ptm = null;
+    ResultSet rs = null;
+
     private static final String AD_SEARCH_APARTMENT = "SELECT A.apartmentId, A.size, A.image, B.buildingName, C.rentPrice, C.salePrice, [Status] = CASE [status]\n"
             + "WHEN 0 THEN 'Het phong' ELSE 'Con phong' END\n"
             + "FROM Apartments A, Buildings B, ApartmentTypes C\n"
-            + "WHERE apartmentId LIKE ? and B.buildingId=A.buildingId and C.apartmentTypeId=A.apartmentTypeId";
+            + "WHERE apartmentId LIKE ? and B.buildingId=A.buildingId and C.apartmentTypeId=A.apartmentTypeId\n"
+            + "ORDER BY A.apartmentId ASC\n"
+            + "OFFSET ? ROWS FETCH NEXT 10 ROWS ONLY;";
     private static final String US_SEARCH_APARTMENT = "SELECT A.apartmentId, A.size, A.image, B.buildingName, C.rentPrice, C.salePrice, [Status] = CASE [status]\n"
             + "WHEN 1 THEN 'Con phong' END\n"
             + "FROM Apartments A, Buildings B, ApartmentTypes C\n"
-            + "WHERE apartmentId LIKE ? and B.buildingId=A.buildingId and C.apartmentTypeId=A.apartmentTypeId and status = 1";
+            + "WHERE apartmentId LIKE ? and B.buildingId=A.buildingId and C.apartmentTypeId=A.apartmentTypeId and status = 1\n"
+            + "ORDER BY A.apartmentId ASC";
 //   private static final String UPDATE_APARTMENT = "\n"
 //            + "UPDATE Apartments \n"
 //            + "SET image = ?\n"
@@ -37,19 +44,20 @@ public class ApartmentDAO {
 //            + "SET rentPrice = ?, salePrice = ?\n"
 //            + "FROM Apartments A, ApartmentTypes B	\n"
 //            + "WHERE A.apartmentTypeId=B.apartmentTypeId and A.apartmentId LIKE ?\n"; 
-    private static final String UPDATE_APARTMENT = "UPDATE Apartments SET image = ? WHERE apartmentId = ?";
+    private static final String UPDATE_APARTMENT = "UPDATE Apartments SET image = ? WHERE apartmentId LIKE ?";
+    private static final String UPDATE_APARTMENT_PRICE = "UPDATE Aparments SET ";
     private static final String UPDATE_APARTMENT_STATUS = "UPDATE Apartments SET status = 0 WHERE apartmentId like ?";
+    private static final String GET_TOTAL_APARTMENT = "SELECT count(*) FROM Apartments";
 
-    public List<ApartmentDTO> getListApartment_AD(String searchApartment) throws SQLException {
+    public List<ApartmentDTO> getListApartment_AD(String searchApartment, int index) throws SQLException {
         List<ApartmentDTO> listApartment = new ArrayList<>();
-        Connection conn = null;
-        PreparedStatement ptm = null;
-        ResultSet rs = null;
+
         try {
             conn = Utils.getConnection();
             if (conn != null) {
                 ptm = conn.prepareStatement(AD_SEARCH_APARTMENT);
                 ptm.setString(1, "%" + searchApartment + "%");
+                ptm.setInt(2, (index - 1) * 10);
                 rs = ptm.executeQuery();
                 while (rs.next()) {
                     String apartmentId = rs.getString("apartmentId");
@@ -80,9 +88,9 @@ public class ApartmentDAO {
 
     public List<ApartmentDTO> getListApartment_US(String search) throws SQLException {
         List<ApartmentDTO> listApartment = new ArrayList<>();
-        Connection conn = null;
-        PreparedStatement ptm = null;
-        ResultSet rs = null;
+//        Connection conn = null;
+//        PreparedStatement ptm = null;
+//        ResultSet rs = null;
         try {
             conn = Utils.getConnection();
             if (conn != null) {
@@ -116,38 +124,39 @@ public class ApartmentDAO {
         return listApartment;
     }
 
-    public boolean updateApartment(String apartmentId, String image) throws SQLException {
-        boolean check = false;
-        Connection conn = null;
-        PreparedStatement ptm = null;
+    public int getTotalApartment() {
+//        Connection conn = null;
+//        PreparedStatement ptm = null;
+//        ResultSet rs = null;
         try {
             conn = Utils.getConnection();
             if (conn != null) {
-                ptm = conn.prepareStatement(UPDATE_APARTMENT);
-//                ptm.setString(1, apartment.getSize());
-//                ptm.setString(2, apartment.getBuildingName());
-                ptm.setString(1, apartmentId);
-                ptm.setString(2, image);
-//                ptm.setString(4, Float.toString(apartment.getRentPrice()));
-//                ptm.setString(5, Float.toString(apartment.getSalePrice()));
-//                ptm.setString(6, apartment.getStatus());
-
-                check = ptm.executeUpdate() > 0;
+                ptm = conn.prepareStatement(GET_TOTAL_APARTMENT);
+                rs = ptm.executeQuery();
+                while (rs.next()) {
+                    return rs.getInt(1);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            if (ptm != null) {
-                ptm.close();
-            }
-            if (conn != null) {
-                conn.close();
-            }
         }
-        return check;
+        return 0;
     }
 
-//    public boolean updateApartment(ApartmentDTO apartment) throws SQLException {
+    public List<ApartmentDTO> pagingApartment(int index) {
+        List<ApartmentDTO> list = new ArrayList<>();
+        return list;
+    }
+
+    public static void main(String[] args) throws SQLException {
+        ApartmentDAO dao = new ApartmentDAO();
+        String searchApartment = "";
+        List<ApartmentDTO> list = dao.getListApartment_AD(searchApartment, 9);
+        for (ApartmentDTO apartmentDTO : list) {
+            System.out.println(apartmentDTO);
+        }
+    }
+//    public boolean updateApartment(String apartmentId, String image) throws SQLException {
 //        boolean check = false;
 //        Connection conn = null;
 //        PreparedStatement ptm = null;
@@ -157,8 +166,8 @@ public class ApartmentDAO {
 //                ptm = conn.prepareStatement(UPDATE_APARTMENT);
 ////                ptm.setString(1, apartment.getSize());
 ////                ptm.setString(2, apartment.getBuildingName());
-//                ptm.setString(1, apartment.getApartmentId());
-//                ptm.setString(2, apartment.getImage());
+//                ptm.setString(1, apartmentId);
+//                ptm.setString(2, image);
 ////                ptm.setString(4, Float.toString(apartment.getRentPrice()));
 ////                ptm.setString(5, Float.toString(apartment.getSalePrice()));
 ////                ptm.setString(6, apartment.getStatus());
@@ -177,10 +186,71 @@ public class ApartmentDAO {
 //        }
 //        return check;
 //    }
-    public boolean updateApartmentStatus(String apartmentId) throws SQLException {
+
+//    public void updateApartment(String apartmentId, String image) throws SQLException {
+//        //boolean check = false;
+////        Connection conn = null;
+////        PreparedStatement ptm = null;
+//        try {
+//            conn = Utils.getConnection();
+//            if (conn != null) {
+//                ptm = conn.prepareStatement(UPDATE_APARTMENT);
+////                ptm.setString(1, apartment.getSize());
+////                ptm.setString(2, apartment.getBuildingName());
+//                ptm.setString(1, apartmentId);
+//                ptm.setString(2, image);
+////                ptm.setString(4, Float.toString(apartment.getRentPrice()));
+////                ptm.setString(5, Float.toString(apartment.getSalePrice()));
+////                ptm.setString(6, apartment.getStatus());
+//
+//                ptm.executeUpdate();
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        } finally {
+//            if (ptm != null) {
+//                ptm.close();
+//            }
+//            if (conn != null) {
+//                conn.close();
+//            }
+//        }
+//    }
+
+    public boolean updateApartment(ApartmentDTO apartment) throws SQLException {
         boolean check = false;
         Connection conn = null;
         PreparedStatement ptm = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                ptm = conn.prepareStatement(UPDATE_APARTMENT);
+//                ptm.setString(1, apartment.getSize());
+//                ptm.setString(2, apartment.getBuildingName());
+                ptm.setString(1, apartment.getImage());
+                ptm.setString(2, apartment.getApartmentId());
+//                ptm.setString(4, Float.toString(apartment.getRentPrice()));
+//                ptm.setString(5, Float.toString(apartment.getSalePrice()));
+//                ptm.setString(6, apartment.getStatus());
+
+                check = ptm.executeUpdate() > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (ptm != null) {
+                ptm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return check;
+    }
+    public boolean updateApartmentStatus(String apartmentId) throws SQLException {
+        boolean check = false;
+//        Connection conn = null;
+//        PreparedStatement ptm = null;
         try {
             conn = Utils.getConnection();
             if (conn != null) {

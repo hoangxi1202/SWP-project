@@ -1,6 +1,6 @@
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page import="dto.ContractDTO"%>
-<%@page import="dao.ApartmentError"%>
 <%@page import="dto.ApartmentDTO"%>
 <%@page import="java.util.List"%>
 <%@page import="dto.UserDTO"%>
@@ -9,10 +9,25 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
         <title>Admin Page</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <link rel="stylesheet" type="text/css" href="css/admin.css">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
     </head>
     <body>
+        <header class="header">
+            <nav class="navbar">
+                <ul>
+                    <li><a href="managerAccount.jsp">Manager Account</a></li>
+                    <li><a href="troubleType.jsp">Trouble Type</a></li>
+                    <li><a href="viewContract.jsp">Contract</a></li>
+                </ul>
+            </nav>
+        </header>
         <%
             UserDTO loginUser = (UserDTO) session.getAttribute("LOGIN_USER");
             if (loginUser == null || !"AD".equals(loginUser.getRoleID())) {
@@ -25,8 +40,10 @@
                 search = "";
             }
         %>
+
         <jsp:include page="headerAdmin.jsp"></jsp:include>
         <a href="managerAccount.jsp">Manager Account</a>
+
 
         <form action="MainController">
             <input type="submit" name="action" value="Logout"/>
@@ -46,161 +63,157 @@
             if (list != null) {
                 if (!list.isEmpty()) {
         %>
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>User ID</th>
-                    <th>Role ID</th>
-                    <th>Password</th>
-                    <th>Delete</th>
-                    <!--                    <th>Update</th>-->
-                </tr>
-            </thead>
-            <tbody>
+        <div class="table-wrapper">
+            <table border="1" class="fl-table">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>User ID</th>
+                        <th>Role ID</th>
+                        <th>Password</th>
+                        <th>Delete</th>
+                        <!--                    <th>Update</th>-->
+                    </tr>
+                </thead>
+                <tbody>
+                    <%
+                        int count = 1;
+                        for (UserDTO user : list) {
+                    %>
+                <form action="MainController" >
+                    <tr>
+                        <td><%= count++%></td>
+                        <td><%= user.getUserID()%></td>          
+                        <td>
+                            <%=user.getRoleID()%>
+                        </td>                   
+                        <td><%= user.getPassword()%></td>
+                        <td>
+                 <!--//            <a href="MainController?action=Delete&userID=<%=user.getUserID()%>&search=<%=search%> " >Delete</a>--> 
+                            <input type="submit" name="action" value="Delete"/>
+                            <input type="hidden" name="userID" value="<%=user.getUserID()%>"/>
+                            <input type="hidden" name="search" value="<%=search%>"/> 
+                        </td>
+                        <!--                    <td>
+                                                <input type="submit" name="action" value="Update"/>
+                                                <input type="hidden" name="userID" value="<%=user.getUserID()%>"/>
+                                                <input type="hidden" name="search" value="<%=search%>"/> 
+                                            </td>-->
+                    </tr>
+                </form>
                 <%
-                    int count = 1;
-                    for (UserDTO user : list) {
+                    }
                 %>
-            <form action="MainController" >
-                <tr>
-                    <td><%= count++%></td>
-                    <td><%= user.getUserID()%></td>          
-                    <td>
-                        <%=user.getRoleID()%>
-                    </td>                   
-                    <td><%= user.getPassword()%></td>
-                    <td>
-             <!--//            <a href="MainController?action=Delete&userID=<%=user.getUserID()%>&search=<%=search%> " >Delete</a>--> 
-                        <input type="submit" name="action" value="Delete"/>
-                        <input type="hidden" name="userID" value="<%=user.getUserID()%>"/>
-                        <input type="hidden" name="search" value="<%=search%>"/> 
-                    </td>
-                    <!--                    <td>
-                                            <input type="submit" name="action" value="Update"/>
-                                            <input type="hidden" name="userID" value="<%=user.getUserID()%>"/>
-                                            <input type="hidden" name="search" value="<%=search%>"/> 
-                                        </td>-->
-                </tr>
-            </form>
-            <%
-                }
-            %>
-        </tbody>
-    </table>
-    <%
-        }
-        String error_message = (String) request.getAttribute("ERROR_MESSSAGE");
-        if (error_message == null) {
-            error_message = "";
-        }
-    %>
-    <h1 ><%= error_message%></h1>
-    <%
-        }
-    %>
-</body>
-
-<form action="MainController">
-    <input type="submit" name="action" value="ViewTrouble"/>
-</form>
-<form action="MainController">
-    <input type="text" name="search" value="${param.search}"/>
-    <input type="submit" name="action" value="ViewResident"/>
-</form>
-
-<a href="troubleType.jsp">View Trouble Type</a><br>
-<a href="viewContract.jsp">View Contract</a><br>
-
-
-<%
-    String searchApartment = (String) request.getParameter("searchApartment");
-    if (searchApartment == null) {
-        searchApartment = "";
-    }
-%>
-<div class="input-group mb-3">
-    <form action="MainController">
-        <div class="input-group-prepend">
-            <input type="text" name="searchApartment" class="form-control" value="<%= searchApartment%>"/>
+                </tbody>
+            </table>
         </div>
-        <input type="submit" class="btn btn-outline-secondary" name="action" value="SearchApartment"/>
-    </form>
-</div>
-<%
-    List<ApartmentDTO> listApartment = (List<ApartmentDTO>) request.getAttribute("LIST_APARTMENT");
-    if (listApartment != null) {
-        if (listApartment.size() > 0) {
-%>
-<table border="1" class="table">
-    <thead class="thead-light">
-        <tr>
-            <th scope="col">No</th>
-            <th scope="col">Apartment ID</th>
-            <th scope="col">Size</th>
-            <th scope="col">Image</th>
-            <th scope="col">Building Name</th>
-            <th scope="col">Rent Price</th>
-            <th scope="col">Sale Price</th>
-            <th scope="col">Status</th>
-        </tr>
-    </thead>
-    <tbody>
+        <%
+            }
+            String error_message = (String) request.getAttribute("ERROR_MESSSAGE");
+            if (error_message == null) {
+                error_message = "";
+            }
+        %>
+        <h1 ><%= error_message%></h1>
+        <%
+            }
+        %>
+        <form action="MainController">
+            <input type="submit" name="action" value="ViewTrouble"/>
+        </form>
+        <form action="MainController">
+            <input type="text" name="search" value="${param.search}"/>
+            <input type="submit" name="action" value="ViewResident"/>
+        </form>
 
         <%
-            int count = 1;
-            for (ApartmentDTO apartment : listApartment) {
+            String searchApartment = (String) request.getParameter("searchApartment");
+            if (searchApartment == null) {
+                searchApartment = "";
+            }
         %>
-    <form action="MainController" >
-        <tr>
-            <td><%= count++%></td>
-            <td>
-                <input type="text" name="apartmentId" value="<%= apartment.getApartmentId()%>" readonly=""/>
-            </td>
-            <td>
-                <input type="text" name="size" value="<%= apartment.getSize()%>" readonly=""/>
-            </td>
-            <td>
-                <input type="text" name="image" value="<%= apartment.getImage()%>" required=""/>
-                <div class="text-center">
-                    <img  class="rounded"  src="<%=apartment.getImage()%>" width="50px" height="50px"/>
-                </div>
-            </td>
-            <td>
-                <input type="text" name="buildingName" value="<%= apartment.getBuildingName()%>" readonly=""/>
-            </td>
-            <td>
-                <input type="number" name="rentPrice" value="<%= apartment.getRentPrice()%>" required=""/>
-            </td>
-            <td>
-                <input type="number" name="salePrice" value="<%= apartment.getSalePrice()%>" required=""/>
-            </td>
-            <td>
-                <input type="text" name="status" value="<%= apartment.getStatus()%>" required=""/>
-            </td>
-
-            <td>
-                <input type="submit" name="action" value="UpdateApartmentStatus"/>
-                <input type="hidden" name="searchApartment" value="<%= searchApartment%>"/>
-            </td>
-            <td>
-                <input type="submit" name="action" value="UpdateApartment"/>
-                <input type="hidden" name="searchApartment" value="<%= searchApartment%>"/>
-            </td>
-        </tr>
-    </form>
-    <%
-        }
-    %>
-</tbody>
-</table>
-<%
-        }
-    }
-%>
+        <form action="MainController">
+            <input type="text" name="searchApartment" value="<%= searchApartment%>"/>
+            <input type="submit" name="action" value="SearchApartment"/>
+        </form>
 
 
+        <%
+            List<ApartmentDTO> listApartment = (List<ApartmentDTO>) request.getAttribute("LIST_APARTMENT");
+            if (listApartment != null) {
+                if (listApartment.size() > 0) {
+        %>
+        <div class="table-wrapper">
+            <table border="1" class="fl-table">
+                <thead>
+                    <tr>
+                        <th style="width:15px">Apartment ID</th>
+                        <th style="width:79px">Size</th>
+                        <th style="width:194px">Image</th>
+                        <th style="width:108px">Building Name</th>
+                        <th style="width:115px">Rent Price</th>
+                        <th style="width:120px">Sale Price</th>
+                        <th style="width:120px">Status</th>
+                    </tr>
+                </thead>
+            </table>
+            <table>
+                <tbody>
+                    <%
+                        for (ApartmentDTO apartment : listApartment) {
+                    %>
+                <form action="MainController" >
 
-</body>
+                    <tr>
+                        <td class="id">
+                            <input type="text" name="apartmentId" value="<%= apartment.getApartmentId()%>" readonly="" style="width:154px"/>
+                        </td>
+                        <td>
+                            <input type="text" name="size" value="<%= apartment.getSize()%>" readonly="" style="width:110px"/>
+                        </td>
+                        <td>
+                            <input type="text" name="image" value="<%= apartment.getImage()%>" required="" style="width:275px"/>
+                            <div class="img">
+                                <img class="rounded" src="<%=apartment.getImage()%>" width="100px" height="100px"/>
+                            </div>
+                        </td>
+                        <td>
+                            <input type="text" name="buildingName" value="<%= apartment.getBuildingName()%>" readonly="" style="width:163px"/>
+                        </td>
+                        <td>
+                            <input type="number" name="rentPrice" value="<%= apartment.getRentPrice()%>" required="" style="width:162px"/>
+                        </td>
+                        <td>
+                            <input type="number" name="salePrice" value="<%= apartment.getSalePrice()%>" required="" style="width:168px"/>
+                        </td>
+                        <td>
+                            <input type="text" name="status" value="<%= apartment.getStatus()%>" required="" style="width:170px"/>
+                        </td>
+
+                        <td>
+
+                            <button class="btn btn-outline-secondary" type="submit" name="action" value="UpdateApartmentStatus" style="width: 150px">Update status</button>
+                            <input type="hidden" name="searchApartment" value="<%= searchApartment%>"/>
+                        </td>
+                        <td>
+                            <button class="btn btn-outline-secondary" type="submit" name="action" value="UpdateApartment" style="width: 150px">Update</button>
+                            <input type="hidden" name="searchApartment" value="<%= searchApartment%>"/>
+                        </td>
+                    </tr>
+                </form>
+                <%
+                    }
+                %>
+                </tbody>
+            </table>
+        </div>
+        <%
+                }
+            }
+        %>
+        <c:forEach begin="1" end="${endP}" var="i">
+            <a href="MainController?action=SearchApartment&index=${i}">${i}</a>
+        </c:forEach>
+    </body>
 
 </html>
