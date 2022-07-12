@@ -17,14 +17,19 @@
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <body>        
-        <jsp:include page="headerEmp.jsp"></jsp:include>
+        <c:if test="${sessionScope.LOGIN_USER.roleID == 'EM'}">
+            <jsp:include page="headerEmp.jsp"></jsp:include>
+        </c:if>
+        <c:if test="${sessionScope.LOGIN_USER.roleID == 'AD'}">
+            <jsp:include page="headerAdmin.jsp"></jsp:include>
+        </c:if>
 
-            <!--NEW-->
-            <div class="container">
-                <h1 class="text-center">Danh sách cư dân</h1>
-                <form action="MainController" method="POST">
-                    <div class="input-group mb-3 btn-search">
-                        <input type="text" class="form-control" placeholder="Tên hoặc Mã chủ sở hữu..." name="search" value="${param.search}"/>
+        <!--NEW-->
+        <div class="container">
+            <h1 class="text-center">Danh sách cư dân</h1>
+            <form action="MainController" method="POST">
+                <div class="input-group mb-3 btn-search">
+                    <input type="text" class="form-control" placeholder="Tên hoặc Mã chủ sở hữu..." name="search" value="${param.search}"/>
                     <div class="input-group-append">                        
                         <button class="btn" type="submit" name="action" value="ViewResident">
                             <span class="input-group-text">
@@ -91,15 +96,19 @@
                                 </div>
                                 <input type="hidden" name="search" value="${param.search}" readonly=""/>
                                 <input type="hidden" name="index" value="${param.index}" readonly=""/>
-                                <button class="btn-add btn btn-outline-success float-right" type="submit" name="action" value="UpdateResident">Cập nhật</button> 
+                                <c:if test="${sessionScope.LOGIN_USER.roleID == 'EM'}">
+                                    <button class="btn-add btn btn-outline-success float-right" type="submit" name="action" value="UpdateResident">Cập nhật</button> 
+                                </c:if>
                             </form>
-                            <form action="MainController" method="POST">
-                                <input type="hidden" name="search" value="${param.search}" readonly=""/>
-                                <input type="hidden" name="index" value="${param.index}" readonly=""/>
-                                <input type="hidden" name="residentId" value="${resident.residentId}"/>
-                                <input type="hidden" name="ownerId" value="${resident.ownerId}"/>
-                                <button type="submit" class="btn btn-add btn-outline-warning float-right" name="action" value="RemoveResident">Xóa</button>
-                            </form>
+                            <c:if test="${sessionScope.LOGIN_USER.roleID == 'EM'}">
+                                <form action="MainController" method="POST">
+                                    <input type="hidden" name="search" value="${param.search}" readonly=""/>
+                                    <input type="hidden" name="index" value="${param.index}" readonly=""/>
+                                    <input type="hidden" name="residentId" value="${resident.residentId}"/>
+                                    <input type="hidden" name="ownerId" value="${resident.ownerId}"/>
+                                    <button type="submit" class="btn btn-add btn-outline-warning float-right" name="action" value="RemoveResident">Xóa</button>
+                                </form>
+                            </c:if>
                             <!--END Each Resident-->
 
                         </div>
@@ -139,14 +148,14 @@
         <!--END-NEW-->
         <jsp:include page="footer.jsp"></jsp:include>
         </body>
-<<<<<<< HEAD
-=======
+        <<<<<<< HEAD
+        =======
         <script>
             $(document).ready(function () {
                 $(".resident").addClass("active");
             });
         </script>
->>>>>>> 3e2547f2cf0d384ef18769796a63854499d27e03
+        >>>>>>> 3e2547f2cf0d384ef18769796a63854499d27e03
     <c:if test="${requestScope.SUCCESS!=null}">
         <c:if test="${not empty requestScope.SUCCESS}">
             <script>

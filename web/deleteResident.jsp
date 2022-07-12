@@ -47,7 +47,7 @@
                                     </div>
                                     <div class="col-md-4 mb-3" >
                                         <label for="validationServer02">Nghề nghiệp: </label>
-                                        <input type="text" class="form-control is-valid" id="validationServer01" value="${resident.job}" readonly="">
+                                        <input type="text" class="form-control" id="validationServer01" value="${resident.job}" readonly="">
                                     </div>
                                     <div class="col-md-4 mb-3" >
                                         <label for="validationServer02">Số điện thoại: </label>
@@ -73,6 +73,11 @@
         <jsp:include page="footer.jsp"></jsp:include>
     </body>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".request").addClass("active");
+        });
+    </script>
     <script>
         $(document).ready(function () {
             $(".request").addClass("active");

@@ -27,7 +27,7 @@
                                     <div class="col-md-3 mb-3">
                                         <label>Hành động: </label>
                                         <c:if test="${request.todo eq 'add'}">
-                                        <input type="text" class="form-control" value="Thêm" readonly="">
+                                            <input type="text" class="form-control" value="Thêm" readonly="">
                                         </c:if>
                                         <c:if test="${request.todo eq 'delete'}">
                                         <input type="text" class="form-control" value="Xóa" readonly="">
