@@ -55,3 +55,17 @@ and open the template in the editor.
     */
     #no-more-tables td:before { content: attr(data-title); }
 }
+.btn-form {
+    padding: 0px 40px !important;
+    margin: 10px 10px !important;
+}
+
+.option-false {
+    color: red;
+    border-radius: 5px;
+}
+
+.option-true {
+    color: green;
+    border-radius: 5px;
+}

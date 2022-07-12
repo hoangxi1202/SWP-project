@@ -7,6 +7,7 @@ package controller;
 
 import dao.TroubleDAO;
 import java.io.IOException;
+import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,23 +21,25 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "UpdateTroubleController", urlPatterns = {"/UpdateTroubleController"})
 public class UpdateTroubleController extends HttpServlet {
 
-    private static final String ERROR = "MainController?action=ViewTrouble";
-    private static final String SUCCESS = "MainController?action=ViewTrouble";
+    private static final String ERROR = "MainController?action=ViewTrouble&index=";
+    private static final String SUCCESS = "MainController?action=ViewTrouble&index=";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         String url = ERROR;
         try {
+            String index = request.getParameter("index");
+            url += index;
             String troubleId = request.getParameter("troubleId");
             String status = request.getParameter("status");
             TroubleDAO dao = new TroubleDAO();
             dao.updateTrouble(troubleId, status);
-            url = SUCCESS;
-        } catch (Exception e) {
+            url = SUCCESS + index;
+        } catch (SQLException e) {
             log("Error at UpdateTroubleController: " + e.toString());
         } finally {
-            request.getRequestDispatcher(url).forward(request, response);
+//            request.getRequestDispatcher(url).forward(request, response);
         }
     }
 

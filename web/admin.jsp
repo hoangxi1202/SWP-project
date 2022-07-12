@@ -42,8 +42,17 @@
         %>
 
         <jsp:include page="headerAdmin.jsp"></jsp:include>
-        <a href="managerAccount.jsp">Manager Account</a>
+            <a href="managerAccount.jsp">Manager Account</a>
 
+            <form action="MainController">
+                <input type="submit" name="action" value="Logout"/>
+            </form>
+            <!--        <form action="MainController" method="POST">
+                        Email<input type="email" name="email" />
+                        <input type="submit" name="action" value="SendMail"/>
+                    </form>-->
+            <form action="MainController">
+                Search User<input type="text" name="search" value="<%=search%>"/>
 
         <form action="MainController">
             <input type="submit" name="action" value="Logout"/>
@@ -132,6 +141,7 @@
                 searchApartment = "";
             }
         %>
+<a href="MainController?action=Statistic">Thống kê</a>
         <form action="MainController">
             <input type="text" name="searchApartment" value="<%= searchApartment%>"/>
             <input type="submit" name="action" value="SearchApartment"/>
