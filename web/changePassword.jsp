@@ -21,32 +21,31 @@
         <!--NEW-->
         <div class="card login-form">
             <div class="card-body">
-                <h3 class="card-title text-center">Change password</h3>
+                <h3 class="card-title text-center">Đổi mật khẩu</h3>
                 <div class="card-text">
-                    <form class="form-password">
+                    <form class="form-password" action="MainController" method="POST">
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Your new password</label>
-                            <input type="password" class="form-control form-control-sm">
+                            <label for="exampleInputEmail1">Mật khẩu cũ</label>
+                            <input type="password" name="oldPassword" value="" class="form-control form-control-sm">
+                            ${requestScope.PASSWORD_ERROR.oldPassError}
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Repeat password</label>
-                            <input type="password" class="form-control form-control-sm">
+                            <label for="exampleInputEmail1">Mật khẩu mới</label>
+                            <input type="password" name="newPassword" value="" class="form-control form-control-sm">
+                            ${requestScope.PASSWORD_ERROR.newPassError}
                         </div>
-                        <button type="submit" class="btn btn-confirm btn-primary btn-block submit-btn">Confirm</button>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Nhập lại mật khẩu mới</label>
+                            <input type="password" name="reNewPassword" value="" class="form-control form-control-sm">
+                            ${requestScope.PASSWORD_ERROR.reNewPassError}
+                        </div>
+                        <button type="submit" name="action" value="ChangePassword" class="btn btn-confirm btn-primary btn-block submit-btn">Xác nhận</button>
                     </form>
                 </div>
             </div>
         </div>
         <!--END-NEW-->
-        <form action="MainController" method="POST">
-            Mật khẩu cũ: <input type="password" name="oldPassword" value=""/>
-            ${requestScope.PASSWORD_ERROR.oldPassError} </br>
-            Mật khẩu mới: <input type="password" name="newPassword" value=""/>
-            ${requestScope.PASSWORD_ERROR.newPassError}</br>
-            Nhập lại mật khẩu mới: <input type="password" name="reNewPassword" value=""/>
-            ${requestScope.PASSWORD_ERROR.reNewPassError}</br>
-            <input type="submit" name="action" value="ChangePassword"/>
-        </form>
+
         <jsp:include page="footer.jsp"></jsp:include>
     </body>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
@@ -55,6 +54,6 @@
             $(".password").addClass("active");
         });
     </script>
-        <script src="js/js.js" ></script>
+    <script src="js/js.js" ></script>
 
 </html>

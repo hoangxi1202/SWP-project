@@ -68,6 +68,39 @@ public class BillDAO {
             + "	AND Apartments.apartmentId = Contracts.apartmentId\n"
             + "	AND Contracts.ownerId = Owners.ownerId\n"
             + "	AND Owners.userId LIKE ? AND Bills.status LIKE ?";
+    private static final String STATISTIC = "SELECT sum(total) as [sum]\n"
+            + " FROM Bills WHERE [date] between ? and ?";
+
+    public double getStatistic(String fromDate, String toDate) throws SQLException {
+        double sum = 0;
+        Connection conn = null;
+        PreparedStatement ptm = null;
+        ResultSet rs = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                ptm = conn.prepareStatement(STATISTIC);
+                ptm.setString(1, fromDate);
+                ptm.setString(2, toDate);
+                rs = ptm.executeQuery();
+                while (rs.next()) {
+                    return rs.getDouble(1);
+                }
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (ptm != null) {
+                ptm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return sum;
+    }
 
     public int countBill(String userId, String status) throws SQLException {
         int index = 0;

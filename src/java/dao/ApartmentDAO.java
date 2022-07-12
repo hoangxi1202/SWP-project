@@ -39,6 +39,38 @@ public class ApartmentDAO {
 //            + "WHERE A.apartmentTypeId=B.apartmentTypeId and A.apartmentId LIKE ?\n"; 
     private static final String UPDATE_APARTMENT = "UPDATE Apartments SET image = ? WHERE apartmentId = ?";
     private static final String UPDATE_APARTMENT_STATUS = "UPDATE Apartments SET status = 0 WHERE apartmentId like ?";
+    private static final String COUNT_ROOM = "SELECT COUNT(apartmentId) AS [count]\n"
+            + "FROM Apartments WHERE status = ?;";
+
+    public int countApartment(String status) throws SQLException {
+        int count = 0;
+        Connection conn = null;
+        PreparedStatement ptm = null;
+        ResultSet rs = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                ptm = conn.prepareStatement(COUNT_ROOM);
+                ptm.setString(1, status);
+                rs = ptm.executeQuery();
+                if (rs.next()) {
+                    count = Integer.parseInt(rs.getString("count"));
+                }
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (ptm != null) {
+                ptm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return count;
+    }
 
     public List<ApartmentDTO> getListApartment_AD(String searchApartment) throws SQLException {
         List<ApartmentDTO> listApartment = new ArrayList<>();

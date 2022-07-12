@@ -1,6 +1,5 @@
 
 <%@page import="dto.ContractDTO"%>
-<%@page import="dao.ApartmentError"%>
 <%@page import="dto.ApartmentDTO"%>
 <%@page import="java.util.List"%>
 <%@page import="dto.UserDTO"%>
@@ -26,17 +25,17 @@
             }
         %>
         <jsp:include page="headerAdmin.jsp"></jsp:include>
-        <a href="managerAccount.jsp">Manager Account</a>
+            <a href="managerAccount.jsp">Manager Account</a>
 
-        <form action="MainController">
-            <input type="submit" name="action" value="Logout"/>
-        </form>
-        <!--        <form action="MainController" method="POST">
-                    Email<input type="email" name="email" />
-                    <input type="submit" name="action" value="SendMail"/>
-                </form>-->
-        <form action="MainController">
-            Search User<input type="text" name="search" value="<%=search%>"/>
+            <form action="MainController">
+                <input type="submit" name="action" value="Logout"/>
+            </form>
+            <!--        <form action="MainController" method="POST">
+                        Email<input type="email" name="email" />
+                        <input type="submit" name="action" value="SendMail"/>
+                    </form>-->
+            <form action="MainController">
+                Search User<input type="text" name="search" value="<%=search%>"/>
             <input type="submit" name="action" value="Search"/>
         </form>
 
@@ -198,8 +197,7 @@
         }
     }
 %>
-
-
+<a href="MainController?action=Statistic">Thống kê</a>
 
 </body>
 

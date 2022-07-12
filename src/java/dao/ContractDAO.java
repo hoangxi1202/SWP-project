@@ -25,12 +25,44 @@ public class ContractDAO {
 //            + "WHERE (B.fullName LIKE ? OR A.contractId LIKE ?) AND A.ownerId=B.ownerId \n"
 //            + "       AND A.apartmentId=C.apartmentId AND C.apartmentId=D.apartmentId \n"
 //            + "       AND D.billId=E.billId AND E.serviceId=F.serviceId";
+    private static final String COUNT_CONTRACT = "Select COUNT(contractId) as [count] \n"
+            + "FROM Contracts WHERE [status] = ?";
     private static final String AD_SEARCH_CONTRACT = "SELECT A.contractId, C.apartmentId, B.fullName, F.serviceName, A.startDate, A.endDate, A.[status]\n"
             + "FROM Contracts A, Owners B, Apartments C, Bills D, BillDetails E, Services F \n"
             + "WHERE  A.ownerId=B.ownerId \n"
             + "       AND A.apartmentId=C.apartmentId AND C.apartmentId=D.apartmentId \n"
             + "       AND D.billId=E.billId AND E.serviceId=F.serviceId";
     private static final String DELETE_CONTRACT = "UPDATE Contracts SET status = 0 WHERE contractId = ?";
+
+    public int countContract(String status) throws SQLException {
+        int count = 0;
+        Connection conn = null;
+        PreparedStatement ptm = null;
+        ResultSet rs = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                ptm = conn.prepareStatement(COUNT_CONTRACT);
+                ptm.setString(1, status);
+                rs = ptm.executeQuery();
+                if (rs.next()) {
+                    count = Integer.parseInt(rs.getString("count"));
+                }
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (ptm != null) {
+                ptm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return count;
+    }
 //    public List<ContractDTO> getListContract_AD(String search) throws SQLException {
 //        List<ContractDTO> listContract = new ArrayList<>();
 //        Connection conn = null;
@@ -68,6 +100,7 @@ public class ContractDAO {
 //        }
 //        return listContract;
 //    }\
+
     public List<ContractDTO> getListContract_AD() throws SQLException {
         List<ContractDTO> listContract = new ArrayList<>();
         Connection conn = null;
