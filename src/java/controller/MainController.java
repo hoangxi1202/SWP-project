@@ -87,6 +87,19 @@ public class MainController extends HttpServlet {
     private static final String CHANGE_PASSWORD = "ChangePassword";
     private static final String CHANGE_PASSWORD_CONTROLLER = "ChangePasswordController";
 
+    private static final String SEARCH_APARTMENT = "SearchApartment";
+    private static final String SEARCH_APARTMENT_CONTROLLER = "SearchApartmentController";
+    private static final String UPDATE_APARTMENT = "UpdateApartment";
+    private static final String UPDATE_APARTMENT_CONTROLLER = "UpdateApartmentController";
+    private static final String UPDATE_APARTMENT_STATUS = "UpdateApartmentStatus";
+    private static final String UPDATE_APARTMENT_STATUS_CONTROLLER = "UpdateApartmentStatusController";
+    private static final String AD_SEARCH_CONTRACT = "SearchContract";
+    private static final String AD_SEARCH_CONTRACT_CONTROLLER = "SearchContractController";
+    private static final String CREATE_TYPE_TROUBLE = "CreateTypeTrouble";
+    private static final String CREATE_TYPE_TROUBLE_CONTROLLER = "CreateTypeTroubleController";
+    private static final String SEARCH_TYPE_TROUBLE = "SearchTypeTrouble";
+    private static final String SEARCH_TYPE_TROUBLE_CONTROLLER = "SearchTypeTroubleController";
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -158,6 +171,18 @@ public class MainController extends HttpServlet {
                 url = VIEW_BILL_DETAIL_CONTROLLER;
             } else if (CHANGE_PASSWORD.equals(action)) {
                 url = CHANGE_PASSWORD_CONTROLLER;
+            } else if (SEARCH_APARTMENT.equals(action)) {
+                url = SEARCH_APARTMENT_CONTROLLER;
+            } else if (UPDATE_APARTMENT.equals(action)) {
+                url = UPDATE_APARTMENT_CONTROLLER;
+            } else if (UPDATE_APARTMENT_STATUS.equals(action)) {
+                url = UPDATE_APARTMENT_STATUS_CONTROLLER;
+            } else if (AD_SEARCH_CONTRACT.equals(action)) {
+                url = AD_SEARCH_CONTRACT_CONTROLLER;
+            } else if (CREATE_TYPE_TROUBLE.equals(action)) {
+                url = CREATE_TYPE_TROUBLE_CONTROLLER;
+            } else if (SEARCH_TYPE_TROUBLE.equals(action)) {
+                url = SEARCH_TYPE_TROUBLE_CONTROLLER;
             } else {
 
                 HttpSession session = request.getSession();

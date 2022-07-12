@@ -6,6 +6,7 @@
 package controller;
 
 import dao.ApartmentDAO;
+import dto.ApartmentDTO;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,8 +21,8 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "UpdateApartmentController", urlPatterns = {"/UpdateApartmentController"})
 public class UpdateApartmentController extends HttpServlet {
 
-    private static final String ERROR = "MainController?action=SearchApartment&searchApartment=";
-    private static final String SUCCESS = "MainController?action=SearchApartment&searchApartment=";
+    private static final String ERROR = "MainController?action=SearchApartment";
+    private static final String SUCCESS = "MainController?action=SearchApartment";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -31,7 +32,8 @@ public class UpdateApartmentController extends HttpServlet {
             String apartmentId = request.getParameter("apartmentId");
             String image = request.getParameter("image");
             ApartmentDAO dao = new ApartmentDAO();
-            dao.updateApartment(apartmentId, image);
+            ApartmentDTO apartment = new ApartmentDTO(apartmentId, image);
+            dao.updateApartment(apartment);
 
             url = SUCCESS;
 
