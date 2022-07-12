@@ -44,7 +44,6 @@
         <jsp:include page="headerAdmin.jsp"></jsp:include>
             <a href="managerAccount.jsp">Manager Account</a>
 
-<<<<<<< HEAD
             <form action="MainController">
                 <input type="submit" name="action" value="Logout"/>
             </form>
@@ -54,7 +53,6 @@
                     </form>-->
             <form action="MainController">
                 Search User<input type="text" name="search" value="<%=search%>"/>
-=======
 
         <form action="MainController">
             <input type="submit" name="action" value="Logout"/>
@@ -65,7 +63,6 @@
                 </form>-->
         <form action="MainController">
             Search User<input type="text" name="search" value="<%=search%>"/>
->>>>>>> d6baa5cd190d9e3a88dcfc9c3132bae6757fac39
             <input type="submit" name="action" value="Search"/>
         </form>
 
@@ -144,56 +141,7 @@
                 searchApartment = "";
             }
         %>
-<<<<<<< HEAD
-    <form action="MainController" >
-        <tr>
-            <td><%= count++%></td>
-            <td>
-                <input type="text" name="apartmentId" value="<%= apartment.getApartmentId()%>" readonly=""/>
-            </td>
-            <td>
-                <input type="text" name="size" value="<%= apartment.getSize()%>" readonly=""/>
-            </td>
-            <td>
-                <input type="text" name="image" value="<%= apartment.getImage()%>" required=""/>
-                <div class="text-center">
-                    <img  class="rounded"  src="<%=apartment.getImage()%>" width="50px" height="50px"/>
-                </div>
-            </td>
-            <td>
-                <input type="text" name="buildingName" value="<%= apartment.getBuildingName()%>" readonly=""/>
-            </td>
-            <td>
-                <input type="number" name="rentPrice" value="<%= apartment.getRentPrice()%>" required=""/>
-            </td>
-            <td>
-                <input type="number" name="salePrice" value="<%= apartment.getSalePrice()%>" required=""/>
-            </td>
-            <td>
-                <input type="text" name="status" value="<%= apartment.getStatus()%>" required=""/>
-            </td>
-
-            <td>
-                <input type="submit" name="action" value="UpdateApartmentStatus"/>
-                <input type="hidden" name="searchApartment" value="<%= searchApartment%>"/>
-            </td>
-            <td>
-                <input type="submit" name="action" value="UpdateApartment"/>
-                <input type="hidden" name="searchApartment" value="<%= searchApartment%>"/>
-            </td>
-        </tr>
-    </form>
-    <%
-        }
-    %>
-</tbody>
-</table>
-<%
-        }
-    }
-%>
 <a href="MainController?action=Statistic">Thống kê</a>
-=======
         <form action="MainController">
             <input type="text" name="searchApartment" value="<%= searchApartment%>"/>
             <input type="submit" name="action" value="SearchApartment"/>
@@ -225,7 +173,6 @@
                         for (ApartmentDTO apartment : listApartment) {
                     %>
                 <form action="MainController" >
->>>>>>> d6baa5cd190d9e3a88dcfc9c3132bae6757fac39
 
                     <tr>
                         <td class="id">

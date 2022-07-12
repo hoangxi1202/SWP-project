@@ -47,7 +47,6 @@ public class ApartmentDAO {
     private static final String UPDATE_APARTMENT = "UPDATE Apartments SET image = ? WHERE apartmentId LIKE ?";
     private static final String UPDATE_APARTMENT_PRICE = "UPDATE Aparments SET ";
     private static final String UPDATE_APARTMENT_STATUS = "UPDATE Apartments SET status = 0 WHERE apartmentId like ?";
-<<<<<<< HEAD
     private static final String COUNT_ROOM = "SELECT COUNT(apartmentId) AS [count]\n"
             + "FROM Apartments WHERE status = ?;";
 
@@ -80,9 +79,7 @@ public class ApartmentDAO {
         }
         return count;
     }
-=======
     private static final String GET_TOTAL_APARTMENT = "SELECT count(*) FROM Apartments";
->>>>>>> d6baa5cd190d9e3a88dcfc9c3132bae6757fac39
 
     public List<ApartmentDTO> getListApartment_AD(String searchApartment, int index) throws SQLException {
         List<ApartmentDTO> listApartment = new ArrayList<>();
@@ -251,7 +248,6 @@ public class ApartmentDAO {
 //            }
 //        }
 //    }
-
     public boolean updateApartment(ApartmentDTO apartment) throws SQLException {
         boolean check = false;
         Connection conn = null;
@@ -282,6 +278,7 @@ public class ApartmentDAO {
         }
         return check;
     }
+
     public boolean updateApartmentStatus(String apartmentId) throws SQLException {
         boolean check = false;
 //        Connection conn = null;

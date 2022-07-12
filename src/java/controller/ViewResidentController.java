@@ -34,10 +34,7 @@ public class ViewResidentController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-<<<<<<< HEAD
-=======
         request.setCharacterEncoding("UTF-8");
->>>>>>> 3e2547f2cf0d384ef18769796a63854499d27e03
         int count = 0;
         String url = "";
         String indexPage = request.getParameter("index");

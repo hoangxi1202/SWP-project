@@ -35,20 +35,11 @@ public class befResidentRequestController extends HttpServlet {
         List<RequestDTO> listRequest = null;
         try {
             ResidentDAO dao = new ResidentDAO();
-<<<<<<< HEAD
-            listReqAdd = dao.getListRequest("add");
-            listReqDel = dao.getListRequest("delete");
-            if (listReqAdd.size() > 0) {
-                for (RequestDTO requestDTO : listReqAdd) {
-                    listResAdd = dao.getListRequestRes("add", requestDTO.getOwnerId());
-                    requestDTO.setListRes(listResAdd);
-=======
             listRequest = dao.getListRequest();
             if (listRequest.size() > 0) {
                 for (RequestDTO requestDTO : listRequest) {
                     listResident = dao.getListRequestRes(requestDTO.getRequestId());
                     requestDTO.setListRes(listResident);
->>>>>>> 3e2547f2cf0d384ef18769796a63854499d27e03
                 }
                 request.setAttribute("LIST_RESIDENT_REQ", listRequest);
             }
