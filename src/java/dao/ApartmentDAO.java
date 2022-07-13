@@ -24,7 +24,7 @@ public class ApartmentDAO {
     PreparedStatement ptm = null;
     ResultSet rs = null;
 
-    private static final String AD_SEARCH_APARTMENT = "SELECT A.apartmentId, A.size, A.image, B.buildingName, C.rentPrice, C.salePrice, [Status] = CASE [status]\n"
+    private static final String AD_SEARCH_APARTMENT = "SELECT A.apartmentId, A.size, A.image, B.buildingName, C.typeName, C.rentPrice, C.salePrice, [Status] = CASE [status]\n"
             + "WHEN 0 THEN 'Het phong' ELSE 'Con phong' END\n"
             + "FROM Apartments A, Buildings B, ApartmentTypes C\n"
             + "WHERE apartmentId LIKE ? and B.buildingId=A.buildingId and C.apartmentTypeId=A.apartmentTypeId\n"
@@ -35,6 +35,7 @@ public class ApartmentDAO {
             + "FROM Apartments A, Buildings B, ApartmentTypes C\n"
             + "WHERE apartmentId LIKE ? and B.buildingId=A.buildingId and C.apartmentTypeId=A.apartmentTypeId and status = 1\n"
             + "ORDER BY A.apartmentId ASC";
+        private static final String AD_SEARCH_APARTMENT_TYPE = "";
 //   private static final String UPDATE_APARTMENT = "\n"
 //            + "UPDATE Apartments \n"
 //            + "SET image = ?\n"
@@ -42,13 +43,14 @@ public class ApartmentDAO {
 //            + "WHERE A.apartmentTypeId=B.apartmentTypeId and A.apartmentId LIKE ?\n"
 //            + "UPDATE ApartmentTypes\n"
 //            + "SET rentPrice = ?, salePrice = ?\n"
-//            + "FROM Apartments A, ApartmentTypes B	\n"
+//            + "FROM Apartments A, ApartmentTypes B\n"
 //            + "WHERE A.apartmentTypeId=B.apartmentTypeId and A.apartmentId LIKE ?\n"; 
     private static final String UPDATE_APARTMENT = "UPDATE Apartments SET image = ? WHERE apartmentId LIKE ?";
     private static final String UPDATE_APARTMENT_PRICE = "UPDATE Aparments SET ";
     private static final String UPDATE_APARTMENT_STATUS = "UPDATE Apartments SET status = 0 WHERE apartmentId like ?";
     private static final String GET_TOTAL_APARTMENT = "SELECT count(*) FROM Apartments";
-
+    private static final String GET_APARTMENT_TYPE = "SELECT* FROM ApartmentTypes";
+    
     public List<ApartmentDTO> getListApartment_AD(String searchApartment, int index) throws SQLException {
         List<ApartmentDTO> listApartment = new ArrayList<>();
 
@@ -64,10 +66,11 @@ public class ApartmentDAO {
                     String size = rs.getString("size");
                     String image = rs.getString("image");
                     String buildingName = rs.getString("buildingName");
+                    String typeName = rs.getString("typeName");
                     float rentPrice = Float.parseFloat(rs.getString("rentPrice"));
                     float salePrice = Float.parseFloat(rs.getString("salePrice"));
                     String status = rs.getString("status");
-                    listApartment.add(new ApartmentDTO(apartmentId, size, image, buildingName, rentPrice, salePrice, status));
+                    listApartment.add(new ApartmentDTO(apartmentId, size, image, buildingName, typeName, rentPrice, salePrice, status));
                 }
             }
         } catch (Exception e) {
@@ -105,7 +108,7 @@ public class ApartmentDAO {
                     float rentPrice = Float.parseFloat(rs.getString("rentPrice"));
                     float salePrice = Float.parseFloat(rs.getString("salePrice"));
                     String status = rs.getString("status");
-                    listApartment.add(new ApartmentDTO(apartmentId, size, image, buildingName, rentPrice, salePrice, status));
+                    listApartment.add(new ApartmentDTO(apartmentId, size, image, buildingName, image, rentPrice, salePrice, status));
                 }
             }
         } catch (Exception e) {
@@ -123,6 +126,8 @@ public class ApartmentDAO {
         }
         return listApartment;
     }
+    
+    
 
     public int getTotalApartment() {
 //        Connection conn = null;
@@ -143,18 +148,36 @@ public class ApartmentDAO {
         return 0;
     }
 
-    public List<ApartmentDTO> pagingApartment(int index) {
-        List<ApartmentDTO> list = new ArrayList<>();
-        return list;
-    }
 
-    public static void main(String[] args) throws SQLException {
-        ApartmentDAO dao = new ApartmentDAO();
-        String searchApartment = "";
-        List<ApartmentDTO> list = dao.getListApartment_AD(searchApartment, 9);
-        for (ApartmentDTO apartmentDTO : list) {
-            System.out.println(apartmentDTO);
+    public List<ApartmentDTO> getListApartmentType() throws SQLException{
+        List<ApartmentDTO> listApartmentTpye = new ArrayList<>();
+        try {
+            conn= Utils.getConnection();
+            if(conn!=null){
+                ptm = conn.prepareStatement(GET_APARTMENT_TYPE);
+                rs = ptm.executeQuery();
+                while(rs.next()){
+                    String apartmentTypeId = rs.getString("apartmentTypeId");
+                    String typeName = rs.getString("typeName");
+                    float rentPrice = Float.parseFloat(rs.getString("rentPrice"));
+                    float salePrice = Float.parseFloat(rs.getString("salePrice"));
+                    listApartmentTpye.add(new ApartmentDTO(apartmentTypeId, typeName, rentPrice, salePrice));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (ptm != null) {
+                ptm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
         }
+        return listApartmentTpye;
     }
 //    public boolean updateApartment(String apartmentId, String image) throws SQLException {
 //        boolean check = false;

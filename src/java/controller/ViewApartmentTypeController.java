@@ -5,58 +5,44 @@
  */
 package controller;
 
-import dao.ResidentDAO;
-import dao.UserDAO;
-import dto.UserDTO;
 import java.io.IOException;
-import java.sql.SQLException;
+import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author Nhat Linh
+ * @author Trieu Do
  */
-@WebServlet(name = "DeleteResidentController", urlPatterns = {"/DeleteResidentController"})
-public class DeleteResidentController extends HttpServlet {
+@WebServlet(name = "ViewApartmentTypeController", urlPatterns = {"/ViewApartmentTypeController"})
+public class ViewApartmentTypeController extends HttpServlet {
 
-    private static final String SUCCESS = "user.jsp";
-    private static final String ERROR = "deleteResident.jsp";
-
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String url = ERROR;
-        try {
-            String[] residentId = request.getParameterValues("delete");
-            ResidentDAO daoRes = new ResidentDAO();
-            HttpSession session = request.getSession();
-            UserDTO loginUser = (UserDTO) session.getAttribute("LOGIN_USER");
-            UserDAO dao = new UserDAO();
-            String ownerId = dao.getOwnerId(loginUser.getUserID());
-            String requestId = "REQ";
-            int indexReq = daoRes.getIndexRequest() + 1;
-            if (indexReq > 99) {
-                requestId += String.valueOf(indexReq);
-            } else if (indexReq >= 10 && indexReq <= 99) {
-                requestId += "0" + String.valueOf(indexReq);
-            } else {
-                requestId += "00" + String.valueOf(indexReq);
-            }
-            daoRes.insertRequest(requestId, ownerId, "delete", "0");
-            for (String residentIdElement : residentId) {
-                daoRes.updateResident(requestId, residentIdElement);
-            }
-            url = SUCCESS;
-
-        } catch (ClassNotFoundException | SQLException e) {
-            log("Error at DeleteResidentController: " + e.toString());
-        } finally {
-            request.getRequestDispatcher(url).forward(request, response);
+        try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet ViewApartmentTypeController</title>");            
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet ViewApartmentTypeController at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
         }
     }
 

@@ -31,19 +31,30 @@ public class ViewBillController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        String indexPage = request.getParameter("index");
+        if ("".equals(indexPage) || indexPage == null) {
+            indexPage = "1";
+        }
+        int count = 0;
+        int index = Integer.parseInt(indexPage);
+        int tag = index;
         HttpSession session = request.getSession();
         UserDTO loginUser = (UserDTO) session.getAttribute("LOGIN_USER");
         String curUser = loginUser.getUserID();
-        List<BillDTO> listPaid = null;
-        List<BillDTO> listUnpaid = null;
+        List<BillDTO> listBill = null;
         BillDAO dao = new BillDAO();
         String url = ERROR;
         try {
-            listPaid = dao.getBill(curUser, "1");
-            listUnpaid = dao.getBill(curUser, "0");
-            if (listPaid.size() > 0 || listUnpaid.size() > 0) {
-                request.setAttribute("LIST_BILL_PAID", listPaid);
-                request.setAttribute("LIST_BILL_UNPAID", listUnpaid);
+            count = dao.countBill(curUser, "%%");
+            int endPage = count / 3;
+            if (count % 3 != 0) {
+                endPage++;
+            }
+            listBill = dao.getBill(curUser, "%%", index);
+            if (listBill.size() > 0) {
+                request.setAttribute("endP", endPage);
+                request.setAttribute("tag", tag);
+                request.setAttribute("LIST_BILL", listBill);
                 url = SUCCESS;
             }
         } catch (SQLException e) {

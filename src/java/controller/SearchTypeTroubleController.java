@@ -22,10 +22,10 @@ import javax.servlet.http.HttpSession;
  *
  * @author Trieu Do
  */
-@WebServlet(name = "ViewTypeTroubleController", urlPatterns = {"/ViewTypeTroubleController"})
+@WebServlet(name = "SearchTypeTroubleController", urlPatterns = {"/SearchTypeTroubleController"})
 public class SearchTypeTroubleController extends HttpServlet {
 
-    private static final String ERROR_AD = "admin.jsp";
+    private static final String ERROR_AD = "troubleType.jsp";
     private static final String ERROR_EM = "employee.jsp";
     private static final String SUCCESS_AD = "troubleType.jsp";
     private static final String SUCCESS_EM = "troubleType.jsp";
@@ -47,15 +47,16 @@ public class SearchTypeTroubleController extends HttpServlet {
             url = ERROR_EM;
         }
         try {
-            String searchTypeTrouble = request.getParameter("searchTypeTrouble");
-            if (searchTypeTrouble == null) {
-                searchTypeTrouble = "";
-            }
-            if (AD.equals(curUser)) {
-                listTypeTrouble = dao.getListTypeTrouble();
-            } else if (EM.equals(curUser)) {
-                listTypeTrouble = dao.getListTypeTrouble();
-            }
+//            String searchTypeTrouble = request.getParameter("searchTypeTrouble");
+//            if (searchTypeTrouble == null) {
+//                searchTypeTrouble = "";
+//            }
+//            if (AD.equals(curUser)) {
+//                listTypeTrouble = dao.getListTypeTrouble();
+//            } else if (EM.equals(curUser)) {
+//                listTypeTrouble = dao.getListTypeTrouble();
+//            }
+            listTypeTrouble = dao.getListTypeTrouble();
             if (listTypeTrouble.size() > 0) {
                 request.setAttribute("LIST_TYPE_TROUBLE", listTypeTrouble);
                 if (AD.equals(curUser)) {

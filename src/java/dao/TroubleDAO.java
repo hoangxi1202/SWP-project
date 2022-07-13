@@ -31,7 +31,7 @@ public class TroubleDAO {
             + "            ORDER BY Apart_Troubles.tranId DESC\n"
             + "            OFFSET ? ROWS FETCH NEXT 3 ROWS ONLY;";
     private static final String UPDATE_TROUBLE = "UPDATE Apart_Troubles SET status = ? WHERE tranId = ?";
-    private static final String VIEW_TYPE_TROUBLE = "SELECT troubleId, troubleName FROM Troubles";
+    private static final String VIEW_TYPE_TROUBLE = "SELECT* FROM Troubles";
     private static final String GET_INDEX_TROUBLE = "SELECT tranId FROM Apart_Troubles";
     private static final String COUNT_TROUBLE = "SELECT count(Apart_Troubles.tranId)"
             + "            FROM Apartments, Troubles, Owners, Apart_Troubles, Contracts \n"
@@ -206,8 +206,8 @@ public class TroubleDAO {
                 rs = ptm.executeQuery();
                 while (rs.next()) {
                     String typeId = rs.getString("troubleId");
-                    String detail = rs.getString("troubleName");
-                    listTrouble.add(new TroubleTypeDTO(typeId, detail));
+                    String troubleName = rs.getString("troubleName");
+                    listTrouble.add(new TroubleTypeDTO(typeId, troubleName));
 
                 }
             }

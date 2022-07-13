@@ -30,7 +30,9 @@ public class BillDAO {
             + " WHERE Bills.apartmentId = Apartments.apartmentId\n"
             + "	AND Apartments.apartmentId = Contracts.apartmentId\n"
             + "	AND Contracts.ownerId = Owners.ownerId\n"
-            + "	AND Owners.userId LIKE ? AND Bills.status LIKE ?";
+            + "	AND Owners.userId LIKE ? AND Bills.status LIKE ?"
+            + " ORDER BY Bills.status, Bills.date"
+            + " OFFSET ? ROWS FETCH NEXT 3 ROWS ONLY;";
     private static final String VIEW_DETAIL_INDEX = "SELECT Services.serviceId, Services.serviceName, Services.servicePrice, \n"
             + "Services.date, ServiceDetails.oldIndex,\n"
             + "ServiceDetails.newIndex, ServiceDetails.usagaIndex, ServiceDetails.date as printDate, \n"
@@ -60,6 +62,43 @@ public class BillDAO {
             + " FROM BankAccounts\n"
             + " WHERE accountNum = ? AND PIN = ? AND name = ?\n"
             + " AND bankId = ?";
+    private static final String COUNT_BILL = "SELECT count(billId)\n"
+            + " FROM Bills, Apartments, Contracts, Owners\n"
+            + " WHERE Bills.apartmentId = Apartments.apartmentId\n"
+            + "	AND Apartments.apartmentId = Contracts.apartmentId\n"
+            + "	AND Contracts.ownerId = Owners.ownerId\n"
+            + "	AND Owners.userId LIKE ? AND Bills.status LIKE ?";
+
+    public int countBill(String userId, String status) throws SQLException {
+        int index = 0;
+        Connection conn = null;
+        PreparedStatement ptm = null;
+        ResultSet rs = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                ptm = conn.prepareStatement(COUNT_BILL);
+                ptm.setString(1, userId);
+                ptm.setString(2, status);
+                rs = ptm.executeQuery();
+                while (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (ptm != null) {
+                ptm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return index;
+    }
 
     public BankAccount checkBank(String accountNum, String PIN, String name, String bankId) throws SQLException {
         BankAccount bank = null;
@@ -167,7 +206,7 @@ public class BillDAO {
         return check;
     }
 
-    public List<BillDTO> getBill(String userId, String status) throws SQLException {
+    public List<BillDTO> getBill(String userId, String status, int index) throws SQLException {
         List<BillDTO> list = new ArrayList<>();
         Connection conn = null;
         PreparedStatement stm = null;
@@ -178,6 +217,7 @@ public class BillDAO {
                 stm = conn.prepareStatement(VIEW_BILL);
                 stm.setString(1, userId);
                 stm.setString(2, status);
+                stm.setInt(3, (index - 1) * 3);
                 rs = stm.executeQuery();
                 while (rs.next()) {
                     String billId = rs.getString("billId");

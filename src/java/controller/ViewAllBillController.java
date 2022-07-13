@@ -29,12 +29,26 @@ public class ViewAllBillController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        String indexPage = request.getParameter("index");
+        if ("".equals(indexPage) || indexPage == null) {
+            indexPage = "1";
+        }
+        int count = 0;
+        int index = Integer.parseInt(indexPage);
+        int tag = index;
         String url = ERROR;
         List<BillDTO> list = null;
         BillDAO dao = new BillDAO();
         try {
-            list = dao.getBill("%%", "%%");
+            count = dao.countBill("%%", "%%");
+            int endPage = count / 3;
+            if (count % 3 != 0) {
+                endPage++;
+            }
+            list = dao.getBill("%%", "%%", index);
             if (list.size() > 0) {
+                request.setAttribute("endP", endPage);
+                request.setAttribute("tag", tag);
                 request.setAttribute("LIST_ALL_BILL", list);
                 url = SUCCESS;
             }

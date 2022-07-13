@@ -25,11 +25,12 @@ public class ContractDAO {
 //            + "WHERE (B.fullName LIKE ? OR A.contractId LIKE ?) AND A.ownerId=B.ownerId \n"
 //            + "       AND A.apartmentId=C.apartmentId AND C.apartmentId=D.apartmentId \n"
 //            + "       AND D.billId=E.billId AND E.serviceId=F.serviceId";
-    private static final String AD_SEARCH_CONTRACT = "SELECT A.contractId, C.apartmentId, B.fullName, F.serviceName, A.startDate, A.endDate, A.[status]\n"
-            + "FROM Contracts A, Owners B, Apartments C, Bills D, BillDetails E, Services F \n"
+    private static final String AD_SEARCH_CONTRACT = "SELECT A.contractId, C.apartmentId, B.fullName, A.startDate, A.endDate, A.[status]\n"
+            + "FROM Contracts A, Owners B, Apartments C, Bills D, BillDetails E\n"
             + "WHERE  A.ownerId=B.ownerId \n"
             + "       AND A.apartmentId=C.apartmentId AND C.apartmentId=D.apartmentId \n"
-            + "       AND D.billId=E.billId AND E.serviceId=F.serviceId";
+            + "       AND D.billId=E.billId\n"
+            + "       GROUP BY A.contractId, B.fullName, C.apartmentId, A.startDate, A.endDate, A.[status]";
     private static final String DELETE_CONTRACT = "UPDATE Contracts SET status = 0 WHERE contractId = ?";
 //    public List<ContractDTO> getListContract_AD(String search) throws SQLException {
 //        List<ContractDTO> listContract = new ArrayList<>();
@@ -82,11 +83,10 @@ public class ContractDAO {
                     String contractId = rs.getString("contractId");
                     String apartmentId = rs.getString("apartmentId");
                     String fullName = rs.getString("fullName");
-                    String serviceName = rs.getString("serviceName");
                     String startDate = rs.getString("startDate");
                     String endDate = rs.getString("endDate");
                     String status = rs.getString("status");
-                    listContract.add(new ContractDTO(contractId, apartmentId, fullName, serviceName, startDate, endDate, status));
+                    listContract.add(new ContractDTO(contractId, apartmentId, fullName, startDate, endDate, status));
                 }
             }
         } catch (Exception e) {

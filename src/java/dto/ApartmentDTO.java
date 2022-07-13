@@ -29,6 +29,14 @@ public class ApartmentDTO {
         this.apartmentId = apartmentId;
         this.image = image;
     }
+
+    public ApartmentDTO(String apartmentTypeId, String typeName, float rentPrice, float salePrice) {
+        this.apartmentTypeId = apartmentTypeId;
+        this.typeName = typeName;
+        this.rentPrice = rentPrice;
+        this.salePrice = salePrice;
+    }
+    
     
 
     public ApartmentDTO(String apartmentId, String size, String image, String status, String apartmentTypeId, String buildingID) {
@@ -40,15 +48,28 @@ public class ApartmentDTO {
         this.buildingID = buildingID;
     }
 
-    public ApartmentDTO(String apartmentId, String size, String image, String buildingName, float rentPrice, float salePrice, String status) {
+    public ApartmentDTO(String apartmentId, String size, String image, String buildingName, String typeName, float rentPrice, float salePrice, String status) {
         this.apartmentId = apartmentId;
         this.size = size;
         this.image = image;
-        this.status = status;
         this.buildingName = buildingName;
+        this.typeName = typeName;
         this.rentPrice = rentPrice;
         this.salePrice = salePrice;
+        this.status = status;
     }
+    
+    
+
+//    public ApartmentDTO(String apartmentId, String size, String image, String buildingName, float rentPrice, float salePrice, String status) {
+//        this.apartmentId = apartmentId;
+//        this.size = size;
+//        this.image = image;
+//        this.status = status;
+//        this.buildingName = buildingName;
+//        this.rentPrice = rentPrice;
+//        this.salePrice = salePrice;
+//    }
 
     public String getApartmentId() {
         return apartmentId;

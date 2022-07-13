@@ -1,4 +1,8 @@
 
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.PreparedStatement"%>
+<%@page import="java.sql.Connection"%>
+<%@page import="java.sql.Connection"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page import="dto.ContractDTO"%>
 <%@page import="dto.ApartmentDTO"%>
@@ -16,7 +20,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
         <link rel="stylesheet" type="text/css" href="css/admin.css">
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-
+        <script src="js/apartment.js"></script>
     </head>
     <body>
         <header class="header">
@@ -25,6 +29,7 @@
                     <li><a href="managerAccount.jsp">Manager Account</a></li>
                     <li><a href="troubleType.jsp">Trouble Type</a></li>
                     <li><a href="viewContract.jsp">Contract</a></li>
+                    <li><a href="apartment.jsp">Apartment</a></li>
                 </ul>
             </nav>
         </header>
@@ -41,16 +46,19 @@
             }
         %>
 
+        <jsp:include page="headerAdmin.jsp"></jsp:include>
+            <a href="managerAccount.jsp">Manager Account</a>
 
-        <form action="MainController">
-            <input type="submit" name="action" value="Logout"/>
-        </form>
-        <!--        <form action="MainController" method="POST">
-                    Email<input type="email" name="email" />
-                    <input type="submit" name="action" value="SendMail"/>
-                </form>-->
-        <form action="MainController">
-            Search User<input type="text" name="search" value="<%=search%>"/>
+
+            <form action="MainController">
+                <input type="submit" name="action" value="Logout"/>
+            </form>
+            <!--        <form action="MainController" method="POST">
+                        Email<input type="email" name="email" />
+                        <input type="submit" name="action" value="SendMail"/>
+                    </form>-->
+            <form action="MainController">
+                Search User<input type="text" name="search" value="<%=search%>"/>
             <input type="submit" name="action" value="Search"/>
         </form>
 
@@ -136,18 +144,21 @@
 
 
         <%
+            ApartmentDTO a = new ApartmentDTO();
             List<ApartmentDTO> listApartment = (List<ApartmentDTO>) request.getAttribute("LIST_APARTMENT");
             if (listApartment != null) {
                 if (listApartment.size() > 0) {
         %>
         <div class="table-wrapper">
             <table border="1" class="fl-table">
+                <h2>List apartment</h2>
                 <thead>
                     <tr>
                         <th style="width:15px">Apartment ID</th>
-                        <th style="width:79px">Size</th>
+                        <th style="width:10px">Size</th>
                         <th style="width:194px">Image</th>
-                        <th style="width:108px">Building Name</th>
+                        <th style="width:90px">Building Name</th>
+                        <th style="width:90px">Apartment's type</th>
                         <th style="width:115px">Rent Price</th>
                         <th style="width:120px">Sale Price</th>
                         <th style="width:120px">Status</th>
@@ -163,32 +174,34 @@
 
                     <tr>
                         <td class="id">
-                            <input type="text" name="apartmentId" value="<%= apartment.getApartmentId()%>" readonly="" style="width:154px"/>
+                            <input type="text" name="apartmentId" value="<%= apartment.getApartmentId()%>" readonly="" style="width:137px"/>
                         </td>
                         <td>
-                            <input type="text" name="size" value="<%= apartment.getSize()%>" readonly="" style="width:110px"/>
+                            <input type="text" name="size" value="<%= apartment.getSize()%>" readonly="" style="width:54px"/>
                         </td>
                         <td>
-                            <input type="text" name="image" value="<%= apartment.getImage()%>" required="" style="width:275px"/>
+                            <input type="text" name="image" value="<%= apartment.getImage()%>" required="" style="width:248px"/>
                             <div class="img">
-                                <img class="rounded" src="<%=apartment.getImage()%>" width="100px" height="100px"/>
+                                <img class="rounded" src="<%=apartment.getImage()%>" width="248px" height="230px"/>
                             </div>
                         </td>
                         <td>
-                            <input type="text" name="buildingName" value="<%= apartment.getBuildingName()%>" readonly="" style="width:163px"/>
+                            <input type="text" name="buildingName" value="<%= apartment.getBuildingName()%>" readonly="" style="width:145px"/>
                         </td>
                         <td>
-                            <input type="number" name="rentPrice" value="<%= apartment.getRentPrice()%>" required="" style="width:162px"/>
+                            <input type="text" name="typeName" value="<%= apartment.getTypeName()%>" readonly="" style="width:167px"/>
                         </td>
                         <td>
-                            <input type="number" name="salePrice" value="<%= apartment.getSalePrice()%>" required="" style="width:168px"/>
+                            <input type="number" name="rentPrice" value="<%= apartment.getRentPrice()%>" required="" style="width:146px" onkeydown="return event.keyCode !== 69 && event.keyCode !== 189"/>
                         </td>
                         <td>
-                            <input type="text" name="status" value="<%= apartment.getStatus()%>" required="" style="width:170px"/>
+                            <input type="number" name="salePrice" value="<%= apartment.getSalePrice()%>" required="" style="width:149px"/>
+                        </td>
+                        <td>
+                            <input type="text" name="status" value="<%= apartment.getStatus()%>" required="" style="width:154px"/>
                         </td>
 
                         <td>
-
                             <button class="btn btn-outline-secondary" type="submit" name="action" value="UpdateApartmentStatus" style="width: 150px">Update status</button>
                             <input type="hidden" name="searchApartment" value="<%= searchApartment%>"/>
                         </td>
@@ -203,6 +216,7 @@
                 %>
                 </tbody>
             </table>
+
         </div>
         <%
                 }

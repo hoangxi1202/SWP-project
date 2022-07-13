@@ -16,9 +16,19 @@ public class RequestDTO {
 
     private String requestId;
     private String ownerId;
+    private String todo;
     private String fullName;
     private boolean status;
     private List<ResidentDTO> listRes;
+
+    public RequestDTO(String requestId, String ownerId, String action, String fullName, boolean status, List<ResidentDTO> listRes) {
+        this.requestId = requestId;
+        this.ownerId = ownerId;
+        this.todo = action;
+        this.fullName = fullName;
+        this.status = status;
+        this.listRes = listRes;
+    }
 
     public RequestDTO(String requestId, String ownerId, String fullName, boolean status) {
         this.requestId = requestId;
@@ -28,10 +38,27 @@ public class RequestDTO {
         this.listRes = new ArrayList<>();
     }
 
+    public RequestDTO(String requestId, String ownerId, String action, String name, boolean status) {
+        this.requestId = requestId;
+        this.ownerId = ownerId;
+        this.todo = action;
+        this.fullName = name;
+        this.status = status;
+        this.listRes = new ArrayList<>();
+    }
+
     public List<ResidentDTO> getListRes() {
         return listRes;
     }
-    
+
+    public String getTodo() {
+        return todo;
+    }
+
+    public void setTodo(String todo) {
+        this.todo = todo;
+    }
+
     public String getFullName() {
         return fullName;
     }
@@ -70,6 +97,5 @@ public class RequestDTO {
     public void setListRes(List<ResidentDTO> listRes) {
         this.listRes = listRes;
     }
-
 
 }
