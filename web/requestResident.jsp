@@ -50,7 +50,7 @@
                                             <input type="hidden" name="requestId" value="${request.requestId}"/>
                                             <button class="btn-form btn btn-form float-right btn-outline-secondary" type="submit" name="action" value="RejectRequest">Từ chối</button>
                                         </form>
-                                        <button class="btn-form btn btn-detail float-right btn-outline-light">Chi tiết</button>
+                                        <button class="btn-form btn btn-detail float-right btn-outline-secondary">Chi tiết</button>
                                     </div>
                                 </div>                       
                             </div>

@@ -25,6 +25,8 @@ public class MainController extends HttpServlet {
     private static final String LOGOUT = "LogoutController";
     private static final String CREATE_ACCOUNT_ACTION = "createAccount";
     private static final String CREATEACCOUNT = "CreateAccountController";
+    private static final String STATISTIC = "Statistic";
+    private static final String STATISTIC_CONTROLLER = "StatisticController";
 
     private static final String SEARCH_ACTION = "Search";
     private static final String SEARCH = "SearchController";
@@ -111,6 +113,10 @@ public class MainController extends HttpServlet {
                 url = LOGIN;
             } else if (UPDATE_RESIDENT.equals(action)) {
                 url = UPDATE_RESIDENT_CONTROLLER;
+
+            } else if (STATISTIC.equals(action)) {
+                url = STATISTIC_CONTROLLER;
+
             } else if (REMOVE_RESIDENT.equals(action)) {
                 url = REMOVE_RESIDENT_CONTROLLER;
             } else if (LOGOUT_ACTION.equals(action)) {

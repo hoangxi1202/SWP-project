@@ -65,7 +65,11 @@
                                             <td data-title="Chi tiết: " >
                                                 <form action="MainController" method="POST">
                                                     <input type="hidden" name="billId" value="${bill.billId}"/>
-                                                    <input type="submit" name="action" value="ViewDetail"/>
+
+
+
+                                                    <button type="submit" name="action" class="btn btn-outline-primary btn-form" value="ViewDetail">Chi tiết</button>
+
                                                 </form>
                                             </td>
                                         </tr>

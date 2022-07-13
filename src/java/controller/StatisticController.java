@@ -5,7 +5,10 @@
  */
 package controller;
 
-import dao.TroubleDAO;
+import dao.ApartmentDAO;
+import dao.BillDAO;
+import dao.ContractDAO;
+import dao.ResidentDAO;
 import java.io.IOException;
 import java.sql.SQLException;
 import javax.servlet.ServletException;
@@ -18,28 +21,42 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Nhat Linh
  */
-@WebServlet(name = "UpdateTroubleController", urlPatterns = {"/UpdateTroubleController"})
-public class UpdateTroubleController extends HttpServlet {
+@WebServlet(name = "StatisticController", urlPatterns = {"/StatisticController"})
+public class StatisticController extends HttpServlet {
 
-    private static final String ERROR = "MainController?action=ViewTrouble&index=";
-    private static final String SUCCESS = "MainController?action=ViewTrouble&index=";
+    private static final String ERROR = "homeAdmin.jsp";
+    private static final String SUCCESS = "homeAdmin.jsp";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         String url = ERROR;
+        String fromDate = request.getParameter("fromDate");
+        String toDate = request.getParameter("toDate");
+        int countRoomEmpty, countRoomNotEmpty, availableContract, unavailableContract, countResident;
+        double money = 0;
+        ContractDAO contract = new ContractDAO();
+        ResidentDAO resident = new ResidentDAO();
+        BillDAO bill = new BillDAO();
+        ApartmentDAO apartment = new ApartmentDAO();
         try {
-            String index = request.getParameter("index");
-            url += index;
-            String troubleId = request.getParameter("troubleId");
-            String status = request.getParameter("status");
-            TroubleDAO dao = new TroubleDAO();
-            dao.updateTrouble(troubleId, status);
-            url = SUCCESS + index;
+            countRoomEmpty = apartment.countApartment("1");
+            countRoomNotEmpty = apartment.countApartment("0");
+            availableContract = contract.countContract("1");
+            unavailableContract = contract.countContract("0");
+            countResident = resident.countResident("1", "");
+            money = bill.getStatistic(fromDate, toDate);
+            request.setAttribute("ROOM_EMPTY", countRoomEmpty);
+            request.setAttribute("ROOM_NOT_EMPTY", countRoomNotEmpty);
+            request.setAttribute("CONTRACT_AVAILABLE", availableContract);
+            request.setAttribute("CONTRACT_UNAVAILABLE", unavailableContract);
+            request.setAttribute("RESIDENT", countResident);
+            request.setAttribute("MONEY", money);
+            url = SUCCESS;
         } catch (SQLException e) {
-            log("Error at UpdateTroubleController: " + e.toString());
+            log("Error at StatisticController: " + e.toString());
         } finally {
-//            request.getRequestDispatcher(url).forward(request, response);
+            request.getRequestDispatcher(url).forward(request, response);
         }
     }
 

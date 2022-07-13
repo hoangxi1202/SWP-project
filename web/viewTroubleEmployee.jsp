@@ -13,11 +13,10 @@
         <title>Trouble Page</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <link rel="stylesheet" href="css/viewTrouble.css"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
     </head>
     <body>
-        <!--Not fix updateTrouble trả về trang hiện tại (đang update trang 2 sẽ trả về trang 1) cần fix đang trang 2 update trouble vẫn về trang 2-->
-        <!--Execute-->
-        <jsp:include page="headerEmp.jsp"></jsp:include>
+        <jsp:include page="headerEmp.jsp"></jsp:include>            
             <div class="container">
                 <div class="row">
                     <div class="col-md-12">
@@ -58,27 +57,24 @@
                                             <td data-title="Loại sự cố: " >${trouble.typeName}</td>
                                             <td  data-title="Chi tiết: " >${trouble.detail}</td>
                                             <td  data-title="Trạng thái: " >
-                                                <form action="MainController">
-                                                    <select name="status">
-                                                        <c:if test ="${!trouble.status}">
-                                                            <option value="false" selected>Not Yet</option>
-                                                            <option value="true">Done</option>
-                                                        </c:if>
-                                                        <c:if test ="${trouble.status}">
-                                                            <option value="true" selected>Done</option>
-                                                            <option value="false">Not Yet</option>
-                                                        </c:if>
-                                                    </select>
-                                                    <input type="hidden" name="troubleId" value="${trouble.troubleId}"/>
-                                                    <input type="submit" name="action" value="UpdateTrouble"/> 
+                                                <div>
+                                                    <c:if test ="${!trouble.status}">
+                                                        <input type="checkbox" data-toggle="toggle" data-on="Done" class="checkbox-input" data-off="Not Yet" data-onstyle="success" data-offstyle="danger">
 
-                                                </form>
+                                                    </c:if>
+                                                    <c:if test ="${trouble.status}">
+                                                        <input type="checkbox" checked data-toggle="toggle" data-on="Done" class="checkbox-input" data-off="Not Yet" data-onstyle="success" data-offstyle="danger">
+
+                                                    </c:if>
+                                                    <div class="test" style="display: none" >Nhaath brkdifsd Linh</div>
+                                                    <input type="hidden" class="tag" name="index" value="${param.tag}"> 
+                                                    <input type="hidden" class="troubleId" name="troubleId" value="${trouble.troubleId}">
+                                                </div>
                                             </td>
 
                                         </tr>
                                     </c:forEach>                           
                                 </tbody>
-
                             </table>
                         </div>
                     </c:if>
@@ -115,7 +111,25 @@
         </nav>
         <jsp:include page="footer.jsp"></jsp:include>
     </body>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".checkbox-input").change(function () {
+                var troubleId = $(this).parent().children(".troubleId").val();
+                $.ajax({
+                    url: '/ApartmentManagement/MainController',
+                    type: 'POST',
+                    data: {
+                        action: 'UpdateTrouble',
+                        status: $(this).prop('checked'),
+                        troubleId: troubleId
+                    },
+                    success: function (data) {
+                        //do some thing
+                    }
+                });
+            });
+        });
+    </script>
     <script>
         $(document).ready(function () {
             $(".trouble").addClass("active");
