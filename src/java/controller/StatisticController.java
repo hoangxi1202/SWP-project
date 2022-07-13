@@ -9,8 +9,10 @@ import dao.ApartmentDAO;
 import dao.BillDAO;
 import dao.ContractDAO;
 import dao.ResidentDAO;
+import dto.BillDTO;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -31,27 +33,26 @@ public class StatisticController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         String url = ERROR;
-        String fromDate = request.getParameter("fromDate");
-        String toDate = request.getParameter("toDate");
-        int countRoomEmpty, countRoomNotEmpty, availableContract, unavailableContract, countResident;
+        int countRoomEmpty, countRoomNotEmpty, availableContract, countResident;
         double money = 0;
         ContractDAO contract = new ContractDAO();
         ResidentDAO resident = new ResidentDAO();
         BillDAO bill = new BillDAO();
         ApartmentDAO apartment = new ApartmentDAO();
+        List<BillDTO> list = null;
         try {
             countRoomEmpty = apartment.countApartment("1");
             countRoomNotEmpty = apartment.countApartment("0");
             availableContract = contract.countContract("1");
-            unavailableContract = contract.countContract("0");
             countResident = resident.countResident("1", "");
-            money = bill.getStatistic(fromDate, toDate);
+            money = bill.getSumMoney();
+            list = bill.getMoneyByMonth();
             request.setAttribute("ROOM_EMPTY", countRoomEmpty);
             request.setAttribute("ROOM_NOT_EMPTY", countRoomNotEmpty);
             request.setAttribute("CONTRACT_AVAILABLE", availableContract);
-            request.setAttribute("CONTRACT_UNAVAILABLE", unavailableContract);
             request.setAttribute("RESIDENT", countResident);
             request.setAttribute("MONEY", money);
+            request.setAttribute("LIST_MONEY", list);
             url = SUCCESS;
         } catch (SQLException e) {
             log("Error at StatisticController: " + e.toString());

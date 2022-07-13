@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package dao;
 
 import dto.BillDTO;
@@ -18,12 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 import utils.Utils;
 
-/**
- *
- * @author Nhat Linh
- */
 public class BillDAO {
 
+    private static final String VIEW_MONEY_BY_MONTH = "SELECT CAST(MONTH(date) AS VARCHAR(2)) + '-' + CAST(YEAR(date) AS VARCHAR(4)) AS [date], SUM(total) AS [sum]\n"
+            + "FROM Bills\n"
+            + "WHERE (date BETWEEN '2001-11-3' AND '2050-11-3')\n"
+            + "GROUP BY CAST(MONTH(date) AS VARCHAR(2)) + '-' + CAST(YEAR(date) AS VARCHAR(4))";
     private static final String UPDATE_BILL = "UPDATE Bills set status = ? WHERE billId = ?";
     private static final String VIEW_BILL = "SELECT billId, total, Bills.[status], [date], Apartments.apartmentId\n"
             + " FROM Bills, Apartments, Contracts, Owners\n"
@@ -69,9 +64,9 @@ public class BillDAO {
             + "	AND Contracts.ownerId = Owners.ownerId\n"
             + "	AND Owners.userId LIKE ? AND Bills.status LIKE ?";
     private static final String STATISTIC = "SELECT sum(total) as [sum]\n"
-            + " FROM Bills WHERE [date] between ? and ?";
+            + " FROM Bills";
 
-    public double getStatistic(String fromDate, String toDate) throws SQLException {
+    public double getSumMoney() throws SQLException {
         double sum = 0;
         Connection conn = null;
         PreparedStatement ptm = null;
@@ -80,8 +75,6 @@ public class BillDAO {
             conn = Utils.getConnection();
             if (conn != null) {
                 ptm = conn.prepareStatement(STATISTIC);
-                ptm.setString(1, fromDate);
-                ptm.setString(2, toDate);
                 rs = ptm.executeQuery();
                 while (rs.next()) {
                     return rs.getDouble(1);
@@ -335,6 +328,37 @@ public class BillDAO {
                     Date date = Date.valueOf(rs.getString("date"));
                     float priceDetail = Float.parseFloat(rs.getString("priceDetail"));
                     list.add(new Service(serviceId, serviceName, servicePrice, date, priceDetail));
+                }
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return list;
+    }
+
+    public List<BillDTO> getMoneyByMonth() throws SQLException {
+        List<BillDTO> list = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(VIEW_MONEY_BY_MONTH);
+                rs = stm.executeQuery();
+                while (rs.next()) {
+                    String date = rs.getString("date");
+                    double total = Double.parseDouble(rs.getString("sum"));
+                    list.add(new BillDTO(total, date));
                 }
             }
         } catch (ClassNotFoundException | SQLException e) {

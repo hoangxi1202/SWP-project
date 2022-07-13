@@ -25,6 +25,11 @@ public class BillDTO {
         this.apartmentId = apartmentId;
     }
 
+    public BillDTO(double total, String date) {
+        this.total = total;
+        this.date = date;
+    }
+
     public BillDTO() {
     }
 
