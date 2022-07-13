@@ -1,9 +1,3 @@
-<%-- 
-    Document   : homeAdmin.jsp
-    Created on : Jul 8, 2022, 5:05:21 PM
-    Author     : Nhat Linh
---%>
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
