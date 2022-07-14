@@ -19,9 +19,7 @@
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     </head>
     <body>
-        <form action="MainController">
-            <input type="submit" name="action" value="CreateTypeTrouble"/>
-        </form>
+
 
         <%
             String searchTypeTrouble = (String) request.getParameter("searchTypeTrouble");
@@ -31,6 +29,12 @@
         %>
         <form action="MainController">
             <input type="submit" name="action" value="SearchTypeTrouble"/>
+        </form>
+        <form action="MainController" method="POST">
+            Type ID<input type="text" name="typeId" required=""/><br>
+            Trouble Name<input type="text" name="troubleName" required=""/>
+            <input type="submit" name="action" value="CreateTypeTrouble"/>
+            <input type="reset" value="Reset"/>
         </form>
 
 

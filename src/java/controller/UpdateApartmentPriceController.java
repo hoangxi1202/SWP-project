@@ -5,70 +5,48 @@
  */
 package controller;
 
-import dao.ContractDAO;
-import dto.ContractDTO;
-import dto.UserDTO;
+import dao.ApartmentDAO;
+import dto.ApartmentDTO;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author Trieu Do
  */
-@WebServlet(name = "SearchContractController", urlPatterns = {"/SearchContractController"})
-public class SearchContractController extends HttpServlet {
+@WebServlet(name = "UpdateApartmentPriceController", urlPatterns = {"/UpdateApartmentPriceController"})
+public class UpdateApartmentPriceController extends HttpServlet {
 
-    private static final String ERROR_AD = "viewContract.jsp";
-    private static final String ERROR_US = "viewContract.jsp";
-    private static final String SUCCESS_AD = "viewContract.jsp";
-    private static final String SUCCESS_US = "viewContract.jsp";
-    private static final String AD = "AD";
-    private static final String US = "US";
+    private static final String ERROR = "MainController?action=SearchApartment";
+    private static final String SUCCESS = "MainController?action=SearchApartment";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        HttpSession session = request.getSession();
-        UserDTO loginUser = (UserDTO) session.getAttribute("LOGIN_USER");
-        String curUser = loginUser.getRoleID();
-        String url = "";
-        List<ContractDTO> listContract = null;
-        ContractDAO dao = new ContractDAO();
-        if (AD.equals(curUser)) {
-            url = ERROR_AD;
-        } else if (US.equals(curUser)) {
-            url = ERROR_US;
-        }
+        String url = ERROR;
         try {
-            String searchContract = request.getParameter("searchContract");
-            if (searchContract == null) {
-                searchContract = "";
-            }
-            if (AD.equals(curUser)) {
-                listContract = dao.getListContract_AD(searchContract);
-            } else if (US.equals(curUser)) {
-                listContract = dao.getListContract_AD(searchContract);
-            }
-            if (listContract.size() > 0) {
-                request.setAttribute("LIST_CONTRACT", listContract);
-                if (AD.equals(curUser)) {
-                    url = SUCCESS_AD;
-                } else if (US.equals(curUser)) {
-                    url = SUCCESS_US;
-                }
-            }
+            String apartmentId = request.getParameter("apartmentId");
+            float rentPrice = Float.parseFloat(request.getParameter("rentPrice"));
+            float salePrice = Float.parseFloat(request.getParameter("salePrice"));
+
+            ApartmentDAO dao = new ApartmentDAO();
+            ApartmentDTO apartment = new ApartmentDTO(apartmentId, rentPrice, salePrice);
+
+            dao.UpdateAprtmentPrice(apartment);
+            
+            url = SUCCESS;
+
         } catch (Exception e) {
-            log("Error at SearchController: " + e.toString());
+            log("Error at UpdateController: " + e.toString());
         } finally {
             request.getRequestDispatcher(url).forward(request, response);
         }
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

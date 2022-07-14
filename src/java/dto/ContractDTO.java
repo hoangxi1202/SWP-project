@@ -20,6 +20,11 @@ public class ContractDTO {
     private String status;
     private String ownerId;
 
+    public ContractDTO(String contractId, String apartmentId) {
+        this.contractId = contractId;
+        this.apartmentId = apartmentId;
+    }
+
     public ContractDTO() {
     }
 
@@ -33,16 +38,14 @@ public class ContractDTO {
         this.status = status;
     }
 
-    public ContractDTO(String contractId, String apartmentId, String fullName, String startDate, String endDate, String status) {
+    public ContractDTO(String contractId, String apartmentId, String ownerId, String startDate, String endDate, String status) {
         this.contractId = contractId;
         this.apartmentId = apartmentId;
-        this.fullName = fullName;
+        this.ownerId = ownerId;
         this.startDate = startDate;
         this.endDate = endDate;
         this.status = status;
     }
-    
-
 
     public String getContractId() {
         return contractId;
@@ -107,6 +110,5 @@ public class ContractDTO {
     public void setServiceName(String serviceName) {
         this.serviceName = serviceName;
     }
-    
 
 }

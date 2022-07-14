@@ -30,6 +30,7 @@
                     <li><a href="troubleType.jsp">Trouble Type</a></li>
                     <li><a href="viewContract.jsp">Contract</a></li>
                     <li><a href="apartment.jsp">Apartment</a></li>
+                    <li><a href="viewService.jsp">Service</a></li>
                 </ul>
             </nav>
         </header>
@@ -51,22 +52,6 @@
             <form action="MainController">
                 <input type="submit" name="action" value="Logout"/>
             </form>
-            <!--        <form action="MainController" method="POST">
-                        Email<input type="email" name="email" />
-                        <input type="submit" name="action" value="SendMail"/>
-                    </form>-->
-            <form action="MainController">
-                Search User<input type="text" name="search" value="<%=search%>"/>
-
-
-
-            <form action="MainController">
-                <input type="submit" name="action" value="Logout"/>
-            </form>
-            <!--        <form action="MainController" method="POST">
-                        Email<input type="email" name="email" />
-                        <input type="submit" name="action" value="SendMail"/>
-                    </form>-->
             <form action="MainController">
                 Search User<input type="text" name="search" value="<%=search%>"/>
             <input type="submit" name="action" value="Search"/>
@@ -147,15 +132,14 @@
                 searchApartment = "";
             }
         %>
-<a href="MainController?action=Statistic">Thống kê</a>
+        <a href="MainController?action=Statistic">Thống kê</a>
         <form action="MainController">
-            <input type="text" name="searchApartment" value="<%= searchApartment%>"/>
+            <input type="text" name="searchApartment" value="<%= searchApartment%>" placeholder="Nhập mã hoặc loại căn hộ..."/>
             <input type="submit" name="action" value="SearchApartment"/>
         </form>
 
 
         <%
-            ApartmentDTO a = new ApartmentDTO();
             List<ApartmentDTO> listApartment = (List<ApartmentDTO>) request.getAttribute("LIST_APARTMENT");
             if (listApartment != null) {
                 if (listApartment.size() > 0) {
@@ -203,7 +187,7 @@
                             <input type="text" name="typeName" value="<%= apartment.getTypeName()%>" readonly="" style="width:167px"/>
                         </td>
                         <td>
-                            <input type="number" name="rentPrice" value="<%= apartment.getRentPrice()%>" required="" style="width:146px" onkeydown="return event.keyCode !== 69 && event.keyCode !== 189"/>
+                            <input type="number" name="rentPrice" value="<%= apartment.getRentPrice()%>" required="" style="width:146px"/>
                         </td>
                         <td>
                             <input type="number" name="salePrice" value="<%= apartment.getSalePrice()%>" required="" style="width:149px"/>
@@ -213,11 +197,15 @@
                         </td>
 
                         <td>
-                            <button class="btn btn-outline-secondary" type="submit" name="action" value="UpdateApartmentStatus" style="width: 150px">Update status</button>
+                            <button class="btn btn-outline-secondary" type="submit" name="action" value="UpdateApartmentStatus" style="width: 150px">Status</button>
                             <input type="hidden" name="searchApartment" value="<%= searchApartment%>"/>
                         </td>
                         <td>
-                            <button class="btn btn-outline-secondary" type="submit" name="action" value="UpdateApartment" style="width: 150px">Update</button>
+                            <button class="btn btn-outline-secondary" type="submit" name="action" value="UpdateApartment" style="width: 150px">Image</button>
+                            <input type="hidden" name="searchApartment" value="<%= searchApartment%>"/>
+                        </td>
+                        <td>
+                            <button class="btn btn-outline-secondary" type="submit" name="action" value="UpdateApartmentPrice">Price</button>
                             <input type="hidden" name="searchApartment" value="<%= searchApartment%>"/>
                         </td>
                     </tr>

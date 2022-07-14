@@ -22,6 +22,7 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     </head>
     <body>
+        <a href="addContract.jsp">Tạo hợp đồng</a>
         <%
             String searchContract = (String) request.getParameter("searchContract");
             if (searchContract == null) {
@@ -29,7 +30,7 @@
             }
         %>
         <form action="MainController">
-            Search Contract<input type="text" name="searchContract" value="<%= searchContract%>"/>
+            Search Contract<input type="text" name="searchContract" value="<%=searchContract%>"/>
             <input type="submit" name="action" value="SearchContract"/>
         </form>
         <%
@@ -42,13 +43,13 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Contract ID</th>
-                        <th>Apartment ID</th>
-                        <th>Full name</th>
+                        <th>Mã hợp đồng</th>
+                        <th>Mã căn hộ</th>
+                        <th>Tên chủ hộ</th>
                         <th></th>
-                        <th>Start date</th>
-                        <th>End date</th>
-                        <th>Status</th>
+                        <th>Ngày khởi tạo</th>
+                        <th>Ngày kết thúc</th>
+                        <th>Trạng thái</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -66,7 +67,7 @@
                             <input type="text" name="apartmentId" value="<%= contract.getApartmentId()%>" readonly=""/>
                         </td>
                         <td>
-                            <input type="text" name="fullName" value="<%= contract.getFullName()%>" readonly=""/>
+                            <input type="text" name="fullName" value="<%= contract.getOwnerId()%>" readonly=""/>
                         </td>
                         <td>
                             <select>

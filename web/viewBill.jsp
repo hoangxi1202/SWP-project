@@ -55,10 +55,8 @@
                                                 <c:if test="${!bill.status}">
                                                     <form action="payment.jsp">
                                                         <input type="hidden" name="billId" value="${bill.billId}"/>
-<<<<<<< HEAD
-=======
                                                         <input type="hidden" name="total" value="${bill.total}"/>
->>>>>>> 6c99997a84b07f1e7c89e87c7685c2c0f839732b
+
                                                         <button type="submit" style="padding: 0px 40px; margin: 10px 10px" class="btn btn-warning" name="action" value="Payment">Thanh toán</button>
                                                     </form>
                                                 </c:if>
@@ -66,10 +64,8 @@
                                             <td data-title="Chi tiết: " >
                                                 <form action="MainController" method="POST">
                                                     <input type="hidden" name="billId" value="${bill.billId}"/>
-<<<<<<< HEAD
-=======
                                                     <input type="hidden" name="total" value="${bill.total}"/>
->>>>>>> 6c99997a84b07f1e7c89e87c7685c2c0f839732b
+
                                                     <button type="submit" style="padding: 0px 40px; margin: 10px 10px" class="btn btn-primary" name="action" value="ViewDetail">Chi tiết</button>
                                                 </form>
                                             </td>

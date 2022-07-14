@@ -71,7 +71,7 @@ public class BillDAO {
 
     private static final String STATISTIC = "SELECT sum(total) as [sum]\n"
             + " FROM Bills WHERE [date] between ? and ?";
-
+    
     public double getStatistic(String fromDate, String toDate) throws SQLException {
         double sum = 0;
         Connection conn = null;

@@ -36,6 +36,12 @@ public class ApartmentDTO {
         this.rentPrice = rentPrice;
         this.salePrice = salePrice;
     }
+
+    public ApartmentDTO(String apartmentId, float rentPrice, float salePrice) {
+        this.apartmentId = apartmentId;
+        this.rentPrice = rentPrice;
+        this.salePrice = salePrice;
+    }
     
     
 

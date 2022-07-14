@@ -27,7 +27,9 @@ public class ApartmentDAO {
     private static final String AD_SEARCH_APARTMENT = "SELECT A.apartmentId, A.size, A.image, B.buildingName, C.typeName, C.rentPrice, C.salePrice, [Status] = CASE [status]\n"
             + "WHEN 0 THEN 'Het phong' ELSE 'Con phong' END\n"
             + "FROM Apartments A, Buildings B, ApartmentTypes C\n"
-            + "WHERE apartmentId LIKE ? and B.buildingId=A.buildingId and C.apartmentTypeId=A.apartmentTypeId\n"
+            + "WHERE (A.apartmentId LIKE ? OR C.typeName LIKE ?)\n"
+            + "      AND B.buildingId=A.buildingId\n"
+            + "      AND C.apartmentTypeId=A.apartmentTypeId\n"
             + "ORDER BY A.apartmentId ASC\n"
             + "OFFSET ? ROWS FETCH NEXT 10 ROWS ONLY;";
     private static final String US_SEARCH_APARTMENT = "SELECT A.apartmentId, A.size, A.image, B.buildingName, C.rentPrice, C.salePrice, [Status] = CASE [status]\n"
@@ -35,7 +37,7 @@ public class ApartmentDAO {
             + "FROM Apartments A, Buildings B, ApartmentTypes C\n"
             + "WHERE apartmentId LIKE ? and B.buildingId=A.buildingId and C.apartmentTypeId=A.apartmentTypeId and status = 1\n"
             + "ORDER BY A.apartmentId ASC";
-        private static final String AD_SEARCH_APARTMENT_TYPE = "";
+    private static final String AD_SEARCH_APARTMENT_TYPE = "";
 //   private static final String UPDATE_APARTMENT = "\n"
 //            + "UPDATE Apartments \n"
 //            + "SET image = ?\n"
@@ -46,7 +48,10 @@ public class ApartmentDAO {
 //            + "FROM Apartments A, ApartmentTypes B\n"
 //            + "WHERE A.apartmentTypeId=B.apartmentTypeId and A.apartmentId LIKE ?\n"; 
     private static final String UPDATE_APARTMENT = "UPDATE Apartments SET image = ? WHERE apartmentId LIKE ?";
-    private static final String UPDATE_APARTMENT_PRICE = "UPDATE Aparments SET ";
+    private static final String UPDATE_APARTMENT_PRICE = "UPDATE ApartmentTypes\n"
+            + "SET rentPrice = ?, salePrice = ?\n"
+            + "FROM Apartments A, ApartmentTypes B\n"
+            + "WHERE A.apartmentTypeId=B.apartmentTypeId AND A.apartmentId LIKE ?";
     private static final String UPDATE_APARTMENT_STATUS = "UPDATE Apartments SET status = 0 WHERE apartmentId like ?";
     private static final String COUNT_ROOM = "SELECT COUNT(apartmentId) AS [count]\n"
             + "FROM Apartments WHERE status = ?;";
@@ -82,7 +87,7 @@ public class ApartmentDAO {
     }
     private static final String GET_TOTAL_APARTMENT = "SELECT count(*) FROM Apartments";
     private static final String GET_APARTMENT_TYPE = "SELECT* FROM ApartmentTypes";
-    
+
     public List<ApartmentDTO> getListApartment_AD(String searchApartment, int index) throws SQLException {
         List<ApartmentDTO> listApartment = new ArrayList<>();
 
@@ -91,7 +96,8 @@ public class ApartmentDAO {
             if (conn != null) {
                 ptm = conn.prepareStatement(AD_SEARCH_APARTMENT);
                 ptm.setString(1, "%" + searchApartment + "%");
-                ptm.setInt(2, (index - 1) * 10);
+                ptm.setString(2, "%" + searchApartment + "%");
+                ptm.setInt(3, (index - 1) * 10);
                 rs = ptm.executeQuery();
                 while (rs.next()) {
                     String apartmentId = rs.getString("apartmentId");
@@ -158,8 +164,6 @@ public class ApartmentDAO {
         }
         return listApartment;
     }
-    
-    
 
     public int getTotalApartment() {
 //        Connection conn = null;
@@ -180,15 +184,14 @@ public class ApartmentDAO {
         return 0;
     }
 
-
-    public List<ApartmentDTO> getListApartmentType() throws SQLException{
+    public List<ApartmentDTO> getListApartmentType() throws SQLException {
         List<ApartmentDTO> listApartmentTpye = new ArrayList<>();
         try {
-            conn= Utils.getConnection();
-            if(conn!=null){
+            conn = Utils.getConnection();
+            if (conn != null) {
                 ptm = conn.prepareStatement(GET_APARTMENT_TYPE);
                 rs = ptm.executeQuery();
-                while(rs.next()){
+                while (rs.next()) {
                     String apartmentTypeId = rs.getString("apartmentTypeId");
                     String typeName = rs.getString("typeName");
                     float rentPrice = Float.parseFloat(rs.getString("rentPrice"));
@@ -211,66 +214,34 @@ public class ApartmentDAO {
         }
         return listApartmentTpye;
     }
-//    public boolean updateApartment(String apartmentId, String image) throws SQLException {
-//        boolean check = false;
-//        Connection conn = null;
-//        PreparedStatement ptm = null;
-//        try {
-//            conn = Utils.getConnection();
-//            if (conn != null) {
-//                ptm = conn.prepareStatement(UPDATE_APARTMENT);
-////                ptm.setString(1, apartment.getSize());
-////                ptm.setString(2, apartment.getBuildingName());
-//                ptm.setString(1, apartmentId);
-//                ptm.setString(2, image);
-////                ptm.setString(4, Float.toString(apartment.getRentPrice()));
-////                ptm.setString(5, Float.toString(apartment.getSalePrice()));
-////                ptm.setString(6, apartment.getStatus());
-//
-//                check = ptm.executeUpdate() > 0;
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            if (ptm != null) {
-//                ptm.close();
-//            }
-//            if (conn != null) {
-//                conn.close();
-//            }
-//        }
-//        return check;
-//    }
 
-//    public void updateApartment(String apartmentId, String image) throws SQLException {
-//        //boolean check = false;
-////        Connection conn = null;
-////        PreparedStatement ptm = null;
-//        try {
-//            conn = Utils.getConnection();
-//            if (conn != null) {
-//                ptm = conn.prepareStatement(UPDATE_APARTMENT);
-////                ptm.setString(1, apartment.getSize());
-////                ptm.setString(2, apartment.getBuildingName());
-//                ptm.setString(1, apartmentId);
-//                ptm.setString(2, image);
-////                ptm.setString(4, Float.toString(apartment.getRentPrice()));
-////                ptm.setString(5, Float.toString(apartment.getSalePrice()));
-////                ptm.setString(6, apartment.getStatus());
-//
-//                ptm.executeUpdate();
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            if (ptm != null) {
-//                ptm.close();
-//            }
-//            if (conn != null) {
-//                conn.close();
-//            }
-//        }
-//    }
+    public boolean UpdateAprtmentPrice(ApartmentDTO apartmentPrice) throws SQLException {
+        boolean check = false;
+        Connection conn = null;
+        PreparedStatement ptm = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                ptm = conn.prepareStatement(UPDATE_APARTMENT_PRICE);
+                ptm.setString(1, Float.toString(apartmentPrice.getRentPrice()));
+                ptm.setString(2, Float.toString(apartmentPrice.getSalePrice()));
+                ptm.setString(3, apartmentPrice.getApartmentId());
+                
+                check = ptm.executeUpdate() > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (ptm != null) {
+                ptm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return check;
+    }
+
     public boolean updateApartment(ApartmentDTO apartment) throws SQLException {
         boolean check = false;
         Connection conn = null;
@@ -279,13 +250,8 @@ public class ApartmentDAO {
             conn = Utils.getConnection();
             if (conn != null) {
                 ptm = conn.prepareStatement(UPDATE_APARTMENT);
-//                ptm.setString(1, apartment.getSize());
-//                ptm.setString(2, apartment.getBuildingName());
                 ptm.setString(1, apartment.getImage());
                 ptm.setString(2, apartment.getApartmentId());
-//                ptm.setString(4, Float.toString(apartment.getRentPrice()));
-//                ptm.setString(5, Float.toString(apartment.getSalePrice()));
-//                ptm.setString(6, apartment.getStatus());
 
                 check = ptm.executeUpdate() > 0;
             }

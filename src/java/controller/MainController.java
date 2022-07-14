@@ -86,15 +86,22 @@ public class MainController extends HttpServlet {
     private static final String VIEW_BILL_DETAIL_CONTROLLER = "ViewBillDetailController";
     private static final String CHANGE_PASSWORD = "ChangePassword";
     private static final String CHANGE_PASSWORD_CONTROLLER = "ChangePasswordController";
-
+    //
     private static final String SEARCH_APARTMENT = "SearchApartment";
     private static final String SEARCH_APARTMENT_CONTROLLER = "SearchApartmentController";
+    
     private static final String UPDATE_APARTMENT = "UpdateApartment";
     private static final String UPDATE_APARTMENT_CONTROLLER = "UpdateApartmentController";
+
+    private static final String UPDATE_APARTMENT_PRICE = "UpdateApartmentPrice";
+    private static final String UPDATE_APARTMENT_PRICE_CONTROLLER = "UpdateApartmentPriceController";
+
     private static final String UPDATE_APARTMENT_STATUS = "UpdateApartmentStatus";
     private static final String UPDATE_APARTMENT_STATUS_CONTROLLER = "UpdateApartmentStatusController";
     private static final String AD_SEARCH_CONTRACT = "SearchContract";
     private static final String AD_SEARCH_CONTRACT_CONTROLLER = "SearchContractController";
+    private static final String CREATE_CONTRACT = "CreateContract";
+    private static final String CREATE_CONTRACT_CONTROLLER = "CreateContractController";
     private static final String CREATE_TYPE_TROUBLE = "CreateTypeTrouble";
     private static final String CREATE_TYPE_TROUBLE_CONTROLLER = "CreateTypeTroubleController";
     private static final String SEARCH_TYPE_TROUBLE = "SearchTypeTrouble";
@@ -179,6 +186,8 @@ public class MainController extends HttpServlet {
                 url = SEARCH_APARTMENT_CONTROLLER;
             } else if (UPDATE_APARTMENT.equals(action)) {
                 url = UPDATE_APARTMENT_CONTROLLER;
+            } else if (UPDATE_APARTMENT_PRICE.equals(action)) {
+                url = UPDATE_APARTMENT_PRICE_CONTROLLER;
             } else if (UPDATE_APARTMENT_STATUS.equals(action)) {
                 url = UPDATE_APARTMENT_STATUS_CONTROLLER;
             } else if (AD_SEARCH_CONTRACT.equals(action)) {
@@ -189,6 +198,8 @@ public class MainController extends HttpServlet {
                 url = SEARCH_TYPE_TROUBLE_CONTROLLER;
             } else if (VIEW_APARTMEMT_TYPE.equals(action)) {
                 url = VIEW_APARTMEMT_TYPE_CONTROLLER;
+            } else if (CREATE_CONTRACT.equals(action)) {
+                url = CREATE_CONTRACT_CONTROLLER;
             } else {
 
                 HttpSession session = request.getSession();
