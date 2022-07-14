@@ -31,7 +31,8 @@ public class TroubleDAO {
             + "            ORDER BY Apart_Troubles.status, Apart_Troubles.tranId DESC\n"
             + "            OFFSET ? ROWS FETCH NEXT 3 ROWS ONLY;";
     private static final String UPDATE_TROUBLE = "UPDATE Apart_Troubles SET status = ? WHERE tranId = ?";
-    private static final String VIEW_TYPE_TROUBLE = "SELECT troubleId, troubleName FROM Troubles";
+    private static final String VIEW_TYPE_TROUBLE = "SELECT* FROM Troubles";
+    private static final String CREATE_TYPE_TROUBLE = "INSERT INTO Troubles(troubleId, troubleName) VALUES (?,?)";
     private static final String GET_INDEX_TROUBLE = "SELECT tranId FROM Apart_Troubles";
     private static final String COUNT_TROUBLE = "SELECT count(Apart_Troubles.tranId)"
             + "            FROM Apartments, Troubles, Owners, Apart_Troubles, Contracts \n"
@@ -206,8 +207,8 @@ public class TroubleDAO {
                 rs = ptm.executeQuery();
                 while (rs.next()) {
                     String typeId = rs.getString("troubleId");
-                    String detail = rs.getString("troubleName");
-                    listTrouble.add(new TroubleTypeDTO(typeId, detail));
+                    String troubleName = rs.getString("troubleName");
+                    listTrouble.add(new TroubleTypeDTO(typeId, troubleName));
 
                 }
             }
@@ -224,5 +225,29 @@ public class TroubleDAO {
             }
         }
         return listTrouble;
+    }
+
+    public boolean createTypeTrouble(TroubleTypeDTO troubleType) throws SQLException {
+        boolean check = false;
+        Connection conn = null;
+        PreparedStatement ptm = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                ptm = conn.prepareStatement(CREATE_TYPE_TROUBLE);
+                ptm.setString(1, troubleType.getTypeId());
+                ptm.setString(2, troubleType.getDetail());
+                check = ptm.executeUpdate() > 0;
+            }
+        } catch (Exception e) {
+        } finally {
+            if (ptm != null) {
+                ptm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return check;
     }
 }

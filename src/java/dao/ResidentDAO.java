@@ -373,6 +373,37 @@ public class ResidentDAO {
         }
         return listResident;
     }
+//
+//    public int countOwner(String search) throws SQLException {
+//        int count = 0;
+//        Connection conn = null;
+//        PreparedStatement ptm = null;
+//        ResultSet rs = null;
+//        try {
+//            conn = Utils.getConnection();
+//            if (conn != null) {
+//                ptm = conn.prepareStatement(COUNT_OWNER);
+//                ptm.setString(1, "%" + search + "%");
+//                ptm.setString(2, "%" + search + "%");
+//                rs = ptm.executeQuery();
+//                if (rs.next()) {
+//                    count = Integer.parseInt(rs.getString("count"));
+//                }
+//            }
+//        } catch (ClassNotFoundException | SQLException e) {
+//        } finally {
+//            if (rs != null) {
+//                rs.close();
+//            }
+//            if (ptm != null) {
+//                ptm.close();
+//            }
+//            if (conn != null) {
+//                conn.close();
+//            }
+//        }
+//        return count;
+//    }
 
     public List<ResidentDTO> getListResident(String search, int index) throws SQLException {
         List<ResidentDTO> listResident = new ArrayList<>();
@@ -439,6 +470,72 @@ public class ResidentDAO {
         }
         return listResident;
     }
+
+//    public List<ResidentDTO> getListResident(String search, int index) throws SQLException {
+//        List<ResidentDTO> listResident = new ArrayList<>();
+//        Connection conn = null;
+//        PreparedStatement ptm = null;
+//        ResultSet rs = null;
+//        try {
+//            conn = Utils.getConnection();
+//            if (conn != null) {
+//                List<ResidentDTO> listOwner = getListOwner(search, index);
+//                listResident.addAll(listOwner);
+//                if (listResident.size() < 5 && !listResident.isEmpty()) {
+//                    ptm = conn.prepareStatement(SEARCH_BY_NAME);
+//                    ptm.setString(1, "%" + search + "%");
+//                    ptm.setString(2, "%" + search + "%");
+//                    ptm.setInt(3, 0);
+//                    ptm.setInt(4, 5 - listResident.size());
+//                    rs = ptm.executeQuery();
+//                    while (rs.next()) {
+//                        String residentId = rs.getString("residentId");
+//                        String ownerId = rs.getString("ownerId");
+//                        String name = rs.getString("fullName");
+//                        String dob = rs.getString("dob");
+//                        boolean gender = Utils.getBoolean(rs.getString("sex"));
+//                        String job = rs.getString("job");
+//                        String phone = rs.getString("phone");
+//                        String req = "";
+//                        listResident.add(new ResidentDTO(residentId, ownerId, name, dob, gender, job, phone, true, req));
+//                    }
+//                } else if (listResident.isEmpty()) {
+//                    int countOwner = countOwner(search, "1");
+//                    int countPage = (countOwner + 5 - 1) / 5;
+//                    int offset = countPage * 5 - countOwner + (index - countPage - 1) * 5;
+//                    ptm = conn.prepareStatement(SEARCH_BY_NAME);
+//                    ptm.setString(1, "%" + search + "%");
+//                    ptm.setString(2, "%" + search + "%");
+//                    ptm.setInt(3, offset);
+//                    ptm.setInt(4, 5);
+//                    rs = ptm.executeQuery();
+//                    while (rs.next()) {
+//                        String residentId = rs.getString("residentId");
+//                        String ownerId = rs.getString("ownerId");
+//                        String name = rs.getString("fullName");
+//                        String dob = rs.getString("dob");
+//                        boolean gender = Utils.getBoolean(rs.getString("sex"));
+//                        String job = rs.getString("job");
+//                        String phone = rs.getString("phone");
+//                        String req = "";
+//                        listResident.add(new ResidentDTO(residentId, ownerId, name, dob, gender, job, phone, true, req));
+//                    }
+//                }
+//            }
+//        } catch (ClassNotFoundException | SQLException e) {
+//        } finally {
+//            if (rs != null) {
+//                rs.close();
+//            }
+//            if (ptm != null) {
+//                ptm.close();
+//            }
+//            if (conn != null) {
+//                conn.close();
+//            }
+//        }
+//        return listResident;
+//    }
 
     public int getIndexRequest() throws SQLException {
         int count = 0;

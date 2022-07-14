@@ -5,16 +5,41 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Bill Detail</title>
+<<<<<<< HEAD
+=======
         <link rel="stylesheet" href="css/viewTrouble.css"/>
+>>>>>>> 6c99997a84b07f1e7c89e87c7685c2c0f839732b
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     </head>
     <body>
         <c:if test="${sessionScope.LOGIN_USER.roleID == 'EM'}">
-            <jsp:include page="headerEmp.jsp"></jsp:include>
+<<<<<<< HEAD
+            <jsp:include page="headerUser.jsp"></jsp:include>
         </c:if>
         <c:if test="${sessionScope.LOGIN_USER.roleID == 'US'}">
             <jsp:include page="headerUser.jsp"></jsp:include>
         </c:if>
+        <c:if test="${requestScope.LIST_BILL_DETAIL_SERVICE!=null}" >
+            <c:if test="${not empty requestScope.LIST_BILL_DETAIL_SERVICE }" >
+                <c:forEach var="serviceDetail" items="${requestScope.LIST_BILL_DETAIL_SERVICE}" varStatus="counter">
+                    Tên dịch vụ: ${serviceDetail.name} </br>
+                    Giá dịch vụ theo đơn vị: ${serviceDetail.price} VNĐ</br>
+                    Ngày ghi nhận: ${serviceDetail.date} </br>
+                    Chỉ số cũ: ${serviceDetail.oldIndex} </br>
+                    Chỉ số mới: ${serviceDetail.newIndex} </br>
+                    Sử dụng: ${serviceDetail.usageIndex} </br>
+                    Giá dịch vụ: ${serviceDetail.priceDetail} </br>
+                </c:forEach>
+            </c:if>
+=======
+            <jsp:include page="headerEmp.jsp"></jsp:include>
+>>>>>>> 6c99997a84b07f1e7c89e87c7685c2c0f839732b
+        </c:if>
+        <c:if test="${sessionScope.LOGIN_USER.roleID == 'US'}">
+            <jsp:include page="headerUser.jsp"></jsp:include>
+        </c:if>
+<<<<<<< HEAD
+=======
         <!--NEW-->
         <div class="container">
             <div class="row">
@@ -115,6 +140,7 @@
         </div>
 
         <!--END-NEW-->
+>>>>>>> 6c99997a84b07f1e7c89e87c7685c2c0f839732b
         <jsp:include page="footer.jsp"></jsp:include>
     </body>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>

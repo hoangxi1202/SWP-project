@@ -49,6 +49,7 @@
                                                     <form action="payment.jsp">
                                                         <input type="hidden" name="billId" value="${bill.billId}"/>
                                                         <input type="hidden" name="total" value="${bill.total}"/>
+
                                                         <button type="submit" style="padding: 0px 40px; margin: 10px 10px" class="btn btn-warning" name="action" value="Payment">Thanh toán</button>
                                                     </form>
                                                 </c:if>
@@ -57,6 +58,7 @@
                                                 <form action="MainController" method="POST">
                                                     <input type="hidden" name="billId" value="${bill.billId}"/>
                                                     <input type="hidden" name="total" value="${bill.total}"/>
+
                                                     <button type="submit" style="padding: 0px 40px; margin: 10px 10px" class="btn btn-primary" name="action" value="ViewDetail">Chi tiết</button>
                                                 </form>
                                             </td>

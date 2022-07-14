@@ -71,6 +71,13 @@ public class BillDAO {
             + "	AND Apartments.apartmentId = Contracts.apartmentId\n"
             + "	AND Contracts.ownerId = Owners.ownerId\n"
             + "	AND Owners.userId LIKE ? AND Bills.status LIKE ?";
+
+
+    private static final String STATISTIC = "SELECT sum(total) as [sum]\n"
+            + " FROM Bills WHERE [date] between ? and ?";
+    
+    public double getStatistic(String fromDate, String toDate) throws SQLException {
+
     private static final String COUNT_BILL_V2 = "SELECT count(billId)\n"
             + " FROM Bills, Apartments, Contracts, Owners\n"
             + " WHERE Bills.apartmentId = Apartments.apartmentId\n"
@@ -81,6 +88,7 @@ public class BillDAO {
             + " FROM Bills";
 
     public double getSumMoney() throws SQLException {
+
         double sum = 0;
         Connection conn = null;
         PreparedStatement ptm = null;
@@ -108,6 +116,7 @@ public class BillDAO {
         }
         return sum;
     }
+
 
     public int countBill(String userId, String status) throws SQLException {
         int index = 0;

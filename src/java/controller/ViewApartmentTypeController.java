@@ -5,69 +5,44 @@
  */
 package controller;
 
-import dao.ContractDAO;
-import dto.ContractDTO;
-import dto.UserDTO;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author Trieu Do
  */
-@WebServlet(name = "SearchContractController", urlPatterns = {"/SearchContractController"})
-public class SearchContractController extends HttpServlet {
+@WebServlet(name = "ViewApartmentTypeController", urlPatterns = {"/ViewApartmentTypeController"})
+public class ViewApartmentTypeController extends HttpServlet {
 
-    private static final String ERROR_AD = "viewContract.jsp";
-    private static final String ERROR_US = "viewContract.jsp";
-    private static final String SUCCESS_AD = "viewContract.jsp";
-    private static final String SUCCESS_US = "viewContract.jsp";
-    private static final String AD = "AD";
-    private static final String US = "US";
-
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        HttpSession session = request.getSession();
-        UserDTO loginUser = (UserDTO) session.getAttribute("LOGIN_USER");
-        String curUser = loginUser.getRoleID();
-        String url = "";
-        List<ContractDTO> listContract = null;
-        ContractDAO dao = new ContractDAO();
-        if (AD.equals(curUser)) {
-            url = ERROR_AD;
-        } else if (US.equals(curUser)) {
-            url = ERROR_US;
-        }
-        try {
-            String searchContract = request.getParameter("searchContract");
-            if (searchContract == null) {
-                searchContract = "";
-            }
-            if (AD.equals(curUser)) {
-                listContract = dao.getListContract_AD(searchContract);
-            } else if (US.equals(curUser)) {
-                listContract = dao.getListContract_AD(searchContract);
-            }
-            if (listContract.size() > 0) {
-                request.setAttribute("LIST_CONTRACT", listContract);
-                if (AD.equals(curUser)) {
-                    url = SUCCESS_AD;
-                } else if (US.equals(curUser)) {
-                    url = SUCCESS_US;
-                }
-            }
-        } catch (Exception e) {
-            log("Error at SearchController: " + e.toString());
-        } finally {
-            request.getRequestDispatcher(url).forward(request, response);
+        try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet ViewApartmentTypeController</title>");            
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet ViewApartmentTypeController at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
         }
     }
 

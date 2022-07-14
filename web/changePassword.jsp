@@ -21,6 +21,7 @@
         <!--NEW-->
         <div class="card login-form">
             <div class="card-body">
+
                 <h3 class="card-title text-center">Đổi mật khẩu</h3>
                 <div class="card-text">
                     <form class="form-password" action="MainController" method="POST">
@@ -54,6 +55,8 @@
             $(".password").addClass("active");
         });
     </script>
+
     <script src="js/js.js" ></script>
+
 
 </html>
