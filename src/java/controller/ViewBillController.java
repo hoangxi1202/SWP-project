@@ -46,8 +46,8 @@ public class ViewBillController extends HttpServlet {
         String url = ERROR;
         try {
             count = dao.countBill(curUser, "%%");
-            int endPage = count / 3;
-            if (count % 3 != 0) {
+            int endPage = count / 5;
+            if (count % 5 != 0) {
                 endPage++;
             }
             listBill = dao.getBill(curUser, "%%", index);

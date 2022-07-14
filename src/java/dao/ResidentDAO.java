@@ -68,6 +68,7 @@ public class ResidentDAO {
     private static final String UPDATE_REQUEST = "UPDATE Requests\n"
             + " SET [status] = 1\n"
             + " WHERE requestId = ?";
+    private static final String ADD_OWNER = "INSERT INTO Owners VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String UPDATE_REQUEST_RESIDENT = "UPDATE Residents\n"
             + " SET [status] = ?\n"
             + " WHERE requestId = ?";
@@ -633,7 +634,7 @@ public class ResidentDAO {
         return check;
     }
 
-    private int countOwner(String search, String status) throws SQLException {
+    public int countOwner(String search, String status) throws SQLException {
         int count = 0;
         Connection conn = null;
         PreparedStatement ptm = null;
@@ -696,5 +697,40 @@ public class ResidentDAO {
             }
         }
         return count;
+    }
+
+    public boolean addOwner(ResidentDTO owner) throws SQLException {
+        boolean check = false;
+        Connection conn = null;
+        PreparedStatement stm = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(ADD_OWNER);
+                stm.setString(1, owner.getOwnerId());
+                stm.setString(2, owner.getName());
+                stm.setString(3, owner.getDob());
+                if (owner.isGender() == true) {
+                    stm.setString(4, "male");
+                } else {
+                    stm.setString(4, "female");
+                }
+                stm.setString(5, owner.getJob());
+                stm.setString(6, owner.getPhone());
+                stm.setString(7, owner.getEmail());
+                stm.setString(8, "1");
+                stm.setString(9, owner.getResidentId());
+                check = stm.executeUpdate() > 0;
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            if (conn != null) {
+                conn.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+        }
+        return check;
     }
 }

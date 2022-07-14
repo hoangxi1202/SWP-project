@@ -24,6 +24,18 @@ import utils.Utils;
  */
 public class ServiceDAO {
 
+    private static final String GET_INDEX = "SELECT Max(BillServiceDetails.newIndex) as oldIndex\n"
+            + " FROM Bills, BillDetails, BillServiceDetails \n"
+            + " WHERE Bills.apartmentId = ?\n"
+            + "	AND BillServiceDetails.serviceId = ?";
+
+    private static final String LIST_SERVICE_DEFAULT = "SELECT Services.serviceId, serviceName, servicePrice\n"
+            + "FROM Services, BillDetails\n"
+            + " WHERE Services.serviceId = BillDetails.serviceId\n"
+            + " AND Services.status = 1\n"
+            + "	AND BillDetails.serviceId NOT IN (SELECT serviceId FROM BillServiceDetails)\n"
+            + "	group by Services.serviceId, serviceName, servicePrice";
+
     public boolean checkDuplicate(String id) throws SQLException {
         boolean check = false;
         Connection conn = null;
@@ -370,4 +382,68 @@ public class ServiceDAO {
 //            System.out.println(service.toString());
 //        });
     }
+
+    public List<Service> getListServiceDefault() throws SQLException {
+        List<Service> list = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(LIST_SERVICE_DEFAULT);
+                rs = stm.executeQuery();
+                while (rs.next()) {
+                    String serviceId = rs.getString("serviceId");
+                    String serviceName = rs.getString("serviceName");
+                    float price = rs.getFloat("servicePrice");
+                    list.add(new Service(serviceId, serviceName, price));
+                }
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return list;
+    }
+
+    public int getIndex(String apartmentId, String serviceId) throws SQLException {
+        int index = 0;
+        Connection conn = null;
+        PreparedStatement ptm = null;
+        ResultSet rs = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                ptm = conn.prepareStatement(GET_INDEX);
+                ptm.setString(1, apartmentId);
+                ptm.setString(2, serviceId);
+                rs = ptm.executeQuery();
+                while (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (ptm != null) {
+                ptm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return index;
+    }
+
 }

@@ -29,6 +29,12 @@ public class Service {
         this.price = servicePrice;
     }
 
+    public Service(String serviceId, String serviceName, float price) {
+        this.serviceId = serviceId;
+        this.serviceName = serviceName;
+        this.price = price;
+    }
+
     public String getTypeID() {
         return typeID;
     }

@@ -54,9 +54,6 @@
                 </form>-->
         <form action="MainController">
             Search User<input type="text" name="search" value="<%=search%>"/>
-
-            <form action="MainController">
-                <input type="submit" name="action" value="Logout"/>
             </form>
             <!--        <form action="MainController" method="POST">
                         Email<input type="email" name="email" />
@@ -110,6 +107,10 @@
                                                     <input type="hidden" name="search" value="<%=search%>"/> 
                                                 </td>-->
                         </tr>
+                    </form>
+                    <form action="addOwner.jsp" method="POST">
+                        <input type="hidden" name="userId" value="<%=user.getUserID()%>">
+                        <button type="submit">AddOwner</button>
                     </form>
                     <%
                         }

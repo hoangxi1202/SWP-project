@@ -27,13 +27,76 @@ public class ContractDAO {
 //            + "       AND D.billId=E.billId AND E.serviceId=F.serviceId";
     private static final String COUNT_CONTRACT = "Select COUNT(contractId) as [count] \n"
             + "FROM Contracts WHERE [status] = ?";
+    private static final String UPDATE_CONTRACT = "UPDATE Contracts\n"
+            + "SET contractId = ?,\n"
+            + "	startDate = ?,\n"
+            + "	endDate = ?,\n"
+            + "	[status] = ?,\n"
+            + "	apartmentId = ?\n"
+            + "	Where contractId = ?";
+    private static final String LIST_CONTRACT = "SELECT Contracts.apartmentId, Contracts.startDate, Contracts.contractId, Owners.fullName, Owners.ownerId\n"
+            + " FROM Contracts, Owners\n"
+            + " WHERE Contracts.ownerId = Owners.ownerId AND Contracts.status = 1";
+    
     private static final String AD_SEARCH_CONTRACT = "SELECT A.contractId, C.apartmentId, B.fullName, F.serviceName, A.startDate, A.endDate, A.[status]\n"
             + "FROM Contracts A, Owners B, Apartments C, Bills D, BillDetails E, Services F \n"
             + "WHERE  A.ownerId=B.ownerId \n"
             + "       AND A.apartmentId=C.apartmentId AND C.apartmentId=D.apartmentId \n"
             + "       AND D.billId=E.billId AND E.serviceId=F.serviceId";
-    private static final String DELETE_CONTRACT = "UPDATE Contracts SET status = 0 WHERE contractId = ?";
-
+    private static final String DELETE_CONTRACT = "UPDATE Contracts SET status = ? WHERE contractId = ?";
+    
+    public boolean updateContract(ContractDTO contract) throws SQLException {
+        boolean check = false;
+        Connection conn = null;
+        PreparedStatement stm = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(UPDATE_CONTRACT);
+                stm.setString(1, contract.getContractId());
+                stm.setString(2, contract.getStartDate());
+                stm.setString(3, contract.getEndDate());
+                stm.setString(4, contract.getStatus());
+                stm.setString(5, contract.getApartmentId());
+                stm.setString(6, contract.getContractId());
+                check = stm.executeUpdate() > 0;
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            if (conn != null) {
+                conn.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+        }
+        return check;
+    }
+    
+    public boolean deleteContract(String contractId, String status) throws SQLException {
+        boolean check = false;
+        Connection conn = null;
+        PreparedStatement stm = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(DELETE_CONTRACT);
+                stm.setString(1, "0");
+                stm.setString(2, contractId);
+                check = stm.executeUpdate() > 0;
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            if (conn != null) {
+                conn.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+        }
+        return check;
+    }
+    
     public int countContract(String status) throws SQLException {
         int count = 0;
         Connection conn = null;
@@ -137,5 +200,39 @@ public class ContractDAO {
         }
         return listContract;
     }
-
+    
+    public List<ContractDTO> getListContract() throws SQLException {
+        List<ContractDTO> listContract = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement ptm = null;
+        ResultSet rs = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                ptm = conn.prepareStatement(LIST_CONTRACT);
+                rs = ptm.executeQuery();
+                while (rs.next()) {
+                    String contractId = rs.getString("contractId");
+                    String apartmentId = rs.getString("apartmentId");
+                    String fullName = rs.getString("fullName");
+                    String startDate = rs.getString("startDate");
+                    String ownerId = rs.getString("ownerId");
+                    listContract.add(new ContractDTO(contractId, apartmentId, fullName, startDate, ownerId));
+                }
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (ptm != null) {
+                ptm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return listContract;
+    }
+    
 }

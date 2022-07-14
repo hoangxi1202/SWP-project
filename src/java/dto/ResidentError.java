@@ -16,6 +16,7 @@ public class ResidentError {
     private String sexError;
     private String jobError;
     private String phoneError;
+    private String emailError;
 
     public ResidentError() {
         this.nameError = "";
@@ -23,6 +24,24 @@ public class ResidentError {
         this.sexError = "";
         this.jobError = "";
         this.phoneError = "";
+        this.emailError = "";
+    }
+
+    public String getEmailError() {
+        return emailError;
+    }
+
+    public void setEmailError(String emailError) {
+        this.emailError = emailError;
+    }
+
+    public ResidentError(String nameError, String dobError, String sexError, String jobError, String phoneError, String emailError) {
+        this.nameError = nameError;
+        this.dobError = dobError;
+        this.sexError = sexError;
+        this.jobError = jobError;
+        this.phoneError = phoneError;
+        this.emailError = emailError;
     }
 
     public ResidentError(String nameError, String dobError, String sexError, String jobError, String phoneError) {

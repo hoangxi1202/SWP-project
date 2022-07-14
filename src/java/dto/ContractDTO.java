@@ -42,6 +42,14 @@ public class ContractDTO {
         this.apartmentId = apartmentId;
     }
 
+    public ContractDTO(String contractId, String apartmentId, String fullName, String startDate, String ownerId) {
+        this.contractId = contractId;
+        this.apartmentId = apartmentId;
+        this.fullName = fullName;
+        this.startDate = startDate;
+        this.ownerId = ownerId;
+    }
+
     public String getContractId() {
         return contractId;
     }
@@ -105,6 +113,5 @@ public class ContractDTO {
     public void setServiceName(String serviceName) {
         this.serviceName = serviceName;
     }
-    
 
 }

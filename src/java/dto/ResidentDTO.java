@@ -17,11 +17,41 @@ public class ResidentDTO {
     private String dob;
     private boolean gender;
     private String job;
+    private String email;
     private String phone;
     private boolean status;
     public String resquestId;
 
-    
+    public ResidentDTO(String ownerId, String name, String dob, boolean gender, String job, String email, String phone, boolean status) {
+        this.ownerId = ownerId;
+        this.name = name;
+        this.dob = dob;
+        this.gender = gender;
+        this.job = job;
+        this.email = email;
+        this.phone = phone;
+        this.status = status;
+    }
+
+    public ResidentDTO(String userId, String ownerId, String name, String dob, boolean gender, String job, String email, String phone, boolean status) {
+        this.residentId = userId;
+        this.ownerId = ownerId;
+        this.name = name;
+        this.dob = dob;
+        this.gender = gender;
+        this.job = job;
+        this.email = email;
+        this.phone = phone;
+        this.status = status;
+    }
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public ResidentDTO(String residentId, String ownerId, String name, String dob, boolean gender, String job, String phone, boolean status, String resquestId) {
         this.residentId = residentId;
         this.ownerId = ownerId;

@@ -9,7 +9,6 @@ import dao.BillDAO;
 import dto.BillDTO;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,44 +19,51 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Nhat Linh
  */
-@WebServlet(name = "ViewAllBillController", urlPatterns = {"/ViewAllBillController"})
-public class ViewAllBillController extends HttpServlet {
+@WebServlet(name = "CreateBillController", urlPatterns = {"/CreateBillController"})
+public class CreateBillController extends HttpServlet {
 
-    private static final String ERROR = "employee.jsp";
-    private static final String SUCCESS = "listBill.jsp";
+    private static final String SUCCESS = "employee.jsp";
+    private static final String ERROR = "createBill.jsp";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String search = request.getParameter("search");
-        if (search == null) {
-            search = "";
-        }
-        String indexPage = request.getParameter("index");
-        if ("".equals(indexPage) || indexPage == null) {
-            indexPage = "1";
-        }
-        int count = 0;
-        int index = Integer.parseInt(indexPage);
-        int tag = index;
         String url = ERROR;
-        List<BillDTO> list;
-        BillDAO dao = new BillDAO();
+        String date = request.getParameter("date");
+        String[] serviceId = request.getParameterValues("serviceId");
+        String apartmentId = request.getParameter("apartmentId");
+        String oldElec = request.getParameter("oldIndexElec");
+        String newElec = request.getParameter("newIndexElec");
+        String oldWater = request.getParameter("oldIndexWater");
+        String newWater = request.getParameter("newIndexWater");
+        BillDAO dao;
         try {
-            count = dao.countBillV2("%" + search + "%", "%" + search + "%");
-            int endPage = count / 5;
-            if (count % 5 != 0) {
-                endPage++;
-            }
-            list = dao.getBillV2("%" + search + "%", "%" + search + "%", index);
-            if (list.size() > 0) {
-                request.setAttribute("endP", endPage);
-                request.setAttribute("tag", tag);
-                request.setAttribute("LIST_ALL_BILL", list);
+            dao = new BillDAO();
+            int usageElec = Integer.parseInt(newElec) - Integer.parseInt(oldElec);
+            int usageWater = Integer.parseInt(newWater) - Integer.parseInt(oldWater);
+            if (usageElec > 0 && usageWater > 0) {
+                double priceElec = dao.getPrice("E01");
+                double priceWater = dao.getPrice("W01");
+                double total = priceElec * usageElec + usageWater * priceWater;
+                String billId = String.valueOf(dao.countBill("%%", "%%") + 1);
+                dao.addBill(new BillDTO(billId, total, false, date, apartmentId));
+                for (String serviceId1 : serviceId) {
+                    double price = dao.getPrice(serviceId1);
+                    total += price;
+                    dao.addBillDetail(billId, serviceId1, price);
+                }                
+                dao.addBillDetail(billId, "E01", priceElec * usageElec);
+                dao.addBillDetail(billId, "W01", usageWater * priceWater);
+                dao.addServiceBillDetail(oldElec, newElec, usageElec, date, "E01", billId);
+                dao.addServiceBillDetail(oldWater, newWater, usageWater, date, "W01", billId);
                 url = SUCCESS;
+                request.setAttribute("SUCESS", "Success!!");
+            } else {
+                request.setAttribute("ERROR", "Chỉ số mới phải lớn hơn!!!");
             }
+
         } catch (SQLException e) {
-            log("Error at ViewAllBillController: " + e.toString());
+            log("Error at Create Bill Controller: " + e.toString());
         } finally {
             request.getRequestDispatcher(url).forward(request, response);
         }

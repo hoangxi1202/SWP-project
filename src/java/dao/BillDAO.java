@@ -15,6 +15,11 @@ import utils.Utils;
 
 public class BillDAO {
 
+    private static final String PRICE_SERVICE = "Select servicePrice from Services where serviceId = ?";
+    private static final String ADD_BILL = "INSERT INTO Bills VALUES (?, ?, ?, ?, ?)";
+    private static final String ADD_BILL_DETAIL = "INSERT INTO BillDetails VALUES (?, ?, ?)";
+    private static final String ADD_SERVICE_BILL_DETAIL = "INSERT INTO BillServiceDetails VALUES (?, ?, ?, ?, ?, ?)";
+
     private static final String VIEW_MONEY_BY_MONTH = "SELECT CAST(MONTH(date) AS VARCHAR(2)) + '-' + CAST(YEAR(date) AS VARCHAR(4)) AS [date], SUM(total) AS [sum]\n"
             + "FROM Bills\n"
             + "WHERE (date BETWEEN '2001-11-3' AND '2050-11-3')\n"
@@ -26,34 +31,35 @@ public class BillDAO {
             + "	AND Apartments.apartmentId = Contracts.apartmentId\n"
             + "	AND Contracts.ownerId = Owners.ownerId\n"
             + "	AND Owners.userId LIKE ? AND Bills.status LIKE ?"
-            + " ORDER BY Bills.status, Bills.date"
-            + " OFFSET ? ROWS FETCH NEXT 3 ROWS ONLY;";
+            + " ORDER BY Bills.status, Bills.date DESC"
+            + " OFFSET ? ROWS FETCH NEXT 5 ROWS ONLY;";
     private static final String VIEW_BILL_V2 = "SELECT billId, total, Bills.[status], [date], Apartments.apartmentId\n"
             + " FROM Bills, Apartments, Contracts, Owners\n"
             + " WHERE Bills.apartmentId = Apartments.apartmentId\n"
             + "	AND Apartments.apartmentId = Contracts.apartmentId\n"
             + "	AND Contracts.ownerId = Owners.ownerId\n"
             + "	AND (Bills.billId LIKE ? OR Apartments.apartmentId LIKE ?)"
-            + " ORDER BY Bills.status, Bills.date"
-            + " OFFSET ? ROWS FETCH NEXT 3 ROWS ONLY;";
+            + " ORDER BY Bills.status, Bills.date DESC"
+            + " OFFSET ? ROWS FETCH NEXT 5 ROWS ONLY;";
     private static final String VIEW_DETAIL_INDEX = "SELECT Services.serviceId, Services.serviceName, Services.servicePrice, \n"
-            + "Services.date, ServiceDetails.oldIndex,\n"
-            + "ServiceDetails.newIndex, ServiceDetails.usagaIndex, ServiceDetails.date as printDate, \n"
-            + "BillDetails.priceDetail \n"
-            + "FROM Services, Bills, BillDetails, ServiceDetails\n"
-            + "WHERE Bills.billId = BillDetails.billId\n"
-            + "	AND BillDetails.serviceId = Services.serviceId\n"
-            + "	AND Services.serviceId = ServiceDetails.serviceId\n"
-            + " AND Bills.billId = ?\n"
-            + " AND Services.status = 1";
+            + "            Services.date, BillServiceDetails.oldIndex,\n"
+            + "            BillServiceDetails.newIndex, BillServiceDetails.usagaIndex, BillServiceDetails.date as printDate, \n"
+            + "            BillDetails.priceDetail \n"
+            + "            FROM Services, Bills, BillDetails, BillServiceDetails\n"
+            + "            WHERE Bills.billId = BillDetails.billId\n"
+            + "			AND BillDetails.serviceId = Services.serviceId\n"
+            + "            AND BillDetails.serviceId = BillServiceDetails.serviceId\n"
+            + "            AND BillDetails.billId = BillServiceDetails.billId\n"
+            + "             AND Bills.billId = ?\n"
+            + "             AND Services.status = 1";
     private static final String VIEW_DETAIL = "SELECT Services.serviceId, Services.serviceName, Services.servicePrice, \n"
-            + "Services.date,\n"
-            + "BillDetails.priceDetail\n"
-            + "FROM Services, Bills, BillDetails\n"
-            + "WHERE Services.serviceId NOT IN (SELECT ServiceDetails.serviceId FROM ServiceDetails)\n"
-            + "	AND Bills.billId = BillDetails.billId\n"
-            + "	AND BillDetails.serviceId = Services.serviceId\n"
-            + "	AND Bills.billId = ?;";
+            + "            Services.date,\n"
+            + "            BillDetails.priceDetail\n"
+            + "            FROM Services, Bills, BillDetails\n"
+            + "            WHERE Services.serviceId NOT IN (SELECT BillServiceDetails.serviceId FROM BillServiceDetails)\n"
+            + "            	AND Bills.billId = BillDetails.billId\n"
+            + "            AND BillDetails.serviceId = Services.serviceId\n"
+            + "            	AND Bills.billId = ?;";
 
     private static final String MINUS_MONEY = "UPDATE BankAccounts\n"
             + " SET accountBlance = accountBlance - ?\n"
@@ -288,7 +294,7 @@ public class BillDAO {
                 stm = conn.prepareStatement(VIEW_BILL_V2);
                 stm.setString(1, billId);
                 stm.setString(2, apartmentId);
-                stm.setInt(3, (index - 1) * 3);
+                stm.setInt(3, (index - 1) * 5);
                 rs = stm.executeQuery();
                 while (rs.next()) {
                     billId = rs.getString("billId");
@@ -325,7 +331,7 @@ public class BillDAO {
                 stm = conn.prepareStatement(VIEW_BILL);
                 stm.setString(1, userId);
                 stm.setString(2, status);
-                stm.setInt(3, (index - 1) * 3);
+                stm.setInt(3, (index - 1) * 5);
                 rs = stm.executeQuery();
                 while (rs.next()) {
                     String billId = rs.getString("billId");
@@ -468,6 +474,117 @@ public class BillDAO {
                 stm = conn.prepareStatement(UPDATE_BILL);
                 stm.setString(1, status);
                 stm.setString(2, billId);
+                check = stm.executeUpdate() > 0;
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            if (conn != null) {
+                conn.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+        }
+        return check;
+    }
+
+    public double getPrice(String serviceId) throws SQLException {
+        double price = 0;
+        Connection conn = null;
+        PreparedStatement ptm = null;
+        ResultSet rs = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                ptm = conn.prepareStatement(PRICE_SERVICE);
+                ptm.setString(1, serviceId);
+                rs = ptm.executeQuery();
+                while (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (ptm != null) {
+                ptm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return price;
+    }
+
+    public boolean addBill(BillDTO bill) throws SQLException {
+        boolean check = false;
+        Connection conn = null;
+        PreparedStatement stm = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(ADD_BILL);
+                stm.setString(1, bill.getBillId());
+                stm.setString(2, String.valueOf(bill.getTotal()));
+                stm.setString(3, bill.isStatus() ? "1" : "0");
+                stm.setString(4, bill.getDate());
+                stm.setString(5, bill.getApartmentId());
+                check = stm.executeUpdate() > 0;
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            if (conn != null) {
+                conn.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+        }
+        return check;
+    }
+
+    public boolean addBillDetail(String billId, String serviceId, double price) throws SQLException {
+        boolean check = false;
+        Connection conn = null;
+        PreparedStatement stm = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(ADD_BILL_DETAIL);
+                stm.setString(1, billId);
+                stm.setString(2, serviceId);
+                String price1 = String.valueOf(price);
+                stm.setString(3, price1);
+                check = stm.executeUpdate() > 0;
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            if (conn != null) {
+                conn.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+        }
+        return check;
+    }
+
+    public boolean addServiceBillDetail(String oldElec, String newElec, int usageElec, String date, String serviceId, String billId) throws SQLException {
+        boolean check = false;
+        Connection conn = null;
+        PreparedStatement stm = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(ADD_SERVICE_BILL_DETAIL);
+                stm.setString(1, oldElec);
+                stm.setString(2, newElec);
+                stm.setString(3, String.valueOf(usageElec));
+                stm.setString(4, date);
+                stm.setString(5, serviceId);
+                stm.setString(6, billId);
                 check = stm.executeUpdate() > 0;
             }
         } catch (ClassNotFoundException | SQLException e) {

@@ -133,13 +133,14 @@
 <form action="MainController">
     <input type="submit" name="action" value="ViewAllBill" />
 </form>
+<a href="MainController?action=BefCreateBill">Tạo bill</a>
 <jsp:include page="footer.jsp"></jsp:include>
 </body>
 <script src="js/js.js" ></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $(".home").addClass("active");
-        });
-    </script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".home").addClass("active");
+    });
+</script>
 </html>

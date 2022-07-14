@@ -5,8 +5,6 @@
  */
 package dto;
 
-import java.sql.Date;
-
 /**
  *
  * @author Nhat Linh

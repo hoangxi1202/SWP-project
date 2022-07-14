@@ -27,7 +27,14 @@ public class MainController extends HttpServlet {
     private static final String CREATEACCOUNT = "CreateAccountController";
     private static final String STATISTIC = "Statistic";
     private static final String STATISTIC_CONTROLLER = "StatisticController";
-
+    private static final String UPDATE_CONTRACT = "UpdateContract";
+    private static final String DELETE_CONTRACT = "DeleteContract";
+    private static final String DELETE_CONTRACT_CONTROLLER = "DeleteContractController";
+    private static final String UPDATE_CONTRACT_CONTROLLER = "UpdateContractController";
+    private static final String BEF_CREATE_BILL = "BefCreateBill";
+    private static final String BEF_CREATE_BILL_CONTROLLER = "BefCreateBillController";
+    private static final String LOAD_INDEX = "LoadIndex";
+    private static final String LOAD_INDEX_CONTROLLER = "LoadIndexController";
     private static final String SEARCH_ACTION = "Search";
     private static final String SEARCH = "SearchController";
     private static final String UPDATE_ACTION = "Update";
@@ -35,6 +42,8 @@ public class MainController extends HttpServlet {
     private static final String DELETE_ACTION = "Delete";
     private static final String DELETE = "DeleteController";
     private static final String SENDMAIL_ACTION = "SendMail";
+    private static final String CREATE_BILL = "CreateBill";
+    private static final String CREATE_BILL_CONTROLLER = "CreateBillController";
     private static final String SENDMAIL = "SendMailController";
     private static final String ADD_SERVICE_ACTION = "AddService";
     private static final String ADD_SERVICE = "AddServiceController";
@@ -77,6 +86,8 @@ public class MainController extends HttpServlet {
     private static final String REJECT_REQUEST_CONTROLLER = "RejectRequestController";
     private static final String UPDATE_RESIDENT_CONTROLLER = "UpdateResidentController";
     private static final String REMOVE_RESIDENT_CONTROLLER = "RemoveResidentController";
+    private static final String ADD_OWNER = "AddOwner";
+    private static final String ADD_OWNER_CONTROLLER = "AddOwnerController";
 
     private static final String VIEW_BILL = "ViewBill";
     private static final String PAY_BILL = "PayBill";
@@ -113,10 +124,22 @@ public class MainController extends HttpServlet {
                 url = LOGIN;
             } else if (UPDATE_RESIDENT.equals(action)) {
                 url = UPDATE_RESIDENT_CONTROLLER;
+            } else if (BEF_CREATE_BILL.equals(action)) {
+                url = BEF_CREATE_BILL_CONTROLLER;
+            } else if (LOAD_INDEX.equals(action)) {
+                url = LOAD_INDEX_CONTROLLER;
+            } else if (CREATE_BILL.equals(action)) {
+                url = CREATE_BILL_CONTROLLER;
             } else if (STATISTIC.equals(action)) {
                 url = STATISTIC_CONTROLLER;
             } else if (REMOVE_RESIDENT.equals(action)) {
                 url = REMOVE_RESIDENT_CONTROLLER;
+            } else if (UPDATE_CONTRACT.equals(action)) {
+                url = UPDATE_CONTRACT_CONTROLLER;
+            } else if (ADD_OWNER.equals(action)) {
+                url = ADD_OWNER_CONTROLLER;
+            } else if (DELETE_CONTRACT.equals(action)) {
+                url = DELETE_CONTRACT_CONTROLLER;
             } else if (LOGOUT_ACTION.equals(action)) {
                 url = LOGOUT;
             } else if (UPDATE_STATUS_BILL.equals(action)) {
