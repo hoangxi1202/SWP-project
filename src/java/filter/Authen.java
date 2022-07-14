@@ -5,6 +5,7 @@
  */
 package filter;
 
+import dto.UserDTO;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -20,6 +21,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -44,18 +46,80 @@ public class Authen implements Filter {
         //resource ma role US co quyen truy cap
         USER_RESOURCES = new ArrayList<>();
         USER_RESOURCES.add("login.jsp");
+        USER_RESOURCES.add("changePassword.jsp");
+        USER_RESOURCES.add("addResident.jsp");
+        USER_RESOURCES.add("createTrouble.jsp");
+        USER_RESOURCES.add("deleteResident.jsp");
+        USER_RESOURCES.add("headerUser.jsp");
+        USER_RESOURCES.add("payment.jsp");
+        USER_RESOURCES.add("slider.jsp");
+        USER_RESOURCES.add("user.jsp");
+        USER_RESOURCES.add("viewBill.jsp");
+        USER_RESOURCES.add("viewDetailBill.jsp");
+        USER_RESOURCES.add("AddResidentController");
+        USER_RESOURCES.add("BeforeCreateTroubleController");
+        USER_RESOURCES.add("BeforeDeleteResidentController");
+        USER_RESOURCES.add("ChangePasswordController");
+        USER_RESOURCES.add("DeleteResidentController");
+        USER_RESOURCES.add("LoginController");
+        USER_RESOURCES.add("LogoutController");
+        USER_RESOURCES.add("PayBillController");
+        USER_RESOURCES.add("ViewBillController");
+        USER_RESOURCES.add("ViewBillDetailController");
+        USER_RESOURCES.add("SendTroubleController");
+        USER_RESOURCES.add("MainController");
 
         //resource ma role AD co quyen truy cap
         ADMIN_RESOURCES = new ArrayList<>();
+        ADMIN_RESOURCES.add("admin.jsp");
         ADMIN_RESOURCES.add("login.jsp");
+        ADMIN_RESOURCES.add("changePassword.jsp");
+        ADMIN_RESOURCES.add("headerAdmin.jsp");
+        ADMIN_RESOURCES.add("homeAdmin.jsp");
+        ADMIN_RESOURCES.add("managerAccount.jsp");
+        ADMIN_RESOURCES.add("troubleType.jsp");
+        ADMIN_RESOURCES.add("viewContract.jsp");
+        ADMIN_RESOURCES.add("viewResident.jsp");
+        ADMIN_RESOURCES.add("viewTroubleAdmin.jsp");
+        ADMIN_RESOURCES.add("MainController");
+
 
         //resource ma role EM co quyen truy cap
         EMPLOYEE_RESOURCES = new ArrayList<>();
         EMPLOYEE_RESOURCES.add("login.jsp");
+        EMPLOYEE_RESOURCES.add("changePassword.jsp");
+        EMPLOYEE_RESOURCES.add("employee.jsp");
+        EMPLOYEE_RESOURCES.add("headerEmp.jsp");
+        EMPLOYEE_RESOURCES.add("listBill.jsp");
+        EMPLOYEE_RESOURCES.add("requestResident.jsp");
+        EMPLOYEE_RESOURCES.add("viewDetailBill.jsp");
+        EMPLOYEE_RESOURCES.add("viewResident.jsp");
+        EMPLOYEE_RESOURCES.add("viewTroubleEmployee.jsp");
+        EMPLOYEE_RESOURCES.add("AcceptRequestController");
+        EMPLOYEE_RESOURCES.add("ChangePasswordController");
+        EMPLOYEE_RESOURCES.add("LoginController");
+        EMPLOYEE_RESOURCES.add("MainController");
+        EMPLOYEE_RESOURCES.add("LogoutController");
+        EMPLOYEE_RESOURCES.add("RejectRequestController");
+        EMPLOYEE_RESOURCES.add("RemoveResidentController");
+        EMPLOYEE_RESOURCES.add("UpdateResidentController");
+        EMPLOYEE_RESOURCES.add("UpdateStatusBillController");
+        EMPLOYEE_RESOURCES.add("UpdateTroubleController");
+        EMPLOYEE_RESOURCES.add("ViewAllBillController");
+        EMPLOYEE_RESOURCES.add("ViewBillDetailController");
+        EMPLOYEE_RESOURCES.add("ViewResidentController");
+        EMPLOYEE_RESOURCES.add("ViewTroubleController");
 
         //resource khong can xac thuc, ai cung truy cap dc
         NON_AUTHEN_RESOURCES = new ArrayList<>();
         NON_AUTHEN_RESOURCES.add("login.jsp");
+//        NON_AUTHEN_RESOURCES.add("css");
+//        NON_AUTHEN_RESOURCES.add("fonts");
+//        NON_AUTHEN_RESOURCES.add("images");
+//        NON_AUTHEN_RESOURCES.add("js");
+//        NON_AUTHEN_RESOURCES.add("vendor");
+        NON_AUTHEN_RESOURCES.add("MainController");
+        NON_AUTHEN_RESOURCES.add("LoginController");
 
     }
 
@@ -142,28 +206,26 @@ public class Authen implements Filter {
             checkContain = true; //xoa sau khi da xong
             if (checkContain) {
                 chain.doFilter(request, response);
+            } else {
+                HttpSession session = req.getSession();
+//                xac thuc
+                if (session == null || session.getAttribute("LOGIN_USER") == null) {
+                    res.sendRedirect(LOGIN_PAGE);
+                } else {
+//                    phan quyen
+                    UserDTO loginUser = (UserDTO) session.getAttribute("LOGIN_USER");
+                    String roleID = loginUser.getRoleID();
+                    if (AD.equals(roleID) && ADMIN_RESOURCES.contains(resource)) {
+                        chain.doFilter(request, response);
+                    } else if (US.equals(roleID) && USER_RESOURCES.contains(resource)) {
+                        chain.doFilter(request, response);
+                    } else if (EM.equals(roleID) && EMPLOYEE_RESOURCES.contains(resource)) {
+                        chain.doFilter(request, response);
+                    } else {
+                        res.sendRedirect(LOGIN_PAGE);
+                    }
+                }
             }
-//            else {
-//                HttpSession session = req.getSession();
-////                xac thuc
-//                if (session == null || session.getAttribute("LOGIN_USER") == null) {
-//                    res.sendRedirect(LOGIN_PAGE);
-//                } else {
-////                    phan quyen
-//                    UserDTO loginUser = (UserDTO) session.getAttribute("LOGIN_USER");
-//                    String roleID = loginUser.getRoleID();
-//                    if (AD.equals(roleID) && ADMIN_RESOURCES.contains(resource)) {
-//                        chain.doFilter(request, response);
-//                    } else if (US.equals(roleID) && USER_RESOURCES.contains(resource)) {
-//                        chain.doFilter(request, response);
-//                    }else if (EM.equals(roleID) && EMPLOYEE_RESOURCES.contains(resource)) {
-//                        chain.doFilter(request, response);
-//                    } 
-//                    else {
-//                        res.sendRedirect(LOGIN_PAGE);
-//                    }
-//                }
-//            }
         } catch (Exception e) {
         }
     }

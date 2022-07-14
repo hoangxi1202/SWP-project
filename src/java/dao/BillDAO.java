@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package dao;
 
 import dto.BillDTO;
@@ -18,12 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 import utils.Utils;
 
-/**
- *
- * @author Nhat Linh
- */
 public class BillDAO {
 
+    private static final String VIEW_MONEY_BY_MONTH = "SELECT CAST(MONTH(date) AS VARCHAR(2)) + '-' + CAST(YEAR(date) AS VARCHAR(4)) AS [date], SUM(total) AS [sum]\n"
+            + "FROM Bills\n"
+            + "WHERE (date BETWEEN '2001-11-3' AND '2050-11-3')\n"
+            + "GROUP BY CAST(MONTH(date) AS VARCHAR(2)) + '-' + CAST(YEAR(date) AS VARCHAR(4))";
     private static final String UPDATE_BILL = "UPDATE Bills set status = ? WHERE billId = ?";
     private static final String VIEW_BILL = "SELECT billId, total, Bills.[status], [date], Apartments.apartmentId\n"
             + " FROM Bills, Apartments, Contracts, Owners\n"
@@ -31,6 +26,14 @@ public class BillDAO {
             + "	AND Apartments.apartmentId = Contracts.apartmentId\n"
             + "	AND Contracts.ownerId = Owners.ownerId\n"
             + "	AND Owners.userId LIKE ? AND Bills.status LIKE ?"
+            + " ORDER BY Bills.status, Bills.date"
+            + " OFFSET ? ROWS FETCH NEXT 3 ROWS ONLY;";
+    private static final String VIEW_BILL_V2 = "SELECT billId, total, Bills.[status], [date], Apartments.apartmentId\n"
+            + " FROM Bills, Apartments, Contracts, Owners\n"
+            + " WHERE Bills.apartmentId = Apartments.apartmentId\n"
+            + "	AND Apartments.apartmentId = Contracts.apartmentId\n"
+            + "	AND Contracts.ownerId = Owners.ownerId\n"
+            + "	AND (Bills.billId LIKE ? OR Apartments.apartmentId LIKE ?)"
             + " ORDER BY Bills.status, Bills.date"
             + " OFFSET ? ROWS FETCH NEXT 3 ROWS ONLY;";
     private static final String VIEW_DETAIL_INDEX = "SELECT Services.serviceId, Services.serviceName, Services.servicePrice, \n"
@@ -68,10 +71,16 @@ public class BillDAO {
             + "	AND Apartments.apartmentId = Contracts.apartmentId\n"
             + "	AND Contracts.ownerId = Owners.ownerId\n"
             + "	AND Owners.userId LIKE ? AND Bills.status LIKE ?";
+    private static final String COUNT_BILL_V2 = "SELECT count(billId)\n"
+            + " FROM Bills, Apartments, Contracts, Owners\n"
+            + " WHERE Bills.apartmentId = Apartments.apartmentId\n"
+            + "	AND Apartments.apartmentId = Contracts.apartmentId\n"
+            + "	AND Contracts.ownerId = Owners.ownerId\n"
+            + "	AND (Bills.billId LIKE ? OR Apartments.apartmentId LIKE ?)";
     private static final String STATISTIC = "SELECT sum(total) as [sum]\n"
-            + " FROM Bills WHERE [date] between ? and ?";
+            + " FROM Bills";
 
-    public double getStatistic(String fromDate, String toDate) throws SQLException {
+    public double getSumMoney() throws SQLException {
         double sum = 0;
         Connection conn = null;
         PreparedStatement ptm = null;
@@ -80,8 +89,6 @@ public class BillDAO {
             conn = Utils.getConnection();
             if (conn != null) {
                 ptm = conn.prepareStatement(STATISTIC);
-                ptm.setString(1, fromDate);
-                ptm.setString(2, toDate);
                 rs = ptm.executeQuery();
                 while (rs.next()) {
                     return rs.getDouble(1);
@@ -113,6 +120,37 @@ public class BillDAO {
                 ptm = conn.prepareStatement(COUNT_BILL);
                 ptm.setString(1, userId);
                 ptm.setString(2, status);
+                rs = ptm.executeQuery();
+                while (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (ptm != null) {
+                ptm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return index;
+    }
+
+    public int countBillV2(String billId, String apartmentId) throws SQLException {
+        int index = 0;
+        Connection conn = null;
+        PreparedStatement ptm = null;
+        ResultSet rs = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                ptm = conn.prepareStatement(COUNT_BILL_V2);
+                ptm.setString(1, billId);
+                ptm.setString(2, apartmentId);
                 rs = ptm.executeQuery();
                 while (rs.next()) {
                     return rs.getInt(1);
@@ -239,6 +277,43 @@ public class BillDAO {
         return check;
     }
 
+    public List<BillDTO> getBillV2(String billId, String apartmentId, int index) throws SQLException {
+        List<BillDTO> list = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(VIEW_BILL_V2);
+                stm.setString(1, billId);
+                stm.setString(2, apartmentId);
+                stm.setInt(3, (index - 1) * 3);
+                rs = stm.executeQuery();
+                while (rs.next()) {
+                    billId = rs.getString("billId");
+                    double total = Double.parseDouble(rs.getString("total"));
+                    boolean statusBill = Utils.getBoolean(rs.getString("status"));
+                    String date = rs.getString("date");
+                    apartmentId = rs.getString("apartmentId");
+                    list.add(new BillDTO(billId, total, statusBill, date, apartmentId));
+                }
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return list;
+    }
+
     public List<BillDTO> getBill(String userId, String status, int index) throws SQLException {
         List<BillDTO> list = new ArrayList<>();
         Connection conn = null;
@@ -350,5 +425,60 @@ public class BillDAO {
             }
         }
         return list;
+    }
+
+    public List<BillDTO> getMoneyByMonth() throws SQLException {
+        List<BillDTO> list = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(VIEW_MONEY_BY_MONTH);
+                rs = stm.executeQuery();
+                while (rs.next()) {
+                    String date = rs.getString("date");
+                    double total = Double.parseDouble(rs.getString("sum"));
+                    list.add(new BillDTO(total, date));
+                }
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return list;
+    }
+
+    public boolean updateStatusBill(String billId, String status) throws SQLException {
+        boolean check = false;
+        Connection conn = null;
+        PreparedStatement stm = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(UPDATE_BILL);
+                stm.setString(1, status);
+                stm.setString(2, billId);
+                check = stm.executeUpdate() > 0;
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            if (conn != null) {
+                conn.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+        }
+        return check;
     }
 }

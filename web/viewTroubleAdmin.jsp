@@ -59,11 +59,11 @@
                                             <td  data-title="Trạng thái: " >
                                                 <div>
                                                     <c:if test ="${!trouble.status}">
-                                                        <input type="checkbox" data-toggle="toggle" data-on="Done" class="checkbox-input" data-off="Not Yet" data-onstyle="success" data-offstyle="danger">
+                                                        <input type="checkbox" data-toggle="toggle" data-on="Done" class="checkbox-input" disabled data-off="Not Yet" data-onstyle="success" data-offstyle="danger">
 
                                                     </c:if>
                                                     <c:if test ="${trouble.status}">
-                                                        <input type="checkbox" checked data-toggle="toggle" data-on="Done" class="checkbox-input" data-off="Not Yet" data-onstyle="success" data-offstyle="danger">
+                                                        <input type="checkbox" checked data-toggle="toggle" data-on="Done" class="checkbox-input" disabled data-off="Not Yet" data-onstyle="success" data-offstyle="danger">
 
                                                     </c:if>
                                                     <input type="hidden" class="tag" name="index" value="${param.tag}"> 
