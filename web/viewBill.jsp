@@ -1,9 +1,3 @@
-<%-- 
-    Document   : viewBill
-    Created on : Jun 16, 2022, 8:57:46 PM
-    Author     : Nhat Linh
---%>
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -16,11 +10,10 @@
     </head>
     <body>
         <jsp:include page="headerUser.jsp"></jsp:include>
-            <!--NEW-->
             <div class="container">
                 <div class="row">
                     <div class="col-md-12">
-                        <h2 class="text-center">
+                        <h2 class="text-center" style="margin: 30px auto;">
                             Hóa đơn
                         </h2>
                     </div>

@@ -28,7 +28,7 @@ public class TroubleDAO {
             + "			AND Owners.ownerId = Contracts.ownerId \n"
             + "			AND Apartments.apartmentId = Apart_Troubles.apartmentId \n"
             + "			AND Contracts.apartmentId = Apartments.apartmentId \n"
-            + "            ORDER BY Apart_Troubles.tranId DESC\n"
+            + "            ORDER BY Apart_Troubles.status, Apart_Troubles.tranId DESC\n"
             + "            OFFSET ? ROWS FETCH NEXT 3 ROWS ONLY;";
     private static final String UPDATE_TROUBLE = "UPDATE Apart_Troubles SET status = ? WHERE tranId = ?";
     private static final String VIEW_TYPE_TROUBLE = "SELECT* FROM Troubles";

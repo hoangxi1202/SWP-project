@@ -56,6 +56,8 @@ public class MainController extends HttpServlet {
     private static final String CREATE_TROUBLE = "CreateTrouble";
     private static final String CREATE_TROUBLE_CONTROLLER = "CreateTroubleController";
     private static final String VIEW_RESIDENT = "ViewResident";
+    private static final String UPDATE_STATUS_BILL = "UpdateStatusBill";
+    private static final String UPDATE_STATUS_BILL_CONTROLLER = "UpdateStatusBillController";
     private static final String VIEW_RESIDENT_CONTROLLER = "ViewResidentController";
     private static final String ADD_RESIDENT = "AddResident";
     private static final String ADD_RESIDENT_CONTROLLER = "AddResidentController";
@@ -128,6 +130,8 @@ public class MainController extends HttpServlet {
                 url = REMOVE_RESIDENT_CONTROLLER;
             } else if (LOGOUT_ACTION.equals(action)) {
                 url = LOGOUT;
+            } else if (UPDATE_STATUS_BILL.equals(action)) {
+                url = UPDATE_STATUS_BILL_CONTROLLER;
             } else if (VIEW_ALL_BILL.equals(action)) {
                 url = VIEW_ALL_BILL_CONTROLLER;
             } else if (CREATE_ACCOUNT_ACTION.equals(action)) {

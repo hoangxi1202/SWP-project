@@ -35,7 +35,7 @@ public class ViewResidentController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
-        int count = 0;
+        int count;
         String url = "";
         String indexPage = request.getParameter("index");
         if ("".equals(indexPage) || indexPage == null) {
@@ -50,7 +50,7 @@ public class ViewResidentController extends HttpServlet {
         HttpSession session = request.getSession();
         UserDTO loginUser = (UserDTO) session.getAttribute("LOGIN_USER");
         String curUser = loginUser.getRoleID();
-        List<ResidentDTO> listResident = null;
+        List<ResidentDTO> listResident;
         ResidentDAO dao = new ResidentDAO();
         if (AD.equals(curUser)) {
             url = ERROR_AD;

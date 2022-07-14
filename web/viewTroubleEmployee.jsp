@@ -66,7 +66,6 @@
                                                         <input type="checkbox" checked data-toggle="toggle" data-on="Done" class="checkbox-input" data-off="Not Yet" data-onstyle="success" data-offstyle="danger">
 
                                                     </c:if>
-                                                    <div class="test" style="display: none" >Nhaath brkdifsd Linh</div>
                                                     <input type="hidden" class="tag" name="index" value="${param.tag}"> 
                                                     <input type="hidden" class="troubleId" name="troubleId" value="${trouble.troubleId}">
                                                 </div>

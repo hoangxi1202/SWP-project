@@ -5,68 +5,48 @@
  */
 package controller;
 
-import dao.TroubleDAO;
-import dto.TroubleTypeDTO;
-import dto.UserDTO;
+import dao.BillDAO;
 import java.io.IOException;
-import java.util.List;
+import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author Trieu Do
+ * @author Nhat Linh
  */
-@WebServlet(name = "SearchTypeTroubleController", urlPatterns = {"/SearchTypeTroubleController"})
-public class SearchTypeTroubleController extends HttpServlet {
+@WebServlet(name = "UpdateStatusBillController", urlPatterns = {"/UpdateStatusBillController"})
+public class UpdateStatusBillController extends HttpServlet {
 
-    private static final String ERROR_AD = "troubleType.jsp";
-    private static final String ERROR_EM = "employee.jsp";
-    private static final String SUCCESS_AD = "troubleType.jsp";
-    private static final String SUCCESS_EM = "troubleType.jsp";
-    private static final String AD = "AD";
-    private static final String EM = "EM";
+    private static final String SUCCESS = "MainController?action=ViewAllBill&index=";
+    private static final String ERROR = "MainController?action=ViewAllBill&index=";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        HttpSession session = request.getSession();
-        UserDTO loginUser = (UserDTO) session.getAttribute("LOGIN_USER");
-        String curUser = loginUser.getRoleID();
-        String url = "";
-        List<TroubleTypeDTO> listTypeTrouble = null;
-        TroubleDAO dao = new TroubleDAO();
-        if (AD.equals(curUser)) {
-            url = ERROR_AD;
-        } else if (EM.equals(curUser)) {
-            url = ERROR_EM;
-        }
+        String url = ERROR;
         try {
-//            String searchTypeTrouble = request.getParameter("searchTypeTrouble");
-//            if (searchTypeTrouble == null) {
-//                searchTypeTrouble = "";
-//            }
-//            if (AD.equals(curUser)) {
-//                listTypeTrouble = dao.getListTypeTrouble();
-//            } else if (EM.equals(curUser)) {
-//                listTypeTrouble = dao.getListTypeTrouble();
-//            }
-            listTypeTrouble = dao.getListTypeTrouble();
-            if (listTypeTrouble.size() > 0) {
-                request.setAttribute("LIST_TYPE_TROUBLE", listTypeTrouble);
-                if (AD.equals(curUser)) {
-                    url = SUCCESS_AD;
-                } else if (EM.equals(curUser)) {
-                    url = SUCCESS_EM;
-                }
+            String billId = request.getParameter("billId");
+            String status = request.getParameter("status");
+            String indexPage = request.getParameter("index");
+            if ("".equals(indexPage) || indexPage == null) {
+                indexPage = "1";
             }
+            int index = Integer.parseInt(indexPage);
+            url += index;
+            BillDAO dao = new BillDAO();
+            if (dao.updateStatusBill(billId, status)) {
+                url = SUCCESS + index;
+                request.setAttribute("SUCCESS", "Success!!!");
+            } else {
+                request.setAttribute("ERROR", "Error!!!");
+            }
+        } catch (NumberFormatException | SQLException e) {
+            log("Error at UpdateStatusBillController: " + e.toString());
 
-        } catch (Exception e) {
-            log("Error at ViewTroubleController: " + e.toString());
         } finally {
             request.getRequestDispatcher(url).forward(request, response);
         }
