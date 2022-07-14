@@ -29,6 +29,10 @@ public class ViewAllBillController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        String search = request.getParameter("search");
+        if (search == null) {
+            search = "";
+        }
         String indexPage = request.getParameter("index");
         if ("".equals(indexPage) || indexPage == null) {
             indexPage = "1";
@@ -37,15 +41,15 @@ public class ViewAllBillController extends HttpServlet {
         int index = Integer.parseInt(indexPage);
         int tag = index;
         String url = ERROR;
-        List<BillDTO> list = null;
+        List<BillDTO> list;
         BillDAO dao = new BillDAO();
         try {
-            count = dao.countBill("%%", "%%");
+            count = dao.countBillV2("%" + search + "%", "%" + search + "%");
             int endPage = count / 3;
             if (count % 3 != 0) {
                 endPage++;
             }
-            list = dao.getBill("%%", "%%", index);
+            list = dao.getBillV2("%" + search + "%", "%" + search + "%", index);
             if (list.size() > 0) {
                 request.setAttribute("endP", endPage);
                 request.setAttribute("tag", tag);
