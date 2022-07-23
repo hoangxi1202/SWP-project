@@ -33,13 +33,13 @@ public class ContractDTO {
         this.status = status;
     }
 
-    public ContractDTO(String contractId, String startDate, String endDate, String status, String ownerId, String apartmentId) {
+    public ContractDTO(String contractId, String apartmentId, String ownerId, String startDate, String endDate, String status) {
         this.contractId = contractId;
+        this.apartmentId = apartmentId;
+        this.ownerId = ownerId;
         this.startDate = startDate;
         this.endDate = endDate;
         this.status = status;
-        this.ownerId = ownerId;
-        this.apartmentId = apartmentId;
     }
 
     public ContractDTO(String contractId, String apartmentId, String fullName, String startDate, String ownerId) {

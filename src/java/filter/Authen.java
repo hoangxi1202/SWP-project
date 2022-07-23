@@ -82,6 +82,27 @@ public class Authen implements Filter {
         ADMIN_RESOURCES.add("viewResident.jsp");
         ADMIN_RESOURCES.add("viewTroubleAdmin.jsp");
         ADMIN_RESOURCES.add("MainController");
+        ADMIN_RESOURCES.add("addContract.jsp");
+        ADMIN_RESOURCES.add("addOwner.jsp");
+        ADMIN_RESOURCES.add("addService.jsp");
+        ADMIN_RESOURCES.add("managerService.jsp");
+        ADMIN_RESOURCES.add("managerAccount.jsp");
+        ADMIN_RESOURCES.add("viewAccount.jsp");
+        ADMIN_RESOURCES.add("viewApartment.jsp");
+        ADMIN_RESOURCES.add("viewTroubleAdmin.jsp");
+        ADMIN_RESOURCES.add("AddOwnerController");
+        ADMIN_RESOURCES.add("AddServiceController");
+        ADMIN_RESOURCES.add("ChangePasswordController");
+        ADMIN_RESOURCES.add("");
+        ADMIN_RESOURCES.add("");
+        ADMIN_RESOURCES.add("");
+        ADMIN_RESOURCES.add("");
+        ADMIN_RESOURCES.add("");
+        ADMIN_RESOURCES.add("");
+        ADMIN_RESOURCES.add("");
+        ADMIN_RESOURCES.add("");
+        ADMIN_RESOURCES.add("");
+
 
 
         //resource ma role EM co quyen truy cap

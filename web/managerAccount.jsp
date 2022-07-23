@@ -19,17 +19,17 @@
     <body>
         <%
             UserError userError = (UserError) request.getAttribute("USER_ERROR");
-            String autoPopup="";
+            String autoPopup = "";
             if (userError == null) {
                 autoPopup = "hide";
                 userError = new UserError();
             }
         %>
-        <button class="open-modal-btn">dang ki tai khoan</button>
+        <button class="open-modal-btn">Đăng kí tài khoản</button>
         <div class="modal <%=autoPopup%> ">
             <div class="modal__inner">
                 <div class="modal__header">
-                    <p>dang ki</p>
+                    <p>Đăng Ký</p>
                     <i class="fa-solid fa-xmark"></i>
                 </div>
                 <div class="modal__body">
@@ -37,29 +37,28 @@
                         <!-- sign up form -->
                         <form action="MainController" method="POST" class="cd-form ">
                             <p class="fieldset cd-username ">
-                                <label class="image-replace " for="signup-username">Username
+                                <label class="image-replace " for="signup-username">Tên đăng nhập: 
                                 </label>
-                                <input class="full-width has-padding has-border " id="signup-username" name="userName" type="text" placeholder="Username" required>
-                                <p class="full-width"><%=userError.getUserIDError()%></p>                       
+                                <input class="full-width has-padding has-border " id="signup-username" name="userName" type="text" placeholder="Tên đăng nhập..." required>
+                            <p class="full-width"><%=userError.getUserIDError()%></p>                       
                             </p>                          
                             <p class="fieldset">
-                                <label class="image-replace cd-password" for="signup-password">Password
+                                <label class="image-replace cd-password" for="signup-password">Mật khẩu
                                 </label>
-                                <input class="full-width has-padding has-border" id="signup-password" name="password" type="password"  placeholder="Password" required>
+                                <input class="full-width has-padding has-border" id="signup-password" name="password" type="password"  placeholder="Mật khẩu..." required>
                                 <a href="#0" class="hide-password">Hide
                                 </a>
                             </p>
                             <p class="fieldset">
-                                <label class="image-replace cd-password" for="signup-password">Password Confirm
+                                <label class="image-replace cd-password" for="signup-password">Nhập lại mật khẩu
                                 </label>
-                                <input class="full-width has-padding has-border" id="signup-password" name="passwordConfirm" type="password"  placeholder="Confirm" required>
+                                <input class="full-width has-padding has-border" id="signup-password" name="passwordConfirm" type="password"  placeholder="Nhập lại mật khẩu..." required>
                                 <a href="#0" class="hide-password">Hide
                                 </a>
-                                <p class="full-width"><%=userError.getConfirmError()%></p> 
+                            <p class="full-width"><%=userError.getConfirmError()%></p> 
                             </p>
                             <p class="fieldset">
                                 <input class="full-width has-padding" type="submit" name="action" value="createAccount" >
-                                
                             </p>
                             <p class="full-width"><%=userError.getMessageError()%></p> 
                         </form>
@@ -69,7 +68,7 @@
 
                 </div>
                 <div class="modal__footer">
-                    <button>Close</button>
+                    <button>Đóng</button>
                 </div>
             </div>
         </div>

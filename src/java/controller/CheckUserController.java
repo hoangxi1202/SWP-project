@@ -5,11 +5,10 @@
  */
 package controller;
 
-import dao.ContractDAO;
-import dto.ContractDTO;
+import dao.UserDAO;
 import dto.UserDTO;
 import java.io.IOException;
-import java.util.List;
+import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,55 +18,35 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author Trieu Do
+ * @author Nhat Linh
  */
-@WebServlet(name = "SearchContractController", urlPatterns = {"/SearchContractController"})
-public class SearchContractController extends HttpServlet {
+@WebServlet(name = "CheckUserController", urlPatterns = {"/CheckUserController"})
+public class CheckUserController extends HttpServlet {
 
-    private static final String ERROR_AD = "viewContract.jsp";
-    private static final String ERROR_US = "viewContract.jsp";
-    private static final String SUCCESS_AD = "viewContract.jsp";
-    private static final String SUCCESS_US = "viewContract.jsp";
-    private static final String AD = "AD";
-    private static final String US = "US";
+    private static final String ERROR = "checkUserName.jsp";
+    private static final String SUCCESS = "forgotPassword.jsp";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        HttpSession session = request.getSession();
-        UserDTO loginUser = (UserDTO) session.getAttribute("LOGIN_USER");
-        String curUser = loginUser.getRoleID();
-        String url = "";
-        List<ContractDTO> listContract = null;
-        ContractDAO dao = new ContractDAO();
-        if (AD.equals(curUser)) {
-            url = ERROR_AD;
-        } else if (US.equals(curUser)) {
-            url = ERROR_US;
-        }
+        String url = ERROR;
+        String userId = request.getParameter("userId");
         try {
-            String searchContract = request.getParameter("searchContract");
-            if (searchContract == null) {
-                searchContract = "";
+            HttpSession session = request.getSession();
+            UserDAO dao = new UserDAO();
+            UserDTO user = dao.checkUser(userId);
+            if (user != null) {
+                session.setAttribute("USER", user);
+                url = SUCCESS;
+            }else {
+                request.setAttribute("ERROR", "Tài khoản không tồn tại");
             }
-            if (AD.equals(curUser)) {
-                listContract = dao.getListContract_AD(searchContract);
-            } else if (US.equals(curUser)) {
-                listContract = dao.getListContract_AD(searchContract);
-            }
-            if (listContract.size() > 0) {
-                request.setAttribute("LIST_CONTRACT", listContract);
-                if (AD.equals(curUser)) {
-                    url = SUCCESS_AD;
-                } else if (US.equals(curUser)) {
-                    url = SUCCESS_US;
-                }
-            }
-        } catch (Exception e) {
-            log("Error at SearchController: " + e.toString());
+        } catch (ClassNotFoundException | SQLException e) {
+            log("Error at CheckUserController: " + e.toString());
         } finally {
             request.getRequestDispatcher(url).forward(request, response);
         }
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

@@ -13,9 +13,9 @@
                 <li class="nav-item bill">
                     <a class="nav-link" href="MainController?action=ViewBill">Hóa đơn</a>
                 </li>
-                <li class="nav-item detail">
+<!--                <li class="nav-item detail">
                     <a class="nav-link" href="#">Thông tin phòng ở</a>
-                </li>
+                </li>-->
                 <li class="nav-item trouble">
                     <a class="nav-link" href="MainController?action=BeforeCreateTrouble">Báo cáo sự cố</a>
                 </li>

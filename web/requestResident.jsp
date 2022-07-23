@@ -30,7 +30,7 @@
                                             <input type="text" class="form-control" value="Thêm" readonly="">
                                         </c:if>
                                         <c:if test="${request.todo eq 'delete'}">
-                                        <input type="text" class="form-control" value="Xóa" readonly="">
+                                            <input type="text" class="form-control" value="Xóa" readonly="">
                                         </c:if>
                                     </div>
                                     <div class="col-md-6 mb-3">
@@ -108,6 +108,6 @@
         $(document).ready(function () {
             $(".request").addClass("active");
         });
-    </script>
+    </script>   
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
 </html>

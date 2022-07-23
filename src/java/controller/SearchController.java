@@ -3,13 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package controller;
 
 import dao.UserDAO;
 import dto.UserDTO;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -23,23 +22,26 @@ import javax.servlet.http.HttpServletResponse;
 public class SearchController extends HttpServlet {
 
     private static final String ERROR = "admin.jsp";
-    private static final String SUCCESS = "admin.jsp";
-    
+    private static final String SUCCESS = "viewAccount.jsp";
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         String url = ERROR;
-        try{
+        try {
             String search = request.getParameter("search");
+            if (search == null) {
+                search = "";
+            }
             UserDAO dao = new UserDAO();
             List<UserDTO> list = dao.getListUser(search);
-            if (!list.isEmpty()){
+            if (!list.isEmpty()) {
                 request.setAttribute("LIST_USER", list);
                 url = SUCCESS;
             }
-        }catch(Exception e){
-            log("Error at SearchController"+e.toString());
-        }finally{
+        } catch (SQLException e) {
+            log("Error at SearchController" + e.toString());
+        } finally {
             request.getRequestDispatcher(url).forward(request, response);
         }
     }

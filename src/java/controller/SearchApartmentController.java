@@ -7,16 +7,14 @@ package controller;
 
 import dao.ApartmentDAO;
 import dto.ApartmentDTO;
-import dto.UserDTO;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -25,62 +23,40 @@ import javax.servlet.http.HttpSession;
 @WebServlet(name = "SearchApartmentController", urlPatterns = {"/SearchApartmentController"})
 public class SearchApartmentController extends HttpServlet {
 
-    private static final String ERROR_AD = "admin.jsp";
-    private static final String ERROR_US = "user.jsp";
-    private static final String SUCCESS_AD = "admin.jsp";
-    private static final String SUCCESS_US = "user.jsp";
-    private static final String AD = "AD";
-    private static final String US = "US";
+    private static final String ERROR = "admin.jsp";
+    private static final String SUCCESS = "viewApartment.jsp";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        HttpSession session = request.getSession();
-        UserDTO loginUser = (UserDTO) session.getAttribute("LOGIN_USER");
-
         String indexPage = request.getParameter("index");
         if ("".equals(indexPage) || indexPage == null) {
             indexPage = "1";
         }
         int index = Integer.parseInt(indexPage);
-
-        String curUser = loginUser.getRoleID();
-        String url = "";
+        int tag = index;
+        String url = ERROR;
         int count = 0;
-
         List<ApartmentDTO> listApartment = null;
         ApartmentDAO dao = new ApartmentDAO();
-        if (AD.equals(curUser)) {
-            url = ERROR_AD;
-        } else if (US.equals(curUser)) {
-            url = ERROR_US;
-        }
         try {
             count = dao.getTotalApartment();
             int endPage = count / 10;
             if (count % 10 != 0) {
                 endPage++;
             }
-
             String searchApartment = request.getParameter("searchApartment");
             if (searchApartment == null) {
                 searchApartment = "";
             }
-            if (AD.equals(curUser)) {
-                listApartment = dao.getListApartment_AD(searchApartment, index);
-                request.setAttribute("endP", endPage);
-            } else if (US.equals(curUser)) {
-                listApartment = dao.getListApartment_US(searchApartment);
-            }
+            listApartment = dao.getListApartment_AD(searchApartment, index);
+            request.setAttribute("endP", endPage);
+            request.setAttribute("tag", tag);
             if (listApartment.size() > 0) {
                 request.setAttribute("LIST_APARTMENT", listApartment);
-                if (AD.equals(curUser)) {
-                    url = SUCCESS_AD;
-                } else if (US.equals(curUser)) {
-                    url = SUCCESS_US;
-                }
+                url = SUCCESS;
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             log("Error at SearchController: " + e.toString());
         } finally {
             request.getRequestDispatcher(url).forward(request, response);

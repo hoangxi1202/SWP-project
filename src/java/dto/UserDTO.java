@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package dto;
 
 /**
@@ -11,9 +10,11 @@ package dto;
  * @author Minh Hoàng
  */
 public class UserDTO {
+
     private String userID;
     private String roleID;
     private String password;
+    private String phone;
 
     public UserDTO() {
     }
@@ -22,6 +23,19 @@ public class UserDTO {
         this.userID = userID;
         this.roleID = roleID;
         this.password = password;
+    }
+
+    public UserDTO(String userID, String phone) {
+        this.userID = userID;
+        this.phone = phone;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getUserID() {

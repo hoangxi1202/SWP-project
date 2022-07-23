@@ -84,7 +84,7 @@
             </div>
         </div>
         <!--END-NEW-->
-        <jsp:include page="footer.jsp"></jsp:include>
+        <jsp:include page="footer2.jsp"></jsp:include>
     </body>
     <script>
         $.newService = '<select class="service custom-select" style="margin-top: 30px;" name="serviceId">' + $("#none").html() + +'</select>';

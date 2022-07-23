@@ -5,69 +5,64 @@
  */
 package controller;
 
-import dao.ContractDAO;
-import dto.ContractDTO;
-import dto.UserDTO;
+import dao.UserDAO;
+import dto.PasswordError;
 import java.io.IOException;
-import java.util.List;
+import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import utils.Utils;
 
 /**
  *
- * @author Trieu Do
+ * @author Nhat Linh
  */
-@WebServlet(name = "SearchContractController", urlPatterns = {"/SearchContractController"})
-public class SearchContractController extends HttpServlet {
+@WebServlet(name = "ForgotPasswordController", urlPatterns = {"/ForgotPasswordController"})
+public class ForgotPasswordController extends HttpServlet {
 
-    private static final String ERROR_AD = "viewContract.jsp";
-    private static final String ERROR_US = "viewContract.jsp";
-    private static final String SUCCESS_AD = "viewContract.jsp";
-    private static final String SUCCESS_US = "viewContract.jsp";
-    private static final String AD = "AD";
-    private static final String US = "US";
+    private static final String ERROR = "newPassword.jsp";
+    private static final String SUCCESS = "login.jsp";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        HttpSession session = request.getSession();
-        UserDTO loginUser = (UserDTO) session.getAttribute("LOGIN_USER");
-        String curUser = loginUser.getRoleID();
-        String url = "";
-        List<ContractDTO> listContract = null;
-        ContractDAO dao = new ContractDAO();
-        if (AD.equals(curUser)) {
-            url = ERROR_AD;
-        } else if (US.equals(curUser)) {
-            url = ERROR_US;
-        }
+        String userId = request.getParameter("userId");
+        String password = request.getParameter("newPassword");
+        String rePassword = request.getParameter("reNewPassword");
+        PasswordError error = new PasswordError();
+        String url = ERROR;
+        boolean check = true;
         try {
-            String searchContract = request.getParameter("searchContract");
-            if (searchContract == null) {
-                searchContract = "";
-            }
-            if (AD.equals(curUser)) {
-                listContract = dao.getListContract_AD(searchContract);
-            } else if (US.equals(curUser)) {
-                listContract = dao.getListContract_AD(searchContract);
-            }
-            if (listContract.size() > 0) {
-                request.setAttribute("LIST_CONTRACT", listContract);
-                if (AD.equals(curUser)) {
-                    url = SUCCESS_AD;
-                } else if (US.equals(curUser)) {
-                    url = SUCCESS_US;
+            if (userId != null && !userId.isEmpty()) {
+                UserDAO dao = new UserDAO();
+                if (password.length() <= 2) {
+                    error.setNewPassError("Mật khẩu yếu!!");
+                    check = false;
                 }
+                if (!password.equals(rePassword)) {
+                    error.setReNewPassError("Không khớp!!");
+                    check = false;
+                }
+                if (check) {
+                    boolean cofirm = dao.updatePass(userId, Utils.getMd5(password));
+                    if (cofirm) {
+                        url = SUCCESS;
+                    }
+                } else {
+                    request.setAttribute("PASSWORD_ERROR", error);
+                }
+            }else {
+                url = "login.jsp";
             }
-        } catch (Exception e) {
-            log("Error at SearchController: " + e.toString());
+        } catch (SQLException e) {
+            log("Error at ForgotPasswordController: " + e.toString());
         } finally {
             request.getRequestDispatcher(url).forward(request, response);
         }
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

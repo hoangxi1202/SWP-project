@@ -26,8 +26,8 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "StatisticController", urlPatterns = {"/StatisticController"})
 public class StatisticController extends HttpServlet {
 
-    private static final String ERROR = "homeAdmin.jsp";
-    private static final String SUCCESS = "homeAdmin.jsp";
+    private static final String ERROR = "admin.jsp";
+    private static final String SUCCESS = "admin.jsp";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

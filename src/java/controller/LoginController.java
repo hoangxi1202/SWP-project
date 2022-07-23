@@ -22,7 +22,7 @@ import utils.Utils;
 public class LoginController extends HttpServlet {
 
     private static final String ERROR = "login.jsp";
-    private static final String ADMIN_PAGE = "admin.jsp";
+    private static final String ADMIN_PAGE = "MainController?action=Statistic";
     private static final String USER_PAGE = "user.jsp";
     private static final String EMPLOYEE_PAGE = "employee.jsp";
 //    private static final String ERROR = "login.jsp";

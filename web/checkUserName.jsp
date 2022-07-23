@@ -1,15 +1,9 @@
-<%-- 
-    Document   : Login
-    Created on : May 23, 2022, 8:27:52 PM
-    Author     : Minh Hoàng
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
-        <title>The BF Aparment</title>
-        <meta charset="UTF-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!--===============================================================================================-->	
         <link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
@@ -35,38 +29,24 @@
         <!--===============================================================================================-->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
     </head>
-    <body>
-        <%
-            String mess = (String) session.getAttribute("ERROR_MESSAGE");
-            if (mess == null) {
-                mess = "";
-            }
-        %>
+    <body>   
         <div class="limiter">
             <div class="container-login100" style="background-image: url('images/bg-01.jpg');">
                 <div class="wrap-login100 p-t-30 p-b-50">
                     <span class="login100-form-title p-b-41">
-                        Account Login
+                        FORGOT PASSWORD
                     </span>
                     <form action="MainController" method="POST" class="login100-form validate-form p-b-33 p-t-5">
                         <div class="wrap-input100 validate-input" data-validate = "Enter username">
-                            <input class="input100" type="text" name="userName" placeholder="User name" >
+                            <input class="input100" type="text" name="userId" placeholder="Tên tài khoản" >
                             <span class="focus-input100" data-placeholder="&#xe82a;"></span>
                         </div>
-                        <div class="wrap-input100 validate-input" data-validate="Enter password">
-                            <input class="input100" id="pass" type="password" name="password" placeholder="Password" >
-                            <!--<i class="input100 fas fa-eye"></i>-->
-                            <span class="focus-input100" data-placeholder="&#xe80f;"></span>
+                        <div class="container-login100-form-btn m-t-32">
+                            <p>${requestScope.ERROR}</p>
                         </div>
                         <div class="container-login100-form-btn m-t-32">
-                            <p><%=mess%></p>
-                        </div>
-                        <div class="container-login100-form-btn m-t-32">
-                            <p><a href="checkUserName.jsp">Quên mật khẩu?</a></p>
-                        </div>
-                        <div class="container-login100-form-btn m-t-32">
-                            <button type="submit" name="action" value="Login" class="login100-form-btn">
-                                Login
+                            <button type="submit" name="action" value="CheckUserName" class="login100-form-btn">
+                                CONFIRM
                             </button>
                         </div>                       
                     </form>
@@ -109,4 +89,3 @@
         <script src="js/main.js"></script>
     </body>
 </html>
-

@@ -21,6 +21,8 @@ public class MainController extends HttpServlet {
     private static final String ERROR = "error.jsp";
     private static final String LOGIN_ACTION = "Login";
     private static final String LOGIN = "LoginController";
+    private static final String FORGOT = "ForgotPassword";
+    private static final String FORGOT_CONTROLLER = "ForgotPasswordController";
     private static final String LOGOUT_ACTION = "Logout";
     private static final String LOGOUT = "LogoutController";
     private static final String CREATE_ACCOUNT_ACTION = "createAccount";
@@ -42,6 +44,10 @@ public class MainController extends HttpServlet {
     private static final String DELETE_ACTION = "Delete";
     private static final String DELETE = "DeleteController";
     private static final String SENDMAIL_ACTION = "SendMail";
+    private static final String CHECK_USERNAME = "CheckUserName";
+    private static final String CHECK_USERNAME_CONTROLLER = "CheckUserController";
+    private static final String CREATE_CONTRACT = "CreateContract";
+    private static final String CREATE_CONTRACT_CONTROLLER = "CreateContractController";
     private static final String CREATE_BILL = "CreateBill";
     private static final String CREATE_BILL_CONTROLLER = "CreateBillController";
     private static final String SENDMAIL = "SendMailController";
@@ -124,6 +130,10 @@ public class MainController extends HttpServlet {
                 url = LOGIN;
             } else if (UPDATE_RESIDENT.equals(action)) {
                 url = UPDATE_RESIDENT_CONTROLLER;
+            } else if (FORGOT.equals(action)) {
+                url = FORGOT_CONTROLLER;
+            } else if (CHECK_USERNAME.equals(action)) {
+                url = CHECK_USERNAME_CONTROLLER;
             } else if (BEF_CREATE_BILL.equals(action)) {
                 url = BEF_CREATE_BILL_CONTROLLER;
             } else if (LOAD_INDEX.equals(action)) {
@@ -198,6 +208,8 @@ public class MainController extends HttpServlet {
                 url = VIEW_BILL_DETAIL_CONTROLLER;
             } else if (CHANGE_PASSWORD.equals(action)) {
                 url = CHANGE_PASSWORD_CONTROLLER;
+            } else if (CREATE_CONTRACT.equals(action)) {
+                url = CREATE_CONTRACT_CONTROLLER;
             } else if (SEARCH_APARTMENT.equals(action)) {
                 url = SEARCH_APARTMENT_CONTROLLER;
             } else if (UPDATE_APARTMENT.equals(action)) {

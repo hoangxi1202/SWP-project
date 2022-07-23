@@ -14,9 +14,9 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Contract Page</title>
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
-
     </head>
     <body>
+        <jsp:include page="headerAdmin.jsp"></jsp:include>
         <%
             String searchContract = (String) request.getParameter("searchContract");
             if (searchContract == null) {
@@ -39,7 +39,6 @@
                     <th>Contract ID</th>
                     <th>Apartment ID</th>
                     <th>Full name</th>
-                    <th>Service name</th>
                     <th>Start date</th>
                     <th>End date</th>
                     <th>Status</th>
@@ -62,9 +61,6 @@
                     </td>
                     <td>
                         <input type="text" name="fullName" value="<%= contract.getFullName()%>" readonly=""/>
-                    </td>
-                    <td>
-                        <input type="text" name="serviceName" value="<%= contract.getServiceName()%>" readonly=""/>
                     </td>
                     <td>
                         <input type="date" name="startDate" value="<%= contract.getStartDate()%>" required>
@@ -92,8 +88,8 @@
             }
         }
     %>   
-
-</body>
+    <jsp:include page="footer.jsp"></jsp:include>
+    </body>
 <c:if test="${requestScope.SUCCESS!=null}">
     <c:if test="${not empty requestScope.SUCCESS}">
         <script>
