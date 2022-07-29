@@ -26,7 +26,9 @@ public class ServiceDAO {
 
     private static final String GET_INDEX = "SELECT Max(BillServiceDetails.newIndex) as oldIndex\n"
             + " FROM Bills, BillDetails, BillServiceDetails \n"
-            + " WHERE Bills.apartmentId = ?\n"
+            + " WHERE Bills.apartmentId = ?\n "
+            + " AND Bills.billId = BillDetails.billId\n"
+            + " AND (BillDetails.billId = BillServiceDetails.billId AND BillDetails.serviceId = BillServiceDetails.serviceId)"
             + "	AND BillServiceDetails.serviceId = ?";
 
     private static final String LIST_SERVICE_DEFAULT = "SELECT Services.serviceId, serviceName, servicePrice\n"

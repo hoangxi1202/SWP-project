@@ -453,3 +453,138 @@ SELECT Apartments.apartmentId, Apart_Troubles.tranId, Owners.fullName, Apart_Tro
             			AND Apartments.apartmentId = Apart_Troubles.apartmentId 
             			AND Contracts.apartmentId = Apartments.apartmentId
 */
+
+/* 
+UPDATE NEW DATABASE
+*/
+
+
+use BFApartment
+drop table ServiceDetails
+drop table BillServiceDetails
+
+CREATE TABLE BillServiceDetails(
+	oldIndex int,
+	newIndex int,
+	usagaIndex int,
+	[date] date,
+	serviceId varchar(25) NOT NULL,
+	billId varchar(25) NOT NULL,
+	CONSTRAINT primaryBill PRIMARY KEY (serviceId, billId)
+	)
+
+ALTER TABLE BillServiceDetails
+ADD FOREIGN KEY(billId, serviceId) 
+REFERENCES BillDetails (billId, serviceId)
+
+delete BillServiceDetails
+delete BillDetails
+delete Bills
+
+CREATE TABLE [dbo].[BillDetails](
+	[billId] [varchar](25) NOT NULL,
+	[serviceId] [varchar](25) NOT NULL,
+	[priceDetail] [float] NULL,
+ CONSTRAINT [Ma2] PRIMARY KEY CLUSTERED 
+(
+	[billId] ASC,
+	[serviceId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Bills]    Script Date: 7/29/2022 8:29:05 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Bills](
+	[billId] [varchar](25) NOT NULL,
+	[total] [float] NULL,
+	[status] [bit] NULL,
+	[date] [date] NULL,
+	[apartmentId] [varchar](25) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[billId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[BillServiceDetails]    Script Date: 7/29/2022 8:29:05 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[BillServiceDetails](
+	[oldIndex] [int] NULL,
+	[newIndex] [int] NULL,
+	[usagaIndex] [int] NULL,
+	[date] [date] NULL,
+	[serviceId] [varchar](25) NOT NULL,
+	[billId] [varchar](25) NOT NULL,
+ CONSTRAINT [primaryBill] PRIMARY KEY CLUSTERED 
+(
+	[serviceId] ASC,
+	[billId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+INSERT [dbo].[BillDetails] ([billId], [serviceId], [priceDetail]) VALUES (N'1', N'S01', 300000)
+INSERT [dbo].[BillDetails] ([billId], [serviceId], [priceDetail]) VALUES (N'1', N'S02', 220000)
+INSERT [dbo].[BillDetails] ([billId], [serviceId], [priceDetail]) VALUES (N'2', N'E01', 100000)
+INSERT [dbo].[BillDetails] ([billId], [serviceId], [priceDetail]) VALUES (N'2', N'S01', 300000)
+INSERT [dbo].[BillDetails] ([billId], [serviceId], [priceDetail]) VALUES (N'2', N'S02', 220000)
+INSERT [dbo].[BillDetails] ([billId], [serviceId], [priceDetail]) VALUES (N'2', N'W01', 100000)
+INSERT [dbo].[BillDetails] ([billId], [serviceId], [priceDetail]) VALUES (N'3', N'S01', 300000)
+INSERT [dbo].[BillDetails] ([billId], [serviceId], [priceDetail]) VALUES (N'3', N'S02', 220000)
+INSERT [dbo].[BillDetails] ([billId], [serviceId], [priceDetail]) VALUES (N'4', N'E01', 30000)
+INSERT [dbo].[BillDetails] ([billId], [serviceId], [priceDetail]) VALUES (N'4', N'S01', 300000)
+INSERT [dbo].[BillDetails] ([billId], [serviceId], [priceDetail]) VALUES (N'4', N'S02', 220000)
+INSERT [dbo].[BillDetails] ([billId], [serviceId], [priceDetail]) VALUES (N'4', N'W01', 144000)
+INSERT [dbo].[BillDetails] ([billId], [serviceId], [priceDetail]) VALUES (N'5', N'E01', 47500)
+INSERT [dbo].[BillDetails] ([billId], [serviceId], [priceDetail]) VALUES (N'5', N'S01', 300000)
+INSERT [dbo].[BillDetails] ([billId], [serviceId], [priceDetail]) VALUES (N'5', N'S02', 220000)
+INSERT [dbo].[BillDetails] ([billId], [serviceId], [priceDetail]) VALUES (N'5', N'W01', 276000)
+INSERT [dbo].[BillDetails] ([billId], [serviceId], [priceDetail]) VALUES (N'6', N'S01', 300000)
+INSERT [dbo].[BillDetails] ([billId], [serviceId], [priceDetail]) VALUES (N'6', N'S02', 220000)
+INSERT [dbo].[BillDetails] ([billId], [serviceId], [priceDetail]) VALUES (N'7', N'E01', 30000)
+INSERT [dbo].[BillDetails] ([billId], [serviceId], [priceDetail]) VALUES (N'7', N'W01', 144000)
+INSERT [dbo].[BillDetails] ([billId], [serviceId], [priceDetail]) VALUES (N'8', N'E01', 2500)
+INSERT [dbo].[BillDetails] ([billId], [serviceId], [priceDetail]) VALUES (N'8', N'W01', 12000)
+GO
+INSERT [dbo].[Bills] ([billId], [total], [status], [date], [apartmentId]) VALUES (N'1', 1450000, 0, CAST(N'2022-07-29' AS Date), N'APM17')
+INSERT [dbo].[Bills] ([billId], [total], [status], [date], [apartmentId]) VALUES (N'2', 520000, 0, CAST(N'2022-01-02' AS Date), N'APM37')
+INSERT [dbo].[Bills] ([billId], [total], [status], [date], [apartmentId]) VALUES (N'3', 394000, 0, CAST(N'2022-07-29' AS Date), N'APM59')
+INSERT [dbo].[Bills] ([billId], [total], [status], [date], [apartmentId]) VALUES (N'4', 174000, 0, CAST(N'2022-07-29' AS Date), N'APM64')
+INSERT [dbo].[Bills] ([billId], [total], [status], [date], [apartmentId]) VALUES (N'5', 323500, 0, CAST(N'2022-07-29' AS Date), N'APM59')
+INSERT [dbo].[Bills] ([billId], [total], [status], [date], [apartmentId]) VALUES (N'6', 174000, 0, CAST(N'2022-07-29' AS Date), N'APM17')
+INSERT [dbo].[Bills] ([billId], [total], [status], [date], [apartmentId]) VALUES (N'7', 174000, 0, CAST(N'2022-07-29' AS Date), N'APM17')
+INSERT [dbo].[Bills] ([billId], [total], [status], [date], [apartmentId]) VALUES (N'8', 14500, 0, CAST(N'2022-07-29' AS Date), N'APM59')
+GO
+INSERT [dbo].[BillServiceDetails] ([oldIndex], [newIndex], [usagaIndex], [date], [serviceId], [billId]) VALUES (0, 40, 40, CAST(N'2001-01-01' AS Date), N'E01', N'2')
+INSERT [dbo].[BillServiceDetails] ([oldIndex], [newIndex], [usagaIndex], [date], [serviceId], [billId]) VALUES (0, 12, 12, CAST(N'2022-07-29' AS Date), N'E01', N'4')
+INSERT [dbo].[BillServiceDetails] ([oldIndex], [newIndex], [usagaIndex], [date], [serviceId], [billId]) VALUES (0, 19, 19, CAST(N'2022-07-29' AS Date), N'E01', N'5')
+INSERT [dbo].[BillServiceDetails] ([oldIndex], [newIndex], [usagaIndex], [date], [serviceId], [billId]) VALUES (0, 12, 12, CAST(N'2022-07-29' AS Date), N'E01', N'7')
+INSERT [dbo].[BillServiceDetails] ([oldIndex], [newIndex], [usagaIndex], [date], [serviceId], [billId]) VALUES (23, 24, 1, CAST(N'2022-07-29' AS Date), N'E01', N'8')
+INSERT [dbo].[BillServiceDetails] ([oldIndex], [newIndex], [usagaIndex], [date], [serviceId], [billId]) VALUES (0, 9, 9, CAST(N'2001-01-01' AS Date), N'W01', N'2')
+INSERT [dbo].[BillServiceDetails] ([oldIndex], [newIndex], [usagaIndex], [date], [serviceId], [billId]) VALUES (0, 12, 12, CAST(N'2022-07-29' AS Date), N'W01', N'4')
+INSERT [dbo].[BillServiceDetails] ([oldIndex], [newIndex], [usagaIndex], [date], [serviceId], [billId]) VALUES (0, 23, 23, CAST(N'2022-07-29' AS Date), N'W01', N'5')
+INSERT [dbo].[BillServiceDetails] ([oldIndex], [newIndex], [usagaIndex], [date], [serviceId], [billId]) VALUES (0, 12, 12, CAST(N'2022-07-29' AS Date), N'W01', N'7')
+INSERT [dbo].[BillServiceDetails] ([oldIndex], [newIndex], [usagaIndex], [date], [serviceId], [billId]) VALUES (19, 20, 1, CAST(N'2022-07-29' AS Date), N'W01', N'8')
+GO
+ALTER TABLE [dbo].[BillDetails]  WITH CHECK ADD FOREIGN KEY([billId])
+REFERENCES [dbo].[Bills] ([billId])
+GO
+ALTER TABLE [dbo].[BillDetails]  WITH CHECK ADD FOREIGN KEY([serviceId])
+REFERENCES [dbo].[Services] ([serviceId])
+GO
+ALTER TABLE [dbo].[Bills]  WITH CHECK ADD FOREIGN KEY([apartmentId])
+REFERENCES [dbo].[Apartments] ([apartmentId])
+GO
+ALTER TABLE [dbo].[BillServiceDetails]  WITH CHECK ADD FOREIGN KEY([billId], [serviceId])
+REFERENCES [dbo].[BillDetails] ([billId], [serviceId])
+GO
+
+/* 
+END UPDATE NEW DATABASE
+*/
+

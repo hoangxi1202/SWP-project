@@ -53,7 +53,6 @@
                                 </div>
                                 <div class="wrap-input100 validate-input" data-validate="Enter password">
                                     <input class="input100" id="pass" type="password" name="reNewPassword" placeholder="Xác nhận mật khẩu mới" >
-                                    <!--<i class="input100 fas fa-eye"></i>-->
                                     <span class="focus-input100" data-placeholder="&#xe80f;"></span>
                                 </div>
                                 <div class="container-login100-form-btn m-t-32">

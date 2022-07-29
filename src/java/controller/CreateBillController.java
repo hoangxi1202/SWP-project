@@ -47,11 +47,13 @@ public class CreateBillController extends HttpServlet {
                 double total = priceElec * usageElec + usageWater * priceWater;
                 String billId = String.valueOf(dao.countBill("%%", "%%") + 1);
                 dao.addBill(new BillDTO(billId, total, false, date, apartmentId));
-                for (String serviceId1 : serviceId) {
-                    double price = dao.getPrice(serviceId1);
-                    total += price;
-                    dao.addBillDetail(billId, serviceId1, price);
-                }                
+                if (serviceId != null && serviceId.length > 0) {
+                    for (String serviceId1 : serviceId) {
+                        double price = dao.getPrice(serviceId1);
+                        total += price;
+                        dao.addBillDetail(billId, serviceId1, price);
+                    }
+                }
                 dao.addBillDetail(billId, "E01", priceElec * usageElec);
                 dao.addBillDetail(billId, "W01", usageWater * priceWater);
                 dao.addServiceBillDetail(oldElec, newElec, usageElec, date, "E01", billId);
