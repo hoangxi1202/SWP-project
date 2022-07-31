@@ -32,11 +32,10 @@ public class ServiceDAO {
             + "	AND BillServiceDetails.serviceId = ?";
 
     private static final String LIST_SERVICE_DEFAULT = "SELECT Services.serviceId, serviceName, servicePrice\n"
-            + "FROM Services, BillDetails\n"
-            + " WHERE Services.serviceId = BillDetails.serviceId\n"
-            + " AND Services.status = 1\n"
-            + "	AND BillDetails.serviceId NOT IN (SELECT serviceId FROM BillServiceDetails)\n"
-            + "	group by Services.serviceId, serviceName, servicePrice";
+            + "            FROM Services\n"
+            + "             WHERE  Services.status = 1\n"
+            + "            	AND Services.serviceId NOT IN (SELECT serviceId FROM BillServiceDetails)\n"
+            + "            	group by Services.serviceId, serviceName, servicePrice";
 
     public boolean checkDuplicate(String id) throws SQLException {
         boolean check = false;
@@ -161,7 +160,7 @@ public class ServiceDAO {
                     list.add(new Service(serviceId, serviceName, createdDate, status, typeId, price));
                 }
             }
-        } catch (Exception e) {
+        } catch (ClassNotFoundException | SQLException e) {
         } finally {
             if (rs != null) {
                 rs.close();
@@ -200,7 +199,7 @@ public class ServiceDAO {
                     s = new Service(serviceId, serviceName, createdDate, status, typeId, price);
                 }
             }
-        } catch (Exception e) {
+        } catch (ClassNotFoundException | SQLException e) {
         } finally {
             if (rs != null) {
                 rs.close();
@@ -223,7 +222,7 @@ public class ServiceDAO {
             conn = Utils.getConnection();
             if (conn != null) {
                 String sql = " UPDATE Services "
-                        + " SET serviceName=?, createdDate=?, price=? "
+                        + " SET serviceName=?, date=?, servicePrice=? "
                         + " WHERE serviceId=?";
                 stm = conn.prepareStatement(sql);
                 stm.setString(1, s.getServiceName());
@@ -232,8 +231,7 @@ public class ServiceDAO {
                 stm.setString(4, s.getServiceId());
                 check = stm.executeUpdate() > 0;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (ClassNotFoundException | SQLException e) {
         } finally {
             if (conn != null) {
                 conn.close();
@@ -254,7 +252,8 @@ public class ServiceDAO {
             conn = Utils.getConnection();
             if (conn != null) {
                 String sql = "SELECT * "
-                        + " FROM ServiceTypes ";
+                        + " FROM ServiceTypes "
+                        + "WHERE typeId NOT IN ('SV01', 'SV02')";
                 stm = conn.prepareStatement(sql);
                 rs = stm.executeQuery();
                 while (rs.next()) {
@@ -319,15 +318,15 @@ public class ServiceDAO {
         try {
             conn = Utils.getConnection();
             if (conn != null) {
-                String sql = " DELETE Services "
+                String sql = " UPDATE Services "
+                        + " set status = 0 "
                         + " WHERE serviceId=?";
                 stm = conn.prepareStatement(sql);
                 stm.setString(1, serID);
                 int value = stm.executeUpdate();
-                result = value > 0 ? true : false;
+                result = value > 0;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (ClassNotFoundException | SQLException e) {
         } finally {
             if (stm != null) {
                 stm.close();

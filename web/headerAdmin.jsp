@@ -16,19 +16,31 @@
                 <li class="nav-item password">
                     <a class="nav-link" href="changePassword.jsp">Đổi mật khẩu</a>
                 </li>
-                <li class="nav-item request">
-                    <a class="nav-link" href="managerAccount.jsp">Tạo mới tài khoản</a>
+                <li class="nav-item dropdown account">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Quản lí tài khoản</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown04">
+                        <a class="dropdown-item" href="managerAccount.jsp">Tạo mới tài khoản</a>
+                        <a class="dropdown-item" href="MainController?action=Search&search=">Danh sách tài khoản</a>
+                    </div>
                 </li>
-                <li class="nav-item request">
-                    <a class="nav-link" href="MainController?action=Search&search=">Quản lí tài khoản</a>
-                </li>
-                <li class="nav-item request">
-                    <a class="nav-link" href="MainController?searchContract=&action=SearchContract">Hợp đồng</a>
+                <li class="nav-item dropdown contract">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Hợp đồng</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown03">
+                        <a class="dropdown-item" href="addContract.jsp">Tạo mới hợp đồng</a>
+                        <a class="dropdown-item" href="MainController?searchContract=&action=SearchContract">Danh sách hợp đồng</a>
+                    </div>
                 </li>
                 <li class="nav-item resident">
                     <a class="nav-link" href="MainController?action=ViewResident&search=">Thông tin hộ dân</a>
                 </li>
-                <li class="nav-item resident">
+                <li class="nav-item dropdown service">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dịch vụ</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown02">
+                        <a class="dropdown-item" href="addService.jsp">Tạo mới dịch vụ</a>
+                        <a class="dropdown-item" href="MainController?action=SearchService&search=">Quản lí dịch vụ</a>
+                    </div>
+                </li>
+                <li class="nav-item room">
                     <a class="nav-link" href="MainController?action=SearchApartment&searchApartment=">Thông tin phòng</a>
                 </li>
             </ul>

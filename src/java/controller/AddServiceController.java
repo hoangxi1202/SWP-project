@@ -46,7 +46,7 @@ public class AddServiceController extends HttpServlet {
             String mess;
             boolean checkDuplicate = SerDAO.checkDuplicate(serID);
             if (checkDuplicate) {
-                mess = "Duplicate Service ID : " + serID + " !";
+                mess = "Mã dịch vụ đã tồn tại: " + serID + " !";
                 request.setAttribute("ERROR_MESSAGE", mess);
             } else {
                 boolean checkInsert = SerDAO.insertService(s);

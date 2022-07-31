@@ -13,7 +13,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-12">
-                        <h2 class="text-center" style="margin: 30px auto;">
+                        <h2 class="text-center">
                             Hóa đơn
                         </h2>
                     </div>

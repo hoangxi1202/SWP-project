@@ -13,9 +13,9 @@
                 <li class="nav-item bill">
                     <a class="nav-link" href="MainController?action=ViewBill">Hóa đơn</a>
                 </li>
-<!--                <li class="nav-item detail">
-                    <a class="nav-link" href="#">Thông tin phòng ở</a>
-                </li>-->
+                <li class="nav-item detail">
+                    <a class="nav-link" href="MainController?action=ViewDetailRoom">Thông tin phòng ở</a>
+                </li>
                 <li class="nav-item trouble">
                     <a class="nav-link" href="MainController?action=BeforeCreateTrouble">Báo cáo sự cố</a>
                 </li>
@@ -27,6 +27,7 @@
                     <div class="dropdown-menu" aria-labelledby="dropdown04">
                         <a class="dropdown-item" href="addResident.jsp">Thêm người ở</a>
                         <a class="dropdown-item" href="MainController?action=BeforeDeleteResident">Xóa người ở</a>
+                        <a class="dropdown-item" href="MainController?action=ViewRequest">Yêu cầu đang xử lý</a>
                     </div>
                 </li>
 

@@ -34,8 +34,8 @@
                                 <tr>
                                     <th scope="col">No</th>
                                     <th scope="col">Tên đăng nhập</th>
-                                    <th scope="col">Chức vụ</th>
                                     <th scope="col">Mật khẩu</th>
+                                    <th scope="col">Chức vụ</th>
                                     <th scope="col">Xóa</th>
                                     <th scope="col">Thêm mới chủ sở hữu</th>
                                 </tr>
@@ -46,19 +46,24 @@
                                         <td>${counter.count}</td>
                                         <td>${account.userID}</td>
                                         <td>
-                                            ${account.roleID}
+                                            ${account.password}
                                         </td>
                                         <td>
-                                            ${account.password}
+                                            ${account.roleID}
                                         </td>
                                         <td>
                                             <form action="MainController" method="POST">
                                                 <input type="hidden" name="userID" value="${account.userID}">
                                                 <c:if test="${sessionScope.LOGIN_USER.userID eq account.userID}">
-                                                    <button type="submit" name="action" value="Delete" class="btn disabled btn-form btn-warning">Xóa tài khoản</button>
+                                                    <button type="button" name="action" value="Delete" class="btn disabled btn-form btn-warning">Xóa tài khoản</button>
                                                 </c:if>
                                                 <c:if test="${sessionScope.LOGIN_USER.userID ne account.userID}">
-                                                    <button type="submit" name="action" value="Delete" class="btn btn-form btn-warning">Xóa tài khoản</button>
+                                                    <c:if test="${account.ownerId eq ''}">
+                                                        <button type="submit" name="action" value="Delete" class="btn btn-form btn-warning">Xóa tài khoản</button>
+                                                    </c:if>
+                                                    <c:if test="${account.ownerId ne ''}">
+                                                        <button type="button" name="action" value="Delete" class="btn btn-form disabled btn-warning">Xóa tài khoản</button>
+                                                    </c:if>
                                                 </c:if>
                                             </form>
                                         </td>
@@ -66,10 +71,15 @@
                                             <form action="addOwner.jsp" method="POST">
                                                 <input type="hidden" name="userId" value="${account.userID}">
                                                 <c:if test="${account.roleID eq 'US'}">
-                                                    <button type="submit" class="btn btn-form btn-primary">Đăng kí chủ sở hữu</button>
+                                                    <c:if test="${account.ownerId eq ''}">
+                                                        <button type="submit" class="btn btn-form btn-primary">Đăng kí chủ sở hữu</button>      
+                                                    </c:if>
+                                                    <c:if test="${account.ownerId ne ''}">
+                                                        <button type="button" class="btn btn-form disabled btn-primary">Đăng kí chủ sở hữu</button>   
+                                                    </c:if>
                                                 </c:if>
                                                 <c:if test="${account.roleID ne 'US'}">
-                                                    <button type="submit" class="btn btn-form btn-primary disabled">Đăng kí chủ sở hữu</button>
+                                                    <button type="button" class="btn btn-form btn-primary disabled">Đăng kí chủ sở hữu</button>
                                                 </c:if>
                                             </form>
                                         </td>
@@ -83,5 +93,9 @@
         </div>
     </body>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
-
+    <script>
+        $(document).ready(function () {
+            $(".account").addClass("active");
+        });
+    </script>
 </html>

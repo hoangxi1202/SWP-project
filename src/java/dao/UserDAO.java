@@ -19,11 +19,11 @@ import java.util.List;
  * @author Minh Hoàng
  */
 public class UserDAO {
-    
+
     private static final String GET_OWNER = "Select ownerId FROM Owners where userId = ?";
     private static final String CHECK_LOGIN = "SELECT roleId FROM Accounts WHERE userId =? AND password=? AND status = 1";
     private static final String INSERT_USER = "INSERT INTO Accounts(userId, password, status, roleId) VALUES(?,?,?,?)";
-    private static final String GET_LIST_USER = "SELECT userId, roleId, status FROM Accounts WHERE userId like ?";
+    private static final String GET_LIST_USER = "SELECT Accounts.userId, roleId, Accounts.status, Owners.ownerId FROM Accounts FULL OUTER JOIN Owners ON Accounts.userId= Owners.userId WHERE Accounts.userId like ?";
     private static final String UPDATE_USER = "UPDATE Accounts SET roleID=? WHERE userID=?";
     private static final String DELETE_USER = "UPDATE Accounts SET status=0 WHERE userId=?";
     private static final String CHECK_DUP_USER = "SELECT userId FROM Accounts WHERE userId=?";
@@ -38,6 +38,7 @@ public class UserDAO {
             + " FROM Accounts, Owners\n"
             + " WHERE Accounts.userId = Owners.userId\n"
             + "	AND Accounts.userId = ?;";
+
     public UserDTO checkUser(String userId) throws ClassNotFoundException, SQLException {
         UserDTO user = null;
         Connection conn = null;
@@ -69,7 +70,7 @@ public class UserDAO {
         }
         return user;
     }
-    
+
     public boolean updatePass(String userId, String password) throws SQLException {
         boolean check = false;
         Connection conn = null;
@@ -93,7 +94,7 @@ public class UserDAO {
         }
         return check;
     }
-    
+
     public boolean checkPass(String userId, String password) throws SQLException, ClassNotFoundException {
         boolean check = false;
         Connection conn = null;
@@ -125,7 +126,7 @@ public class UserDAO {
         }
         return check;
     }
-    
+
     public String getApartment(String userId) throws SQLException, ClassNotFoundException {
         String apartmentId = "";
         Connection conn = null;
@@ -155,7 +156,7 @@ public class UserDAO {
         }
         return apartmentId;
     }
-    
+
     public UserDTO checkLogin(String userID, String password) throws SQLException, ClassNotFoundException {
         UserDTO user = null;
         Connection conn = null;
@@ -187,7 +188,7 @@ public class UserDAO {
         }
         return user;
     }
-    
+
     public boolean checkDuplicate(String userID) throws SQLException {
         boolean check = false;
         Connection conn = null;
@@ -218,7 +219,7 @@ public class UserDAO {
         }
         return check;
     }
-    
+
     public String getOwnerId(String userID) throws SQLException, ClassNotFoundException {
         String ownId = "";
         Connection conn = null;
@@ -248,7 +249,7 @@ public class UserDAO {
         }
         return ownId;
     }
-    
+
     public boolean insertUser(UserDTO user) throws SQLException {
         boolean check = false;
         Connection conn = null;
@@ -275,7 +276,7 @@ public class UserDAO {
         }
         return check;
     }
-    
+
     public List<UserDTO> getListUser(String search) throws SQLException {
         List<UserDTO> list = new ArrayList<>();
         Connection conn = null;
@@ -292,12 +293,16 @@ public class UserDAO {
                     String roleID = rs.getString("roleID");
                     int status = rs.getInt("status");
                     String password = "***";
+                    String ownerId = rs.getString("ownerId");
+                    if (ownerId == null || "NULL".equals(ownerId)) {
+                        ownerId = "";
+                    }
                     if (status == 1) {
-                        list.add(new UserDTO(userID, password, roleID));
+                        list.add(new UserDTO(userID, roleID, password, ownerId));
                     }
                 }
             }
-        } catch (Exception e) {
+        } catch (ClassNotFoundException | SQLException e) {
         } finally {
             if (rs != null) {
                 rs.close();
@@ -311,7 +316,7 @@ public class UserDAO {
         }
         return list;
     }
-    
+
     public boolean updateUser(UserDTO user) throws SQLException {
         boolean check = false;
         Connection conn = null;
@@ -336,7 +341,7 @@ public class UserDAO {
         }
         return check;
     }
-    
+
     public boolean deleteUser(String userID) throws SQLException {
         boolean result = false;
         Connection conn = null;

@@ -30,6 +30,8 @@ public class MainController extends HttpServlet {
     private static final String STATISTIC = "Statistic";
     private static final String STATISTIC_CONTROLLER = "StatisticController";
     private static final String UPDATE_CONTRACT = "UpdateContract";
+    private static final String VIEW_DETAIL_ROOM = "ViewDetailRoom";
+    private static final String VIEW_DETAIL_ROOM_CONTROLLER = "ViewDetailRoomController";
     private static final String DELETE_CONTRACT = "DeleteContract";
     private static final String DELETE_CONTRACT_CONTROLLER = "DeleteContractController";
     private static final String UPDATE_CONTRACT_CONTROLLER = "UpdateContractController";
@@ -45,6 +47,8 @@ public class MainController extends HttpServlet {
     private static final String DELETE = "DeleteController";
     private static final String SENDMAIL_ACTION = "SendMail";
     private static final String CHECK_USERNAME = "CheckUserName";
+    private static final String VIEW_REQUEST = "ViewRequest";
+    private static final String VIEW_REQUEST_CONTROLLER = "ViewRequestController";
     private static final String CHECK_USERNAME_CONTROLLER = "CheckUserController";
     private static final String CREATE_CONTRACT = "CreateContract";
     private static final String CREATE_CONTRACT_CONTROLLER = "CreateContractController";
@@ -138,10 +142,14 @@ public class MainController extends HttpServlet {
                 url = BEF_CREATE_BILL_CONTROLLER;
             } else if (LOAD_INDEX.equals(action)) {
                 url = LOAD_INDEX_CONTROLLER;
+            } else if (VIEW_DETAIL_ROOM.equals(action)) {
+                url = VIEW_DETAIL_ROOM_CONTROLLER;
             } else if (CREATE_BILL.equals(action)) {
                 url = CREATE_BILL_CONTROLLER;
             } else if (STATISTIC.equals(action)) {
                 url = STATISTIC_CONTROLLER;
+            } else if (VIEW_REQUEST.equals(action)) {
+                url = VIEW_REQUEST_CONTROLLER;
             } else if (REMOVE_RESIDENT.equals(action)) {
                 url = REMOVE_RESIDENT_CONTROLLER;
             } else if (UPDATE_CONTRACT.equals(action)) {

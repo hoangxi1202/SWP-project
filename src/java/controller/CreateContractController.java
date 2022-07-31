@@ -8,6 +8,7 @@ package controller;
 import dao.ContractDAO;
 import dto.ContractDTO;
 import java.io.IOException;
+import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -29,23 +30,16 @@ public class CreateContractController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         String url = ERROR;
         try {
-            String contractId = request.getParameter("contractId");
             String startDate = request.getParameter("startDate");
             String endDate = request.getParameter("endDate");
             String ownerId = request.getParameter("ownerId").replaceAll(" ", "");
             String apartmentId = request.getParameter("apartmentId").replaceAll(" ", "");
-
             boolean check = true;
-
-            ContractDTO contract = new ContractDTO(contractId, apartmentId, ownerId, startDate, endDate, "1");
-
             ContractDAO contractDao = new ContractDAO();
-            //ContractDAO serviceDao = new ContractDAO();
-
-            String mess;
-//            boolean checkDApartment = contractDao.checkDuplicateApartment(apartmentId);
-//            boolean checkOwner = serviceDao.checkDuplicateOwner(ownerId);
-
+            int numId = contractDao.countContract("");
+            String contractId = "CT" + (numId < 10 ? ("0"+numId) : numId);
+            ContractDTO contract = new ContractDTO(contractId, apartmentId, ownerId, startDate, endDate, "1");
+            String mess = "";
             if (contractDao.checkDuplicateApartment(apartmentId)) {
                 mess = "Mã phòng " + apartmentId + " đã được sử dụng";
                 request.setAttribute("ERROR_MESSAGE", mess);
@@ -58,15 +52,15 @@ public class CreateContractController extends HttpServlet {
             }
             if (check) {
                 boolean checkCreate = contractDao.insertContract(contract);
-                mess = "Tạo hợp đồng thành công";
-                request.setAttribute("ERROR_MESSAGE", mess);
                 if (checkCreate) {
+                    mess = "Tạo hợp đồng thành công";
+                    request.setAttribute("ERROR_MESSAGE", mess);
                     url = SUCCESS;
                 } else {
                     request.setAttribute("ERROR_MESSAGE", mess);
                 }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             log("Error at CreateContractController" + e.toString());
         } finally {
             request.getRequestDispatcher(url).forward(request, response);

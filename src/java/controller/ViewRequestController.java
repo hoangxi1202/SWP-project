@@ -5,11 +5,12 @@
  */
 package controller;
 
-import dao.ContractDAO;
-import dao.ServiceDAO;
-import dto.ContractDTO;
-import entity.Service;
+import dao.ResidentDAO;
+import dto.RequestDTO;
+import dto.ResidentDTO;
+import dto.UserDTO;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -17,33 +18,39 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author Nhat Linh
  */
-@WebServlet(name = "BefCreateBillController", urlPatterns = {"/BefCreateBillController"})
-public class BefCreateBillController extends HttpServlet {
+@WebServlet(name = "ViewRequestController", urlPatterns = {"/ViewRequestController"})
+public class ViewRequestController extends HttpServlet {
 
-    private static final String SUCCESS = "createBill.jsp";
-    private static final String ERROR = "employee.jsp";
+    private static final String ERROR = "viewRequest.jsp";
+    private static final String SUCCESS = "viewRequest.jsp";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         String url = ERROR;
-        List<ContractDTO> listContract = null;
-        List<Service> listService = null;
+        List<ResidentDTO> listResident = null;
+        List<RequestDTO> listRequest = null;
         try {
-            ContractDAO contract = new ContractDAO();
-            ServiceDAO service = new ServiceDAO();
-            listContract = contract.getListContract();
-            listService = service.getListServiceDefault();
-            request.setAttribute("LIST_CONTRACT", listContract);
-            request.setAttribute("LIST_SERVICE", listService);
+            HttpSession session = request.getSession();
+            UserDTO loginUser = (UserDTO) session.getAttribute("LOGIN_USER");
+            ResidentDAO dao = new ResidentDAO();
+            listRequest = dao.getListRequest(loginUser.getUserID());
+            if (listRequest.size() > 0) {
+                for (RequestDTO requestDTO : listRequest) {
+                    listResident = dao.getListRequestRes(requestDTO.getRequestId());
+                    requestDTO.setListRes(listResident);
+                }
+                request.setAttribute("LIST_REQUEST", listRequest);
+            }
             url = SUCCESS;
         } catch (SQLException e) {
-            log("Error at BeforeCreateBillController: " + e.toString());
+            log("Error at ViewRequestController: " + e.toString());
         } finally {
             request.getRequestDispatcher(url).forward(request, response);
         }

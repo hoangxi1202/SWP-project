@@ -26,7 +26,7 @@ public class ContractDAO {
 //            + "       AND A.apartmentId=C.apartmentId AND C.apartmentId=D.apartmentId \n"
 //            + "       AND D.billId=E.billId AND E.serviceId=F.serviceId";
     private static final String COUNT_CONTRACT = "Select COUNT(contractId) as [count] \n"
-            + "FROM Contracts WHERE [status] = ?";
+            + "FROM Contracts WHERE [status] LIKE ?";
     private static final String UPDATE_CONTRACT = "UPDATE Contracts\n"
             + "SET contractId = ?,\n"
             + "	startDate = ?,\n"
@@ -37,6 +37,10 @@ public class ContractDAO {
     private static final String LIST_CONTRACT = "SELECT Contracts.apartmentId, Contracts.startDate, Contracts.contractId, Owners.fullName, Owners.ownerId\n"
             + " FROM Contracts, Owners\n"
             + " WHERE Contracts.ownerId = Owners.ownerId AND Contracts.status = 1";
+    private static final String GET_CONTRACT = "SELECT Contracts.apartmentId, Contracts.startDate, Contracts.contractId, Owners.fullName, Owners.ownerId\n"
+            + " FROM Contracts, Owners\n"
+            + " WHERE Contracts.ownerId = Owners.ownerId AND Contracts.status = 1\n"
+            + " AND Owners.userId = ?";
 
 //    private static final String AD_SEARCH_CONTRACT = "SELECT A.contractId, C.apartmentId, B.fullName, F.serviceName, A.startDate, A.endDate, A.[status]\n"
 //            + "FROM Contracts A, Owners B, Apartments C, Bills D, BillDetails E, Services F \n"
@@ -51,7 +55,8 @@ public class ContractDAO {
             + "       AND A.apartmentId=C.apartmentId\n"
             + "       AND C.apartmentId=D.apartmentId\n"
             + "       AND D.billId=E.billId\n"
-            + "       GROUP BY A.contractId, B.fullName, C.apartmentId, A.startDate, A.endDate, A.[status]";
+            + "       GROUP BY A.contractId, B.fullName, C.apartmentId, A.startDate, A.endDate, A.[status]\n"
+            + "       ORDER BY A.status DESC";
     private static final String INSERT_CONTRACT = "INSERT INTO Contracts(contractId, startDate, endDate, status, ownerId, apartmentId) VALUES(?,?,?,?,?,?)";
     private static final String CHECK_DUPLICATE_APARTMENT = "SELECT apartmentId FROM Contracts WHERE apartmentId =?";
 
@@ -126,6 +131,9 @@ public class ContractDAO {
         PreparedStatement ptm = null;
         try {
             conn = Utils.getConnection();
+            if ("".equals(contract.getEndDate())) {
+                contract.setEndDate(null);
+            }
             if (conn != null) {
                 ptm = conn.prepareStatement(INSERT_CONTRACT);
                 ptm.setString(1, contract.getContractId());
@@ -154,6 +162,9 @@ public class ContractDAO {
         PreparedStatement stm = null;
         try {
             conn = Utils.getConnection();
+            if ("".equals(contract.getEndDate())) {
+                contract.setEndDate(null);
+            }
             if (conn != null) {
                 stm = conn.prepareStatement(UPDATE_CONTRACT);
                 stm.setString(1, contract.getContractId());
@@ -209,7 +220,7 @@ public class ContractDAO {
             conn = Utils.getConnection();
             if (conn != null) {
                 ptm = conn.prepareStatement(COUNT_CONTRACT);
-                ptm.setString(1, status);
+                ptm.setString(1, "%%" + status + "%%");
                 rs = ptm.executeQuery();
                 if (rs.next()) {
                     count = Integer.parseInt(rs.getString("count"));
@@ -336,6 +347,41 @@ public class ContractDAO {
             }
         }
         return listContract;
+    }
+
+    public ContractDTO getContract(String userID) throws SQLException {
+        ContractDTO contract = null;
+        Connection conn = null;
+        PreparedStatement ptm = null;
+        ResultSet rs = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                ptm = conn.prepareStatement(GET_CONTRACT);
+                ptm.setString(1, userID);
+                rs = ptm.executeQuery();
+                while (rs.next()) {
+                    String contractId = rs.getString("contractId");
+                    String apartmentId = rs.getString("apartmentId");
+                    String fullName = rs.getString("fullName");
+                    String startDate = rs.getString("startDate");
+                    String ownerId = rs.getString("ownerId");
+                    contract = new ContractDTO(contractId, apartmentId, fullName, startDate, ownerId);
+                }
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (ptm != null) {
+                ptm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return contract;
     }
 
 }

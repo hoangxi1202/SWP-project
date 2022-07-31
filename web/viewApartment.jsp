@@ -107,4 +107,9 @@
         </div>
         <jsp:include page="footer.jsp"></jsp:include>
     </body>
+    <script>
+        $(document).ready(function () {
+            $(".room").addClass("active");
+        });
+    </script>
 </html>

@@ -10,6 +10,8 @@ import dao.ServiceDAO;
 import entity.Service;
 import java.io.IOException;
 import java.sql.Date;
+import java.sql.SQLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -51,7 +53,7 @@ public class UpdateServiceController extends HttpServlet {
             if (check) {
                     url = SUCCESS;
             }
-        } catch (Exception e) {
+        } catch (NumberFormatException | SQLException | ParseException e) {
             log("Error at UpdateServiceController" + e.toString());
         } finally {
             request.getRequestDispatcher(url).forward(request, response);

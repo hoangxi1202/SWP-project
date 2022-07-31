@@ -25,10 +25,18 @@ public class ResidentDAO {
             + " Residents WHERE (fullName LIKE ? OR ownerId LIKE ?) and status = 1\n"
             + " ORDER BY Residents.residentId ASC\n"
             + " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY;";
+    private static final String LIST_RESIDENT_BY_USERID = "SELECT Residents.residentId, Residents.ownerId, Residents.fullName, Residents.dob, Residents.sex, Residents.job, Residents.phone FROM \n"
+            + "             Residents, Owners WHERE Residents.status = 1\n"
+            + "			 AND Residents.ownerId = Owners.ownerId\n"
+            + "			 AND Owners.userId = ?\n"
+            + "             ORDER BY Residents.residentId ASC";
     private static final String SEARCH_RES_OWN = "SELECT ownerId as residentId, ownerId, fullname, dob, sex, job, phone FROM "
             + " Owners WHERE (fullName LIKE ? OR ownerId LIKE ?) and status =1\n"
             + " ORDER BY OwnerId ASC\n"
             + " OFFSET ? ROWS FETCH NEXT 5 ROWS ONLY;";
+    private static final String SEARCH_RES_OWN_V2 = "SELECT ownerId as residentId, ownerId, fullname, dob, sex, job, phone FROM \n"
+            + " Owners WHERE Owners.userId = ? and status =1\n"
+            + " ORDER BY OwnerId ASC";
     private static final String SEARCH_BY_NAME_OWN = "SELECT Residents.residentId, Residents.ownerId, Residents.fullName, "
             + "Residents.dob, Residents.sex, Residents.job, Residents.phone FROM "
             + "Residents, Owners WHERE Residents.ownerId = Owners.ownerId"
@@ -64,6 +72,12 @@ public class ResidentDAO {
             + "FROM Requests, Owners\n"
             + "WHERE Requests.ownerId = Owners.ownerId\n"
             + "	AND Requests.status = 0\n"
+            + "	ORDER BY action, requestId";
+    private static final String VIEW_REQUEST_V2 = "SELECT requestId, Requests.ownerId, Owners.fullName, Requests.action\n"
+            + "FROM Requests, Owners\n"
+            + "WHERE Requests.ownerId = Owners.ownerId\n"
+            + "	AND Requests.status = 0\n"
+            + " AND Owners.userId = ?\n"
             + "	ORDER BY action, requestId";
     private static final String UPDATE_REQUEST = "UPDATE Requests\n"
             + " SET [status] = 1\n"
@@ -204,6 +218,40 @@ public class ResidentDAO {
             conn = Utils.getConnection();
             if (conn != null) {
                 ptm = conn.prepareStatement(VIEW_REQUEST);
+                rs = ptm.executeQuery();
+                while (rs.next()) {
+                    String requestId = rs.getString("requestId");
+                    String ownerId = rs.getString("ownerId");
+                    String action = rs.getString("action");
+                    String name = rs.getString("fullName");
+                    listRequest.add(new RequestDTO(requestId, ownerId, action, name, false));
+                }
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (ptm != null) {
+                ptm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return listRequest;
+    }
+
+    public List<RequestDTO> getListRequest(String userId) throws SQLException {
+        List<RequestDTO> listRequest = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement ptm = null;
+        ResultSet rs = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                ptm = conn.prepareStatement(VIEW_REQUEST_V2);
+                ptm.setString(1, userId);
                 rs = ptm.executeQuery();
                 while (rs.next()) {
                     String requestId = rs.getString("requestId");
@@ -372,6 +420,86 @@ public class ResidentDAO {
                 conn.close();
             }
         }
+        return listResident;
+    }
+
+    private List<ResidentDTO> getListOwner(String userId) throws SQLException {
+        List<ResidentDTO> listResident = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement ptm = null;
+        ResultSet rs = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                ptm = conn.prepareStatement(SEARCH_RES_OWN_V2);
+                ptm.setString(1, userId);
+                rs = ptm.executeQuery();
+                while (rs.next()) {
+                    String residentId = rs.getString("residentId");
+                    String ownerId = rs.getString("ownerId");
+                    String name = rs.getString("fullName");
+                    String dob = rs.getString("dob");
+                    boolean gender = Utils.getBoolean(rs.getString("sex"));
+                    String job = rs.getString("job");
+                    String phone = rs.getString("phone");
+                    String req = "";
+                    listResident.add(new ResidentDTO(residentId, ownerId, name, dob, gender, job, phone, true, req));
+                }
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (ptm != null) {
+                ptm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return listResident;
+    }
+
+    public List<ResidentDTO> getListResident(String userId) throws SQLException {
+        List<ResidentDTO> listResident = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement ptm = null;
+        ResultSet rs = null;
+        try {
+            conn = Utils.getConnection();
+            if (conn != null) {
+                List<ResidentDTO> listOwner = getListOwner(userId);
+                listResident.addAll(listOwner);
+                ptm = conn.prepareStatement(LIST_RESIDENT_BY_USERID);
+                ptm.setString(1, userId);
+                rs = ptm.executeQuery();
+                while (rs.next()) {
+                    String residentId = rs.getString("residentId");
+                    String ownerId = rs.getString("ownerId");
+                    String name = rs.getString("fullName");
+                    String dob = rs.getString("dob");
+                    boolean gender = Utils.getBoolean(rs.getString("sex"));
+                    String job = rs.getString("job");
+                    String phone = rs.getString("phone");
+                    String req = "";
+                    listResident.add(new ResidentDTO(residentId, ownerId, name, dob, gender, job, phone, true, req));
+                }
+
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (ptm != null) {
+                ptm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+
         return listResident;
     }
 

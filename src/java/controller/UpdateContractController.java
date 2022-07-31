@@ -35,11 +35,22 @@ public class UpdateContractController extends HttpServlet {
             String apartmentId = request.getParameter("apartmentId");
             String startDate = request.getParameter("startDate");
             String endDate = request.getParameter("endDate");
+            if (endDate == null) {
+                endDate = "";
+            }
             String status = request.getParameter("status");
+            boolean check = false;
+            ContractDAO dao = new ContractDAO();
             if (Utils.isValidDate(startDate) && Utils.isValidDate(endDate)) {
-                boolean check = false;
-                ContractDAO dao = new ContractDAO();
-                check = dao.updateContract(new ContractDTO(contractId, apartmentId, startDate, endDate, status));
+                check = dao.updateContract(new ContractDTO(contractId, apartmentId, "", startDate, endDate, status));
+                if (check) {
+                    url = SUCCESS;
+                    request.setAttribute("SUCCESS", "Success!!!");
+                } else {
+                    request.setAttribute("ERROR", "Error!!!");
+                }
+            } else if (Utils.isValidDate(startDate) && "".equals(endDate)) {
+                check = dao.updateContract(new ContractDTO(contractId, apartmentId, "", startDate, endDate, status));
                 if (check) {
                     url = SUCCESS;
                     request.setAttribute("SUCCESS", "Success!!!");

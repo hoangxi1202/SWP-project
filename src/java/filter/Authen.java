@@ -56,6 +56,7 @@ public class Authen implements Filter {
         USER_RESOURCES.add("user.jsp");
         USER_RESOURCES.add("viewBill.jsp");
         USER_RESOURCES.add("viewDetailBill.jsp");
+        USER_RESOURCES.add("viewRequest.jsp");
         USER_RESOURCES.add("AddResidentController");
         USER_RESOURCES.add("BeforeCreateTroubleController");
         USER_RESOURCES.add("BeforeDeleteResidentController");

@@ -13,7 +13,7 @@
                 <li class="nav-item bill">
                     <a class="nav-link" href="MainController?action=ViewAllBill">Hóa đơn</a>
                 </li>
-                <li class="nav-item bill">
+                <li class="nav-item createbill">
                     <a class="nav-link" href="MainController?action=BefCreateBill">Tạo hóa đơn</a>
                 </li>
                 <li class="nav-item trouble">

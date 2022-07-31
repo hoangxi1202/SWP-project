@@ -15,8 +15,24 @@ public class UserDTO {
     private String roleID;
     private String password;
     private String phone;
+    private String ownerId;
 
     public UserDTO() {
+    }
+
+    public UserDTO(String userID, String roleID, String password, String ownerId) {
+        this.userID = userID;
+        this.roleID = roleID;
+        this.password = password;
+        this.ownerId = ownerId;
+    }
+
+    public String getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(String ownerId) {
+        this.ownerId = ownerId;
     }
 
     public UserDTO(String userID, String password, String roleID) {

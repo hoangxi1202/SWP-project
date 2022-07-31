@@ -62,7 +62,7 @@
                     <input type="hidden" name="userId" value="${param.userId}">
                     <button type="submit" class="btn btn-primary btn-form float-right btn-search" name="action" value="AddOwner">Thêm mới</button>
                 </form>  
-                <a href="admin.jsp"><button style="padding: 0px 40px; margin: 10px 10px" class="btn btn-light float-right">Hủy</button></a> 
+                <a href="MainController?action=Statistic"><button style="padding: 0px 40px; margin: 10px 10px" class="btn btn-light float-right">Hủy</button></a> 
             </c:if>
 
 
@@ -186,7 +186,7 @@
                         <input type="hidden" name="userId" value="${param.userId}">
                         <button type="submit" class="btn btn-primary btn-form float-right" name="action" value="AddOwner">Thêm mới</button>                        
                     </form>
-                    <a href="admin.jsp"><button style="padding: 0px 40px; margin: 10px 10px" class="btn btn-light float-right">Hủy</button></a>  
+                    <a href="MainController?action=Statistic"><button style="padding: 0px 40px; margin: 10px 10px" class="btn btn-light float-right">Hủy</button></a>  
                 </c:if>
             </c:if>
         </div>
@@ -196,7 +196,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
-//            $(".trouble").addClass("active");
+            $(".account").addClass("active");
         });
     </script>
 </html>

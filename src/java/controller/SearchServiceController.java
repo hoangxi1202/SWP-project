@@ -21,8 +21,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class SearchServiceController extends HttpServlet {
 
-    private static final String ERROR = "employee.jsp";
-    private static final String SUCCESS = "employee.jsp";
+    private static final String ERROR = "searchService.jsp";
+    private static final String SUCCESS = "searchService.jsp";
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
